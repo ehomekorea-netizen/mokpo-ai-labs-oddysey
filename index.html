@@ -2117,6 +2117,27 @@ URL: [내 서비스 메인 URL] 배포된 도메인주소 예: https://danggeun-
     document.body.style.overflow = '';
   };
 
+  // Generic Modals (openModal / closeModal)
+  window.openModal = function(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    
+    // Trigger Lucide icons inside modal just in case
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  };
+  window.closeModal = function(id) {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  };
+
   // ============================================================
   // VIBE CODING CANVAS (Step 4)
   // ============================================================
