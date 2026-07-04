@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FILM SLICER — 영상을 스크롤 페이지로</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300&family=Noto+Sans+KR:wght@300;400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0c10;--bg2:#0e1015;--ink:#eceae3;--dim:#8e9099;
+    --brass:#dfb45a;--line:rgba(236,234,227,.14);--hair:rgba(236,234,227,.09)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;
+    min-height:100vh;padding:clamp(24px,5vw,64px)}
+  .wrap{max-width:860px;margin:0 auto}
+  ::selection{background:var(--brass);color:#12100a}
+
+  .eyebrow{font-family:'Space Grotesk',monospace;font-size:12px;letter-spacing:.34em;
+    color:var(--brass);text-transform:uppercase;margin-bottom:16px}
+  h1{font-family:'Noto Serif KR',serif;font-weight:200;font-size:clamp(34px,6vw,54px);
+    line-height:1.2;margin-bottom:14px}
+  .lead{color:var(--dim);font-weight:300;line-height:1.9;font-size:15px;max-width:38em}
+  .lead b{color:var(--ink);font-weight:400}
+
+  .step{margin-top:clamp(40px,6vw,60px);border-top:1px solid var(--hair);
+    padding-top:clamp(28px,4vw,40px)}
+  .step h2{font-family:'Space Grotesk','Noto Sans KR',monospace;font-weight:400;
+    font-size:13px;letter-spacing:.26em;color:var(--dim);margin-bottom:22px}
+  .step h2 b{color:var(--brass);font-weight:500;margin-right:10px}
+
+  /* 프롬프트 라이브러리 */
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+  .chip{font-size:13px;font-weight:300;padding:9px 16px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--dim);
+    font-family:'Noto Sans KR',sans-serif;transition:all .18s}
+  .chip:hover{border-color:var(--brass);color:var(--ink)}
+  .chip.on{border-color:var(--brass);background:rgba(223,180,90,.08);color:var(--brass)}
+  #tplDesc{font-size:13px;color:var(--dim);font-weight:300;margin-bottom:18px;line-height:1.8}
+  #tplSlots{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-bottom:18px}
+  #tplSlots .field.full{grid-column:1/-1}
+  #promptOut{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--ink);
+    padding:14px;font-family:'Space Grotesk',monospace;font-size:12.5px;line-height:1.75;
+    outline:none;resize:vertical;min-height:120px}
+  #promptOut:focus{border-color:var(--brass)}
+  #promptRow{margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  #copyPrompt{padding:11px 26px;font-size:13px}
+  #copyMsg{font-size:12px;color:var(--brass);opacity:0;transition:opacity .3s}
+  .prompt-tip{font-size:12px;color:var(--dim);font-weight:300;line-height:1.8;margin-top:12px}
+  @media (max-width:640px){#tplSlots{grid-template-columns:1fr}}
+
+  /* 드롭존 */
+  #drop{border:1px dashed var(--line);padding:clamp(36px,6vw,60px);text-align:center;
+    cursor:pointer;transition:border-color .2s,background .2s}
+  #drop:hover,#drop.over{border-color:var(--brass);background:rgba(223,180,90,.04)}
+  #drop .big{font-family:'Noto Serif KR',serif;font-weight:300;font-size:20px;margin-bottom:8px}
+  #drop .small{color:var(--dim);font-size:13px;font-weight:300}
+  #meta{margin-top:14px;font-family:'Space Grotesk',monospace;font-size:12px;
+    letter-spacing:.12em;color:var(--brass);display:none}
+
+  /* 설정 */
+  .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .opt label{display:block;font-size:12px;color:var(--dim);letter-spacing:.1em;margin-bottom:10px}
+  .opt output{color:var(--brass);font-family:'Space Grotesk',monospace}
+  input[type=range]{width:100%;accent-color:var(--brass);background:transparent}
+  select{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--ink);
+    padding:10px 12px;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:300}
+
+  /* 텍스트 필드 */
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px}
+  .field{display:flex;flex-direction:column;gap:8px}
+  .field.full{grid-column:1/-1}
+  .field label{font-size:12px;color:var(--dim);letter-spacing:.1em}
+  .field input,.field textarea{background:var(--bg2);border:1px solid var(--line);
+    color:var(--ink);padding:11px 13px;font-family:'Noto Sans KR',sans-serif;
+    font-size:14px;font-weight:300;outline:none;resize:vertical}
+  .field input:focus,.field textarea:focus{border-color:var(--brass)}
+  .field .tip{font-size:11px;color:rgba(142,144,153,.7)}
+
+  /* 버튼/진행 */
+  .btn{font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:500;
+    letter-spacing:.06em;padding:15px 36px;cursor:pointer;
+    border:1px solid var(--brass);background:var(--brass);color:#12100a;
+    transition:transform .2s,box-shadow .2s,opacity .2s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(223,180,90,.25)}
+  .btn:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  #prog{margin-top:18px;display:none;align-items:center;gap:14px;
+    font-family:'Space Grotesk',monospace;font-size:12px;letter-spacing:.14em;color:var(--dim)}
+  #prog .bar{flex:1;height:1px;background:var(--line);position:relative}
+  #prog .bar div{position:absolute;left:0;top:0;height:100%;width:0;background:var(--brass)}
+
+  /* 미리보기 */
+  #preview{display:none}
+  #pvCanvas{width:100%;border:1px solid var(--hair);display:block;background:#000}
+  #pvSlider{width:100%;margin-top:14px}
+  #pvInfo{margin-top:8px;font-family:'Space Grotesk',monospace;font-size:11px;
+    letter-spacing:.18em;color:var(--dim);text-align:center}
+
+  #dlRow{display:none;gap:14px;flex-wrap:wrap}
+  .footer{margin-top:clamp(50px,7vw,70px);padding-top:24px;border-top:1px solid var(--hair);
+    font-size:12px;color:var(--dim);font-weight:300;line-height:1.9}
+  video{display:none}
+  @media (max-width:640px){.opts{grid-template-columns:1fr}.fields{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Film Slicer · Browser-Only Tool</div>
+  <h1>영상을 넣으면,<br>스크롤 페이지가 나온다</h1>
+  <p class="lead">ffmpeg도 서버도 필요 없습니다. <b>브라우저가 곧 영상 편집기</b>입니다 — 이 페이지가 영상을 1프레임씩 캔버스에 그려 추출하고, 완성된 스크롤 인터랙티브 HTML을 만들어 내려드립니다. 파일은 어디에도 업로드되지 않습니다.</p>
+
+  <!-- STEP 0 : 프롬프트 라이브러리 -->
+  <div class="step">
+    <h2><b>STEP 0</b>영상이 아직 없다면 — 프롬프트부터 (선택)</h2>
+    <div class="chips" id="tplChips"></div>
+    <div id="tplDesc"></div>
+    <div id="tplSlots"></div>
+    <textarea id="promptOut" spellcheck="false"></textarea>
+    <div id="promptRow">
+      <button class="btn ghost" id="copyPrompt">프롬프트 복사</button>
+      <span id="copyMsg">복사되었습니다 — AI 영상 생성기에 붙여넣으세요</span>
+    </div>
+    <p class="prompt-tip">빈칸만 바꾸면 나만의 프롬프트가 됩니다 (한글로 적어도 되지만 영문이 결과가 더 좋습니다). 완성 프롬프트는 직접 수정도 가능합니다. Higgsfield · Kling · Sora · Runway 등에 붙여넣어 <b>8~10초, 16:9</b> 영상을 만든 뒤, 아래 STEP 1에 드래그하세요. 스크럽 원칙: 컷 없이 한 방향으로만 진행되는 영상이 가장 잘 어울립니다.</p>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <h2><b>STEP 1</b>영상 파일 넣기</h2>
+    <div id="drop">
+      <div class="big">영상을 여기에 끌어다 놓거나, 클릭해서 선택</div>
+      <div class="small">MP4 권장 · 3~8초 · 한 방향으로 균일하게 움직이는 영상일수록 좋습니다</div>
+      <div id="meta"></div>
+    </div>
+    <input type="file" id="file" accept="video/*" hidden>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <h2><b>STEP 2</b>추출 설정</h2>
+    <div class="opts">
+      <div class="opt">
+        <label>프레임 수 — <output id="oCount">120</output>장</label>
+        <input type="range" id="count" min="60" max="180" step="10" value="120">
+      </div>
+      <div class="opt">
+        <label>가로 해상도</label>
+        <select id="width">
+          <option value="768">768px — 가볍게</option>
+          <option value="1024" selected>1024px — 권장</option>
+          <option value="1280">1280px — 선명하게</option>
+        </select>
+      </div>
+      <div class="opt">
+        <label>JPEG 품질 — <output id="oQ">0.72</output></label>
+        <input type="range" id="quality" min="0.5" max="0.9" step="0.02" value="0.72">
+      </div>
+    </div>
+    <div style="margin-top:26px">
+      <button class="btn" id="extract" disabled>프레임 추출하기</button>
+    </div>
+    <div id="prog"><span id="progTxt">SLICING</span><div class="bar"><div id="progFill"></div></div><span id="progPct">0%</span></div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="preview">
+    <h2><b>STEP 3</b>스크럽 미리보기 — 슬라이더가 곧 스크롤입니다</h2>
+    <canvas id="pvCanvas"></canvas>
+    <input type="range" id="pvSlider" min="0" max="119" value="0">
+    <div id="pvInfo">FRAME 001 / 120</div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <h2><b>STEP 4</b>페이지 문구 (선택 — 비워두면 기본값)</h2>
+    <div class="fields">
+      <div class="field"><label>브랜드명</label><input id="fBrand" placeholder="AURA®"></div>
+      <div class="field"><label>버튼 문구</label><input id="fBtn" placeholder="사전 예약하기"></div>
+      <div class="field full"><label>히어로 제목 (줄바꿈 가능, *별표*가 포인트 컬러)</label>
+        <textarea id="fTitle" rows="2" placeholder="손끝이&#10;*카메라*가 되다"></textarea></div>
+      <div class="field full"><label>히어로 서브카피</label>
+        <textarea id="fSub" rows="2" placeholder="이 화면은 스스로 움직이지 않습니다. 당신이 스크롤하는 만큼만 시간이 흐릅니다."></textarea></div>
+      <div class="field"><label>중간 문구 ①</label><input id="fS1" placeholder="모든 각도에서, 완벽하게"></div>
+      <div class="field"><label>중간 문구 ②</label><input id="fS2" placeholder="빛이 머무는 방향까지 설계했다"></div>
+      <div class="field full"><label>마무리 문구 (CTA 위)</label><input id="fEnd" placeholder="들을 준비, 되셨나요"></div>
+    </div>
+    <div id="dlRow" style="margin-top:26px;display:flex">
+      <button class="btn" id="download">완성 HTML 다운로드</button>
+      <button class="btn ghost" id="open">새 탭에서 바로 열어보기</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    파이프라인: AI 영상 생성(Higgsfield 등) → 이 도구에 드롭 → 완성 HTML. 모든 처리는 이 브라우저 탭 안에서만 일어납니다.<br>
+    원리: &lt;video&gt;를 프레임 시점마다 seek → &lt;canvas&gt;에 그려 JPEG로 저장 → 스크롤 진행률을 프레임 번호로 매핑한 페이지에 내장.
+  </div>
+</div>
+
+<video id="vid" muted playsinline preload="auto"></video>
+<canvas id="work" hidden></canvas>
+
+<script>
+/* ─────────────────────────────────────────────
+   STEP 0 · 프롬프트 라이브러리
+   ------------------------------------------------------------------ */
+(function(){
+  var TPL = [
+    {name:'분해도 (익스플로디드 뷰)',
+     desc:'제품이 부품 단위로 공중 분해됐다가 재조립됩니다. 스크롤 내리면 분해, 올리면 조립 — 스크럽의 왕도. 부품 이름을 구체적으로 적을수록 진짜 분해도가 나옵니다.',
+     slots:[
+       {k:'subj', label:'피사체 (제품)', def:'a premium mechanical wristwatch', full:false},
+       {k:'parts',label:'부품 3~6개 (콤마로)', def:'brass gears, ruby jewels, coiled springs, the balance wheel', full:true},
+       {k:'live', label:'분해 중에도 움직이는 요소 하나', def:'the balance wheel keeps ticking mid-air', full:true}
+     ],
+     build:function(v){return 'One single continuous shot: '+v.subj+' floats in a pitch-black studio void and deconstructs into an exploded view \u2014 '+v.parts+' separating and rotating slowly in zero gravity while '+v.live+'. The camera weaves between the floating components in macro detail, then all parts magnetically reassemble as the camera pulls back. Warm amber key light, cool rim light, volumetric dust, photorealistic CGI, no cuts, no text, no people.'}},
+    {name:'줌인 · 매크로 다이브',
+     desc:'피사체 표면을 뚫고 내부 세계로 들어갑니다. 스크롤 = 깊이. 겉과 속이 다를수록 극적입니다.',
+     slots:[
+       {k:'subj', label:'피사체', def:'a single golden serum droplet on a glass dropper', full:true},
+       {k:'inside',label:'내부에서 발견하는 것', def:'micro air bubbles floating like planets in an amber universe', full:true}
+     ],
+     build:function(v){return 'One single continuous macro zoom: starting on '+v.subj+', the camera pushes relentlessly closer and dives through the surface into the interior \u2014 revealing '+v.inside+' \u2014 light caustics sweeping past the lens as the scale keeps shrinking. Extreme macro cinematography, shallow depth of field, luminous detail, no cuts, no text, no people.'}},
+    {name:'궤도 + 변형 (오빗 모프)',
+     desc:'카메라가 한 바퀴 도는 동안 피사체가 변신합니다. "궤도 각도 = 변형 진행률"이라 스크럽과 궁합이 좋습니다.',
+     slots:[
+       {k:'subj', label:'피사체', def:'a solitary maple tree on a hill', full:true},
+       {k:'morph',label:'한 바퀴 동안 일어나는 변화', def:'the four seasons transform around it \u2014 spring blossoms, summer green, autumn red leaves peeling away, bare branches catching snow', full:true}
+     ],
+     build:function(v){return 'One single continuous 360-degree orbit: the camera circles '+v.subj+' at a steady pace while '+v.morph+', the transformation progressing in perfect sync with the camera angle and completing exactly as the orbit ends. Seamless continuous change, cinematic lighting, no cuts, no text, no people.'}},
+    {name:'상승 드론샷',
+     desc:'수직 상승은 스크롤과 방향 직관이 일치합니다. 낮은 곳의 디테일에서 시작해 높은 곳의 장관으로 끝내세요.',
+     slots:[
+       {k:'from', label:'시작점 (낮은 곳, 디테일)', def:'the courtyard of a traditional Korean hanok, curved roof tiles in macro detail', full:true},
+       {k:'to',   label:'도착점 (높은 곳, 장관)', def:'an entire hanok village below with a modern city skyline glowing on the horizon', full:true}
+     ],
+     build:function(v){return 'One single continuous aerial ascent: the camera starts low at '+v.from+' and rises smoothly and steadily upward, details sliding past the lens, until it reveals '+v.to+'. Golden hour light, thin mist layers, cinematic drone movement with constant vertical speed, no cuts, no text, no people.'}},
+    {name:'액체 → 형태 (변형)',
+     desc:'흐르는 재료가 완성된 형태로 굳는 과정. 재질감(금속·유리·초콜릿)이 살수록 고급스럽습니다.',
+     slots:[
+       {k:'liquid',label:'액체 재질', def:'streams of molten liquid gold', full:true},
+       {k:'form',  label:'완성되는 형태', def:'an elegant frosted-glass perfume bottle with a gold cap', full:true}
+     ],
+     build:function(v){return 'One single continuous shot: '+v.liquid+' swirls and dances in a pitch-black space, forming ribbons and spirals. As the camera slowly pushes in, the flowing material gradually coalesces and solidifies into '+v.form+', tiny droplets still orbiting it like satellites in the final frame. Caustic light patterns, macro surface tension detail, photorealistic CGI, no cuts, no text, no people.'}},
+    {name:'공간 관통 (플라이스루)',
+     desc:'여러 공간을 연달아 통과합니다. 프레임당 변화량이 가장 큰 유형 — 스크럽 쾌감의 끝판왕.',
+     slots:[
+       {k:'spaces',label:'통과할 공간 3~4개 (화살표로)', def:'a golden desert with a rolling sandstorm \u2192 a rain-soaked neon city street \u2192 an underwater coral canyon \u2192 a snow-covered pine forest under aurora', full:true}
+     ],
+     build:function(v){return 'One single continuous forward flight through a chain of glowing portals, each opening into a completely different world: '+v.spaces.split('\u2192').join(' \u2014 through a portal \u2014 ')+', the last portal closing behind the camera. Each world\u2019s light, color and atmosphere completely distinct, debris and particles streaking past the lens for speed, no cuts, no text, no people.'}}
+  ];
+  var chips=document.getElementById('tplChips'),slots=document.getElementById('tplSlots'),
+      desc=document.getElementById('tplDesc'),out=document.getElementById('promptOut'),cur=0;
+  TPL.forEach(function(t,i){var b=document.createElement('button');b.className='chip'+(i===0?' on':'');
+    b.textContent=t.name;b.onclick=function(){cur=i;
+      chips.querySelectorAll('.chip').forEach(function(c,j){c.classList.toggle('on',j===i)});render()};
+    chips.appendChild(b)});
+  function render(){var t=TPL[cur];desc.textContent=t.desc;slots.innerHTML='';
+    t.slots.forEach(function(s){var d=document.createElement('div');d.className='field'+(s.full?' full':'');
+      d.innerHTML='<label>'+s.label+'</label>';var inp=document.createElement('input');
+      inp.value=s.def;inp.dataset.k=s.k;inp.oninput=build;d.appendChild(inp);slots.appendChild(d)});
+    build()}
+  function build(){var t=TPL[cur],v={};slots.querySelectorAll('input').forEach(function(i){v[i.dataset.k]=i.value});
+    out.value=t.build(v)}
+  document.getElementById('copyPrompt').onclick=function(){
+    navigator.clipboard.writeText(out.value).then(function(){
+      var m=document.getElementById('copyMsg');m.style.opacity=1;
+      setTimeout(function(){m.style.opacity=0},2200)})};
+  render();
+})();
+
+/* ------------------------------------------------------------------
+   STEP 1 · 파일 받기
+───────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const drop=$('drop'), fileIn=$('file'), vid=$('vid'), meta=$('meta');
+let frames = [];   // 추출된 dataURL 목록
+
+drop.onclick = ()=>fileIn.click();
+drop.ondragover = e=>{e.preventDefault();drop.classList.add('over')};
+drop.ondragleave = ()=>drop.classList.remove('over');
+drop.ondrop = e=>{e.preventDefault();drop.classList.remove('over');
+  if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);};
+fileIn.onchange = ()=>{ if(fileIn.files[0]) loadFile(fileIn.files[0]); };
+
+function loadFile(f){
+  vid.src = URL.createObjectURL(f);
+  vid.onloadedmetadata = ()=>{
+    meta.style.display='block';
+    meta.textContent = f.name+' — '+vid.videoWidth+'×'+vid.videoHeight+' · '+vid.duration.toFixed(1)+'초';
+    $('extract').disabled = false;
+    frames = []; $('preview').style.display='none'; $('dlRow').style.display='none';
+  };
+}
+
+/* 설정 표시 */
+$('count').oninput = e=>$('oCount').textContent=e.target.value;
+$('quality').oninput = e=>$('oQ').textContent=(+e.target.value).toFixed(2);
+
+/* ─────────────────────────────────────────────
+   STEP 2 · 프레임 추출 — seek → canvas → JPEG
+───────────────────────────────────────────── */
+const work=$('work'), wctx=work.getContext('2d');
+
+function seekTo(t){
+  return new Promise(res=>{
+    vid.onseeked = ()=>res();
+    vid.currentTime = Math.min(t, Math.max(0, vid.duration - .01));
+  });
+}
+
+$('extract').onclick = async ()=>{
+  const N = +$('count').value;
+  const W = +$('width').value;
+  const Q = +$('quality').value;
+  const H = Math.round(W * vid.videoHeight / vid.videoWidth / 2)*2;
+  work.width=W; work.height=H;
+
+  $('extract').disabled = true;
+  $('prog').style.display='flex';
+  frames = [];
+
+  for(let i=0;i<N;i++){
+    await seekTo(i/(N-1) * vid.duration);
+    wctx.drawImage(vid, 0, 0, W, H);
+    frames.push(work.toDataURL('image/jpeg', Q));
+    $('progFill').style.width = ((i+1)/N*100)+'%';
+    $('progPct').textContent = Math.round((i+1)/N*100)+'%';
+  }
+  $('progTxt').textContent = 'DONE — '+N+'장 · '
+    + (frames.join('').length/1e6*0.75).toFixed(1)+'MB';
+  $('extract').disabled = false;
+
+  /* 미리보기 활성화 */
+  const pv=$('pvCanvas'), pctx=pv.getContext('2d');
+  pv.width=W; pv.height=H;
+  const slider=$('pvSlider');
+  slider.max = N-1; slider.value = 0;
+  const showFrame = i=>{
+    const im = new Image();
+    im.onload = ()=>pctx.drawImage(im,0,0);
+    im.src = frames[i];
+    $('pvInfo').textContent = 'FRAME '+String(+i+1).padStart(3,'0')+' / '+N;
+  };
+  slider.oninput = e=>showFrame(e.target.value);
+  showFrame(0);
+  $('preview').style.display='block';
+  $('dlRow').style.display='flex';
+};
+
+/* ─────────────────────────────────────────────
+   STEP 4 · 완성 페이지 HTML 생성
+   (생성되는 페이지의 JS는 백틱 없이 작성해 문자열 충돌 방지)
+───────────────────────────────────────────── */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function val(id,def){const v=$(id).value.trim();return v||def}
+
+function buildPage(){
+  const brand = esc(val('fBrand','AURA®'));
+  const btn   = esc(val('fBtn','사전 예약하기'));
+  const sub   = esc(val('fSub','이 화면은 스스로 움직이지 않습니다. 당신이 스크롤하는 만큼만 시간이 흐릅니다 — 내리면 앞으로, 올리면 거꾸로.'));
+  const s1    = esc(val('fS1','모든 각도에서, 완벽하게'));
+  const s2    = esc(val('fS2','빛이 머무는 방향까지 설계했다'));
+  const endT  = esc(val('fEnd','들을 준비, 되셨나요'));
+  let title   = esc(val('fTitle','손끝이\n*카메라*가 되다'));
+  title = title.replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
+
+  const head =
+'<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">'
++'<meta name="viewport" content="width=device-width, initial-scale=1.0">'
++'<title>'+brand+' — Scroll Film</title>'
++'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300&family=Noto+Sans+KR:wght@300;400;500&family=Space+Grotesk:wght@300;500&display=swap" rel="stylesheet">'
++'<style>'
++':root{--bg:#0b0c10;--ink:#eceae3;--dim:#8e9099;--brass:#dfb45a;--line:rgba(236,234,227,.14)}'
++'*{margin:0;padding:0;box-sizing:border-box}'
++'body{background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",sans-serif;overflow-x:hidden}'
++'#film{position:fixed;inset:0;width:100%;height:100%;z-index:0}'
++'#vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at center,transparent 42%,rgba(11,12,16,.72) 100%),linear-gradient(rgba(11,12,16,.5),transparent 22%,transparent 78%,rgba(11,12,16,.6))}'
++'#track{height:480vh;position:relative;z-index:2;pointer-events:none}'
++'.layer{position:fixed;inset:0;z-index:3;pointer-events:none;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(24px,6vw,96px);opacity:0}'
++'.eyebrow{font-family:"Space Grotesk",monospace;font-size:clamp(11px,1.2vw,13px);letter-spacing:.34em;color:var(--brass);text-transform:uppercase;margin-bottom:20px}'
++'h1{font-family:"Noto Serif KR",serif;font-weight:200;font-size:clamp(42px,8vw,108px);line-height:1.14}'
++'h1 em{font-style:normal;color:var(--brass)}'
++'h2{font-family:"Noto Serif KR",serif;font-weight:300;font-size:clamp(28px,4.4vw,54px);line-height:1.3}'
++'.sub{margin-top:20px;max-width:30em;color:var(--dim);font-weight:300;font-size:clamp(14px,1.5vw,17px);line-height:1.85;text-shadow:0 2px 24px rgba(11,12,16,.9)}'
++'.right{align-items:flex-end;text-align:right}'
++'.hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);font-family:"Space Grotesk",monospace;font-size:11px;letter-spacing:.3em;color:var(--dim)}'
++'#tc{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:16px;font-family:"Space Grotesk",monospace;font-size:11px;letter-spacing:.18em;color:var(--dim)}'
++'#tc .reel{width:min(320px,42vw);height:1px;background:var(--line);position:relative}'
++'#tc .head{position:absolute;top:50%;left:0;width:9px;height:9px;border-radius:50%;background:var(--brass);transform:translate(-50%,-50%);box-shadow:0 0 14px var(--brass)}'
++'#tc .n{color:var(--ink)}'
++'#nav{position:fixed;top:0;left:0;right:0;z-index:8;display:flex;justify-content:space-between;padding:22px clamp(24px,6vw,96px);font-family:"Space Grotesk",monospace;font-size:12px;letter-spacing:.3em;mix-blend-mode:difference}'
++'#load{position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font-family:"Space Grotesk",monospace;font-size:11px;letter-spacing:.3em;color:var(--dim);transition:opacity .6s}'
++'#load .bar{width:180px;height:1px;background:var(--line);position:relative}'
++'#load .bar div{position:absolute;left:0;top:0;height:100%;width:0;background:var(--brass)}'
++'#end{position:relative;z-index:6;background:var(--bg);border-top:1px solid rgba(236,234,227,.09);text-align:center;padding:clamp(90px,12vw,150px) 24px}'
++'.btn{font-size:14px;font-weight:500;letter-spacing:.06em;padding:16px 40px;cursor:pointer;border:1px solid var(--brass);background:var(--brass);color:#12100a;margin-top:34px}'
++'#end .foot{margin-top:clamp(60px,9vw,100px);padding-top:24px;border-top:1px solid rgba(236,234,227,.09);font-size:12px;color:var(--dim);font-weight:300}'
++'</style></head><body>'
++'<nav id="nav"><span>'+brand+'</span><span>SCROLL FILM</span></nav>'
++'<canvas id="film"></canvas><div id="vig"></div><div id="track"></div>'
++'<section class="layer" id="L0"><div class="eyebrow">Scroll-Driven Film</div><h1>'+title+'</h1><p class="sub">'+sub+'</p><div class="hint">SCROLL ↓</div></section>'
++'<section class="layer right" id="L1"><div class="eyebrow">01</div><h2>'+s1+'</h2></section>'
++'<section class="layer" id="L2"><div class="eyebrow">02</div><h2>'+s2+'</h2></section>'
++'<div id="tc"><span>FRAME</span><div class="reel"><div class="head"></div></div><span class="n">001</span></div>'
++'<div id="load">LOADING FILM<div class="bar"><div></div></div></div>'
++'<section id="end"><div class="eyebrow">'+brand+'</div><h2>'+endT+'</h2>'
++'<div><button class="btn">'+btn+'</button></div>'
++'<div class="foot">Made with FILM SLICER — 브라우저에서 추출한 프레임 시퀀스로 구동됩니다.</div></section>';
+
+  const js =
+'<scr'+'ipt>'
++'var F='+JSON.stringify(frames)+';var N=F.length;'
++'var cv=document.getElementById("film"),cx=cv.getContext("2d");'
++'var tk=document.getElementById("track");'
++'var imgs=new Array(N),ld=0;'
++'var lb=document.querySelector("#load .bar div"),le=document.getElementById("load");'
++'F.forEach(function(s,i){var m=new Image();m.onload=function(){ld++;lb.style.width=(ld/N*100)+"%";'
++'if(ld===N){le.style.opacity=0;setTimeout(function(){le.remove()},700);draw(0,true)}};m.src=s;imgs[i]=m});'
++'var last=-1;'
++'function draw(i,f){if(i===last&&!f)return;var m=imgs[i];if(!m||!m.complete)return;last=i;'
++'var cw=cv.width,ch=cv.height,iw=m.naturalWidth,ih=m.naturalHeight;'
++'var s=Math.max(cw/iw,ch/ih),w=iw*s,h=ih*s;cx.drawImage(m,(cw-w)/2,(ch-h)/2,w,h)}'
++'function rs(){cv.width=innerWidth*Math.min(devicePixelRatio,2);cv.height=innerHeight*Math.min(devicePixelRatio,2);draw(last<0?0:last,true)}'
++'addEventListener("resize",rs);'
++'var tg=0,pr=0;'
++'function rd(){var m=tk.offsetHeight-innerHeight;tg=m>0?Math.max(0,Math.min(1,scrollY/m)):0}'
++'addEventListener("scroll",rd,{passive:true});'
++'function sg(p,a,b){return Math.max(0,Math.min(1,(p-a)/(b-a)))}'
++'function fd(p,w){return p<w[0]?0:p<w[1]?sg(p,w[0],w[1]):p<w[2]?1:1-sg(p,w[2],w[3])}'
++'var Ls=[{e:document.getElementById("L0"),w:[0,0,.12,.24]},'
++'{e:document.getElementById("L1"),w:[.30,.38,.52,.62]},'
++'{e:document.getElementById("L2"),w:[.66,.74,.88,.985]}];'
++'var tc=document.getElementById("tc"),hd=document.querySelector("#tc .head"),tn=document.querySelector("#tc .n");'
++'function tick(){requestAnimationFrame(tick);pr+=(tg-pr)*.1;var p=pr;'
++'draw(Math.round(p*(N-1)));'
++'for(var i=0;i<Ls.length;i++){var o=fd(p,Ls[i].w);Ls[i].e.style.opacity=o;'
++'Ls[i].e.style.transform="translateY("+((1-o)*26)+"px)"}'
++'tc.style.opacity=1-sg(p,.96,1);hd.style.left=(p*100)+"%";'
++'tn.textContent=String(Math.round(p*(N-1))+1).padStart(3,"0")+" / "+N}'
++'rd();rs();requestAnimationFrame(tick);'
++'</scr'+'ipt></body></html>';
+
+  return head + js;
+}
+
+$('download').onclick = ()=>{
+  if(!frames.length) return alert('먼저 프레임을 추출해주세요.');
+  const blob = new Blob([buildPage()], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'scroll-film.html';
+  a.click();
+};
+$('open').onclick = ()=>{
+  if(!frames.length) return alert('먼저 프레임을 추출해주세요.');
+  const blob = new Blob([buildPage()], {type:'text/html'});
+  window.open(URL.createObjectURL(blob), '_blank');
+};
+</script>
+</body>
+</html>
