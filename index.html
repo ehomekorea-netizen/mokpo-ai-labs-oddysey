@@ -1,0 +1,2894 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>목포 AI 실험실 - 웹 인터랙션 교안</title>
+  <meta name="description" content="명함 한 장으로 만드는 프리미엄 랜딩페이지 — 목포 AI 실험실 실전 압축 교안">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+  <script src="./js/bunny_data.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            seed: { DEFAULT: '#FF7E36', light: '#FFE4D0', dark: '#E66825' },
+            warm: '#f8f4ed',
+            ink: { 900: '#191F28', 700: '#2D3540', 500: '#4E5968', 300: '#8B95A1', 100: '#EDF0F3' }
+          },
+          fontSize: {
+            '2xs': '0.65rem',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    @font-face {
+      font-family: 'PixelFont';
+      src: url('./fonts/x12y12pxMaruMinyaHangul.woff2') format('woff2'),
+           url('./fonts/x12y12pxMaruMinyaHangul.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    :root {
+      --seed: #FF7E36;
+      --bg: #f8f4ed;
+      --ink: #191F28;
+    }
+
+    html { background: var(--bg); }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+      background-image: radial-gradient(#d1c8b8 0.8px, transparent 0.8px);
+      background-size: 28px 28px;
+    }
+
+    .font-pixel { font-family: 'PixelFont', 'Courier New', monospace; }
+    .font-inter { font-family: 'Inter', sans-serif; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #c9bfb4; border-radius: 3px; }
+
+    /* Josh Cards */
+    .card {
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      will-change: transform;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -12px rgba(25,31,40,0.12);
+    }
+
+    /* Tab styles */
+    .tab-btn { transition: all 0.2s ease; }
+    .tab-btn.active {
+      background: white;
+      border-color: var(--seed);
+      box-shadow: 0 4px 12px -4px rgba(255,126,54,0.2);
+    }
+    .tab-btn.active .tab-icon { color: var(--seed); }
+    .tab-btn.active .tab-label { color: var(--ink); font-weight: 700; }
+
+    /* Animations */
+    @keyframes portalOut {
+      0%   { transform: scale(1);    opacity: 1; }
+      100% { transform: scale(1.06); opacity: 0; visibility: hidden; }
+    }
+    .portal-out { animation: portalOut 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+    @keyframes flyMail {
+      0%   { transform: translate(0, 0) scale(1) rotate(0deg);   opacity: 0; }
+      15%  { opacity: 1; }
+      80%  { transform: translate(130px, -65px) scale(0.55) rotate(-8deg); opacity: 1; }
+      100% { transform: translate(150px, -55px) scale(0); opacity: 0; }
+    }
+    .mail-fly { animation: flyMail 3s infinite ease-in-out; }
+
+    @keyframes stylePulse {
+      0%, 25% { background: #f3f4f6; border-color: #d1d5db; color: #9ca3af; }
+      60%, 85% { background: #FFE4D0; border-color: #FF7E36; color: #E66825; box-shadow: 0 4px 16px rgba(255,126,54,0.25); }
+      100% { background: #f3f4f6; border-color: #d1d5db; color: #9ca3af; }
+    }
+    .style-pulse { animation: stylePulse 4s infinite alternate ease-in-out; }
+
+    /* Drawer */
+    .drawer-transition { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; }
+
+    /* Vibe Canvas */
+    #vibe-preview {
+      transition: background 0.6s ease, color 0.6s ease, border-radius 0.4s ease, font-family 0.3s ease;
+    }
+    #vibe-preview .vp-hero { transition: background 0.6s ease; }
+    #vibe-preview .vp-btn { transition: all 0.4s ease; }
+
+    /* Step badge */
+    .step-badge {
+      width: 3.5rem; height: 3.5rem;
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-weight: 900; font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    /* Reminder callout */
+    .reminder-box {
+      background: linear-gradient(135deg, #fff9f5 0%, #fff3ec 100%);
+      border-left: 4px solid var(--seed);
+      border-radius: 0 16px 16px 0;
+    }
+
+    /* Glow button */
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.4); }
+      50%       { box-shadow: 0 0 0 14px rgba(37,99,235,0); }
+    }
+    .glow { animation: glowPulse 1.8s cubic-bezier(0.4,0,0.6,1) infinite; }
+
+    /* Toast */
+    #toast { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; }
+
+    /* Vibe topic pills */
+    .vibe-pill {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .vibe-pill:hover { transform: translateX(4px); border-color: var(--seed); }
+    .vibe-pill.selected { background: #FFE4D0; border-color: #FF7E36; color: #191F28; }
+  </style>
+</head>
+
+<body class="antialiased">
+
+<!-- ============================================================ -->
+<!-- SPLASH OVERLAY (COMP_THUMBNAIL★.md 준수)                     -->
+<!-- ============================================================ -->
+<div id="splash-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#f8f4ed]/96 backdrop-blur-2xl transition-all duration-500">
+  <div id="splash-card" class="max-w-2xl w-full mx-4 p-12 md:p-16 rounded-[44px] bg-white border border-black/5 shadow-2xl text-center space-y-8 transform transition-all duration-500 ease-out scale-100 opacity-100 relative overflow-hidden">
+    <!-- Easter egg container -->
+    <div id="easter-egg-container" class="absolute inset-0 flex items-center justify-center z-20 hidden transition-all duration-500 transform scale-75 opacity-0 bg-white/92 backdrop-blur-sm pointer-events-none">
+      <div id="easter-egg-lottie" class="w-56 h-56"></div>
+    </div>
+
+    <div class="flex justify-center">
+      <span class="px-4 py-2 rounded-full bg-seed-light text-seed-dark text-xs font-black tracking-widest uppercase">TODAY'S SESSION</span>
+    </div>
+
+    <h2 class="font-pixel text-4xl md:text-6xl text-ink-900 leading-snug">
+      명함 한 장으로<br>
+      <span class="text-seed">감각적인 랜딩페이지</span><br>
+      만들기
+    </h2>
+
+    <div class="w-20 h-1 bg-seed/25 mx-auto rounded-full"></div>
+
+    <p class="text-base md:text-lg text-ink-500 leading-relaxed max-w-lg mx-auto">
+      오프라인 명함이 지닌 고유 시각 언어를 분석하여 디자인 토큰을 설계하고,<br class="hidden md:block">
+      한 장의 웹 코드로 완성하는 압축 실전 프로세스를 시작합니다.
+    </p>
+
+    <div class="pt-2">
+      <button onclick="closeSplash()" class="w-full py-5 px-8 bg-seed hover:bg-seed-dark text-white font-extrabold text-base rounded-2xl transition-all duration-200 shadow-lg shadow-seed/20 hover:scale-[1.02] transform">
+        실습실 입장하기 🚀
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- HEADER (COMP_HEADER★.md 준수)                                -->
+<!-- ============================================================ -->
+<header class="w-full py-5 px-6 md:px-16 flex items-center justify-between border-b border-black/5 bg-[#f8f4ed]/82 backdrop-blur-md sticky top-0 z-40">
+  <a href="#" class="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
+    <img src="./assets/logo.png" alt="목포 AI 실험실 로고" class="h-11 w-11 object-contain rounded-xl"
+         onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+    <div id="logo-fallback" class="hidden h-11 w-11 bg-seed text-white items-center justify-center rounded-xl font-black text-lg shadow-sm">M</div>
+    <span class="font-pixel text-xl md:text-2xl text-ink-900 select-none">목포 AI 실험실</span>
+  </a>
+  <nav class="hidden md:flex items-center gap-8">
+    <a href="#step-0" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">개념 이해</a>
+    <a href="#step-1" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">명함 데이터</a>
+    <a href="#step-2" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">AI 빌드</a>
+    <a href="#step-4" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">원하는 기능 넣기</a>
+    <a href="#step-5" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">세상에 띄우기</a>
+    <a href="#step-6" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">공유 썸네일</a>
+    <a href="#step-7" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">영상 스크롤</a>
+  </nav>
+</header>
+
+
+<!-- ============================================================ -->
+<!-- MAIN                                                          -->
+<!-- ============================================================ -->
+<main class="max-w-7xl mx-auto px-6 md:px-12 py-14 md:py-24 space-y-36">
+
+  <!-- HERO -->
+  <div class="text-center max-w-5xl mx-auto">
+    <div class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-ink-100 text-ink-700 font-semibold text-sm mb-8 border border-ink-100">
+      <span class="relative flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-seed opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-seed"></span>
+      </span>
+      실전 압축 웹 인터랙션 프로세스 · 목포 AI 실험실
+    </div>
+    <h1 class="font-inter font-black text-5xl md:text-7xl text-ink-900 mb-8 tracking-tight leading-[1.05]">
+      명함 한 장으로 만드는<br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-seed to-amber-500">프리미엄 랜딩페이지</span>
+    </h1>
+    <p class="text-xl md:text-2xl text-ink-500 leading-relaxed max-w-3xl mx-auto">
+      이 기술이 왜 생겨났는지 맥락을 알면 외울 필요가 없습니다.<br>
+      인터넷의 뿌리부터 AI 프롬프트 엔지니어링, 원클릭 배포까지 단 30분 만에 마스터하세요.
+    </p>
+  </div>
+
+
+  <!-- =========================================================== -->
+  <!-- STEP 0: 웹의 뿌리 이해하기                                    -->
+  <!-- =========================================================== -->
+  <section id="step-0">
+    <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div class="flex items-center gap-5">
+        <div class="step-badge bg-ink-900 text-white shadow-xl">0</div>
+        <div>
+          <h2 class="text-3xl md:text-4xl font-black text-ink-900">웹의 뿌리 이해하기</h2>
+          <p class="text-ink-500 mt-1.5 text-lg">비개발자도 감으로 잡을 수 있게, 프론트엔드의 큰 그림을 먼저 머릿속에 그립니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-ink-900 text-white rounded-3xl p-8 md:p-10 mb-8 shadow-xl relative overflow-hidden">
+      <div class="absolute right-8 top-8 opacity-10">
+        <i data-lucide="monitor-smartphone" class="w-32 h-32"></i>
+      </div>
+      <div class="relative max-w-4xl">
+        <p class="text-seed font-black tracking-widest text-sm uppercase mb-3">Before Coding</p>
+        <h3 class="text-2xl md:text-3xl font-black mb-4 leading-tight">오늘 만드는 것은 “예쁜 파일”이 아니라, 주소로 열리고 공유되는 작은 웹 서비스입니다.</h3>
+        <p class="text-white/75 text-lg leading-relaxed">
+          코드를 전부 외울 필요는 없습니다. 먼저 브라우저가 무엇을 받아서 화면을 그리는지, HTML/CSS/JS가 각각 어떤 일을 나눠 맡는지,
+          그리고 배포 후 링크가 어떻게 사람들에게 전달되는지만 이해하면 AI에게 훨씬 정확하게 일을 시킬 수 있습니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-ink-100 overflow-hidden shadow-sm flex flex-col lg:flex-row min-h-[500px]">
+      <div class="w-full lg:w-[340px] bg-ink-100/40 border-b lg:border-b-0 lg:border-r border-ink-100 p-6 flex flex-col gap-3 shrink-0">
+        <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn active text-left p-5 rounded-2xl border-2 border-transparent flex items-start gap-4">
+          <i data-lucide="network" class="w-6 h-6 text-ink-300 tab-icon mt-0.5 shrink-0"></i>
+          <div>
+            <h3 class="text-ink-500 tab-label text-xl font-medium transition-all">인터넷 vs 웹, 그리고 배포</h3>
+            <p class="text-sm text-ink-300 mt-1">연결망, 문서 요청, 공개 주소의 차이</p>
+          </div>
+        </button>
+        <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn text-left p-5 rounded-2xl border-2 border-transparent flex items-start gap-4 hover:bg-white">
+          <i data-lucide="palette" class="w-6 h-6 text-ink-300 tab-icon mt-0.5 shrink-0"></i>
+          <div>
+            <h3 class="text-ink-500 tab-label text-xl font-medium">HTML 뼈대와 CSS 옷</h3>
+            <p class="text-sm text-ink-300 mt-1">내용과 표현을 나눠 생각하기</p>
+          </div>
+        </button>
+        <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn text-left p-5 rounded-2xl border-2 border-transparent flex items-start gap-4 hover:bg-white">
+          <i data-lucide="zap" class="w-6 h-6 text-ink-300 tab-icon mt-0.5 shrink-0"></i>
+          <div>
+            <h3 class="text-ink-500 tab-label text-xl font-medium">JS: 브라우저 리모컨</h3>
+            <p class="text-sm text-ink-300 mt-1">클릭에 반응하고 화면 상태를 바꾸는 언어</p>
+          </div>
+        </button>
+      </div>
+
+      <div class="flex-1 p-10 lg:p-14 bg-white">
+        <div id="tab-content-1" class="tab-content">
+          <div class="bg-blue-50/60 rounded-2xl border border-blue-100 p-6 md:p-8 mb-10">
+            <div class="grid md:grid-cols-3 gap-4">
+              <div class="bg-white rounded-2xl border border-blue-100 p-5 shadow-sm">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                  <i data-lucide="network" class="w-6 h-6"></i>
+                </div>
+                <p class="text-xs font-black text-blue-600 tracking-widest uppercase mb-2">Internet</p>
+                <h4 class="text-xl font-black text-ink-900 mb-2">컴퓨터들이 이어진 길</h4>
+                <p class="text-sm text-ink-500 leading-relaxed">인터넷은 전 세계 컴퓨터가 서로 데이터를 주고받을 수 있게 만든 거대한 연결망입니다.</p>
+              </div>
+
+              <div class="bg-white rounded-2xl border border-blue-100 p-5 shadow-sm">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                  <i data-lucide="file-text" class="w-6 h-6"></i>
+                </div>
+                <p class="text-xs font-black text-blue-600 tracking-widest uppercase mb-2">Web</p>
+                <h4 class="text-xl font-black text-ink-900 mb-2">주소로 문서를 받는 약속</h4>
+                <p class="text-sm text-ink-500 leading-relaxed">브라우저가 URL을 요청하면 서버가 HTML, CSS, JS 같은 웹 문서를 보내줍니다.</p>
+              </div>
+
+              <div class="bg-white rounded-2xl border border-blue-100 p-5 shadow-sm">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                  <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                </div>
+                <p class="text-xs font-black text-blue-600 tracking-widest uppercase mb-2">Deploy</p>
+                <h4 class="text-xl font-black text-ink-900 mb-2">내 문서를 공개 주소에 올리기</h4>
+                <p class="text-sm text-ink-500 leading-relaxed">배포는 내가 만든 <code class="bg-ink-100 text-red-500 px-1.5 py-0.5 rounded-md font-mono">index.html</code>을 누구나 열 수 있게 올리는 일입니다.</p>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="text-3xl font-black text-ink-900 mb-5">오늘 실습은 “문서 만들기 → 주소로 열기”입니다</h3>
+          <p class="text-ink-500 leading-relaxed text-xl mb-6">
+            복잡하게 들리지만 핵심은 단순합니다. 우리는 명함 정보를 담은 <strong class="text-ink-900">HTML 문서</strong>를 만들고, 그 문서를 Netlify 같은 서비스에 올려 <strong class="text-ink-900">고유한 웹 주소</strong>를 받습니다. 그 순간 내 컴퓨터 안의 파일이 다른 사람도 접속할 수 있는 웹페이지가 됩니다.
+          </p>
+          <div class="grid md:grid-cols-3 gap-3 text-sm">
+            <div class="rounded-xl bg-ink-100/60 border border-ink-100 p-4"><strong class="text-ink-900">1. 파일</strong><br><span class="text-ink-500">index.html 작성</span></div>
+            <div class="rounded-xl bg-ink-100/60 border border-ink-100 p-4"><strong class="text-ink-900">2. 배포</strong><br><span class="text-ink-500">Netlify에 업로드</span></div>
+            <div class="rounded-xl bg-ink-100/60 border border-ink-100 p-4"><strong class="text-ink-900">3. 공유</strong><br><span class="text-ink-500">URL로 접속</span></div>
+          </div>
+        </div>
+
+        <div id="tab-content-2" class="tab-content hidden">
+          <div class="bg-orange-50/60 rounded-2xl border border-orange-100 p-6 md:p-8 mb-10">
+            <div class="grid md:grid-cols-2 gap-5">
+              <div class="bg-white rounded-2xl border border-orange-100 p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-12 h-12 rounded-2xl bg-seed-light text-seed flex items-center justify-center">
+                    <i data-lucide="braces" class="w-6 h-6"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-black text-seed tracking-widest uppercase">HTML</p>
+                    <h4 class="text-2xl font-black text-ink-900">내용의 뼈대</h4>
+                  </div>
+                </div>
+                <p class="text-ink-500 leading-relaxed mb-4">이름, 소개글, 버튼, 이미지처럼 웹페이지에 <strong class="text-ink-900">무엇이 들어가는지</strong> 정합니다.</p>
+                <div class="rounded-xl bg-ink-100/60 p-4 font-mono text-sm text-ink-500">
+                  &lt;h1&gt;김목포&lt;/h1&gt;<br>
+                  &lt;p&gt;AI 강의자&lt;/p&gt;<br>
+                  &lt;button&gt;문의하기&lt;/button&gt;
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl border border-orange-100 p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-12 h-12 rounded-2xl bg-seed-light text-seed flex items-center justify-center">
+                    <i data-lucide="paintbrush" class="w-6 h-6"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-black text-seed tracking-widest uppercase">CSS</p>
+                    <h4 class="text-2xl font-black text-ink-900">분위기와 인상</h4>
+                  </div>
+                </div>
+                <p class="text-ink-500 leading-relaxed mb-4">색상, 폰트, 여백, 둥근 모서리처럼 같은 내용이 <strong class="text-ink-900">어떻게 보일지</strong> 정합니다.</p>
+                <div class="rounded-xl bg-white border border-ink-100 p-4 shadow-md">
+                  <div class="h-5 w-28 rounded-full bg-seed mb-3"></div>
+                  <div class="h-4 w-full rounded-full bg-ink-100 mb-2"></div>
+                  <div class="h-4 w-2/3 rounded-full bg-ink-100"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="text-3xl font-black text-ink-900 mb-5">AI에게도 “뼈대”와 “분위기”를 나눠 말해야 합니다</h3>
+          <p class="text-ink-500 leading-relaxed text-xl">
+            HTML과 CSS를 구분하면 프롬프트가 선명해집니다. “내 명함의 이름과 연락처를 넣어줘”는 HTML 지시이고, “명함의 따뜻한 색감과 여백을 살려줘”는 CSS 지시입니다. 그래서 먼저 <code class="bg-ink-100 text-red-500 px-2 py-0.5 rounded-lg font-mono text-base">DESIGN.md</code>로 색상, 폰트, 레이아웃 의도를 정리한 뒤 HTML을 만들면 결과물이 훨씬 안정적입니다.
+          </p>
+        </div>
+
+        <div id="tab-content-3" class="tab-content hidden">
+          <div class="bg-emerald-50/60 rounded-2xl border border-emerald-100 p-6 md:p-8 mb-10">
+            <div class="grid md:grid-cols-[1fr_auto_1fr] gap-5 items-center">
+              <div class="bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <i data-lucide="mouse-pointer-click" class="w-6 h-6"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-black text-emerald-600 tracking-widest uppercase">Event</p>
+                    <h4 class="text-2xl font-black text-ink-900">사용자의 행동</h4>
+                  </div>
+                </div>
+                <p class="text-ink-500 leading-relaxed">클릭, 입력, 스크롤, 마우스 이동처럼 사용자가 브라우저에서 하는 행동을 이벤트라고 부릅니다.</p>
+              </div>
+
+              <div class="hidden md:flex flex-col items-center gap-2 text-emerald-600">
+                <i data-lucide="arrow-right" class="w-7 h-7"></i>
+                <span class="text-xs font-black bg-white px-3 py-1 rounded-full border border-emerald-100">JS가 처리</span>
+              </div>
+
+              <div class="bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <i data-lucide="panel-top-open" class="w-6 h-6"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-black text-emerald-600 tracking-widest uppercase">State</p>
+                    <h4 class="text-2xl font-black text-ink-900">화면 상태 변화</h4>
+                  </div>
+                </div>
+                <p class="text-ink-500 leading-relaxed">JS는 이벤트를 보고 메뉴를 열거나, 숫자를 바꾸거나, 대시보드를 여는 등 화면의 다음 상태를 결정합니다.</p>
+              </div>
+            </div>
+
+            <div class="mt-6 bg-white rounded-2xl border border-emerald-100 p-5 shadow-sm">
+              <p class="text-xs font-black text-emerald-600 tracking-widest uppercase mb-3">Example</p>
+              <div class="grid md:grid-cols-3 gap-3 text-sm">
+                <div class="rounded-xl bg-emerald-50/70 p-4"><strong class="text-ink-900">버튼 클릭</strong><br><span class="text-ink-500">모달 열기</span></div>
+                <div class="rounded-xl bg-emerald-50/70 p-4"><strong class="text-ink-900">입력 감지</strong><br><span class="text-ink-500">글자 수 표시</span></div>
+                <div class="rounded-xl bg-emerald-50/70 p-4"><strong class="text-ink-900">링크 연결</strong><br><span class="text-ink-500">대시보드 열기</span></div>
+              </div>
+            </div>
+          </div>
+          <h3 class="text-3xl font-black text-ink-900 mb-5">JS는 “예쁜 효과”보다 “반응 규칙”에 가깝습니다</h3>
+          <p class="text-ink-500 leading-relaxed text-xl">
+            HTML과 CSS만 있으면 웹페이지는 읽을 수 있는 문서에 가깝습니다. JS가 들어가면 사용자가 버튼을 눌렀을 때 무엇을 보여줄지, 어떤 링크를 열지, 어떤 데이터를 기억할지를 정할 수 있습니다. 그래서 오늘 교안처럼 <strong class="text-ink-900">여러 서비스 링크를 한 페이지 안에서 자연스럽게 연결하는 UX</strong>에는 JS 개념이 꼭 필요합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">01 Request</p>
+        <h4 class="font-black text-ink-900 mb-1">주소를 부른다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">브라우저에 URL을 입력하면 “이 페이지 주세요”라는 요청이 나갑니다.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">02 Document</p>
+        <h4 class="font-black text-ink-900 mb-1">문서가 온다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">서버는 HTML, CSS, JS 같은 재료를 브라우저로 보내줍니다.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">03 Render</p>
+        <h4 class="font-black text-ink-900 mb-1">브라우저가 그린다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">브라우저는 문서를 해석해서 우리가 보는 화면으로 조립합니다.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">04 Action</p>
+        <h4 class="font-black text-ink-900 mb-1">사용자가 누른다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">버튼, 입력, 스크롤 같은 행동을 JS가 감지하고 반응합니다.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">05 Share</p>
+        <h4 class="font-black text-ink-900 mb-1">링크로 퍼진다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">배포 주소와 Open Graph가 있어야 공유했을 때 멋진 카드가 뜹니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== -->
+  <!-- STEP 1: 무엇을 데이터로 삼을 것인가?                           -->
+  <!-- =========================================================== -->
+  <section id="step-1">
+    <div class="mb-12 flex items-center gap-5">
+      <div class="step-badge bg-ink-900 text-white shadow-xl">1</div>
+      <div>
+        <h2 class="text-3xl md:text-4xl font-black text-ink-900">무엇을 데이터로 삼을 것인가?</h2>
+        <p class="text-ink-500 mt-1.5 text-lg">오프라인 명함의 시각 언어를 데이터로 주입하세요. (샘플 3개 한정)</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl p-10 md:p-14 border border-ink-100 mb-12 text-center shadow-sm">
+      <i data-lucide="id-card" class="w-14 h-14 text-seed mx-auto mb-6"></i>
+      <h3 class="text-3xl font-black text-ink-900 mb-4">당신을 나타내는 가장 강력한 시각 데이터, '명함'</h3>
+      <p class="text-ink-500 text-xl max-w-4xl mx-auto leading-relaxed">
+        AI에게 대뜸 "멋진 웹페이지 만들어줘"라고 하면 실패합니다. 기준점이 없기 때문입니다.<br class="hidden md:block">
+        하지만 여러분이 이미 수차례 고민하여 만든 <strong class="text-ink-900">명함 한 장</strong>에는 이름, 직함뿐만 아니라<br class="hidden md:block">
+        당신만의 <strong class="text-ink-900">브랜드 컬러, 폰트의 무드, 여백의 철학</strong>이 고스란히 담겨있습니다.
+      </p>
+    </div>
+
+    <!-- Namecard samples grid — 3 samples as requested -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Card 1 -->
+      <div class="group relative rounded-2xl overflow-hidden border border-ink-100 bg-white card cursor-pointer" onclick="window.open('./namecard/1.html','_blank')">
+        <div class="absolute top-3 left-3 z-10 bg-black/70 backdrop-blur text-white text-xs font-bold px-2.5 py-1.5 rounded-lg tracking-widest">SAMPLE 01</div>
+        <div class="aspect-[3/4] bg-ink-100 overflow-hidden">
+          <img src="./namecard/1.jpg" alt="명함 샘플 1" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+               onerror="this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-ink-300\'><i data-lucide=\'image\' class=\'w-12 h-12\'></i></div>'">
+        </div>
+        <div class="p-5 flex justify-between items-center">
+          <span class="text-base font-bold text-ink-700">추출된 웹페이지</span>
+          <span class="flex items-center gap-1 text-seed text-sm font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">열기 <i data-lucide="arrow-up-right" class="w-4 h-4"></i></span>
+        </div>
+        <div class="absolute inset-0 bg-seed/0 group-hover:bg-seed/4 transition-colors pointer-events-none rounded-2xl"></div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="group relative rounded-2xl overflow-hidden border border-ink-100 bg-white card cursor-pointer" onclick="window.open('./namecard/2.html','_blank')">
+        <div class="absolute top-3 left-3 z-10 bg-black/70 backdrop-blur text-white text-xs font-bold px-2.5 py-1.5 rounded-lg tracking-widest">SAMPLE 02</div>
+        <div class="aspect-[3/4] bg-ink-100 overflow-hidden">
+          <img src="./namecard/2.jpg" alt="명함 샘플 2" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+               onerror="this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-ink-300\'><i data-lucide=\'image\' class=\'w-12 h-12\'></i></div>'">
+        </div>
+        <div class="p-5 flex justify-between items-center">
+          <span class="text-base font-bold text-ink-700">추출된 웹페이지</span>
+          <span class="flex items-center gap-1 text-seed text-sm font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">열기 <i data-lucide="arrow-up-right" class="w-4 h-4"></i></span>
+        </div>
+        <div class="absolute inset-0 bg-seed/0 group-hover:bg-seed/4 transition-colors pointer-events-none rounded-2xl"></div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="group relative rounded-2xl overflow-hidden border border-ink-100 bg-white card cursor-pointer" onclick="window.open('./namecard/3.html','_blank')">
+        <div class="absolute top-3 left-3 z-10 bg-black/70 backdrop-blur text-white text-xs font-bold px-2.5 py-1.5 rounded-lg tracking-widest">SAMPLE 03</div>
+        <div class="aspect-[3/4] bg-ink-100 overflow-hidden">
+          <img src="./namecard/3.jpg" alt="명함 샘플 3" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+               onerror="this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center text-ink-300\'><i data-lucide=\'image\' class=\'w-12 h-12\'></i></div>'">
+        </div>
+        <div class="p-5 flex justify-between items-center">
+          <span class="text-base font-bold text-ink-700">추출된 웹페이지</span>
+          <span class="flex items-center gap-1 text-seed text-sm font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">열기 <i data-lucide="arrow-up-right" class="w-4 h-4"></i></span>
+        </div>
+        <div class="absolute inset-0 bg-seed/0 group-hover:bg-seed/4 transition-colors pointer-events-none rounded-2xl"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =========================================================== -->
+  <!-- STEP 2 & 3: AI 프롬프트 빌드업                               -->
+  <!-- =========================================================== -->
+  <section id="step-2">
+    <div class="mb-12 text-center">
+      <div class="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 font-bold mb-6 shadow-sm text-base">
+        <i data-lucide="bot" class="w-5 h-5"></i> 실전 AI 프롬프트 엔지니어링
+      </div>
+      <h2 class="text-4xl md:text-5xl font-black text-ink-900">명함에서 웹페이지로,<br>마법 같은 2단계 빌드업</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+      <!-- STEP 2 카드 -->
+      <div class="bg-white rounded-3xl border-2 border-ink-100 p-10 shadow-lg flex flex-col card relative">
+        <div class="absolute -top-6 left-9 w-12 h-12 bg-ink-900 text-white rounded-full flex items-center justify-center font-black text-xl border-4 border-warm shadow-md">2</div>
+        <div class="mt-6 mb-4 flex items-center justify-between">
+          <h3 class="text-2xl font-black text-ink-900">명함 시각 언어 추출</h3>
+          <button onclick="openDesignMdModal()" class="flex items-center gap-1.5 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3.5 py-2 rounded-full transition-colors">
+            <i data-lucide="info" class="w-3.5 h-3.5"></i> DESIGN.md란?
+          </button>
+        </div>
+
+        <!-- ⚠️ 명함 첨부 리마인더 -->
+        <div class="reminder-box p-5 mb-6 flex items-start gap-3">
+          <span class="text-2xl">📎</span>
+          <div>
+            <p class="text-base font-black text-ink-900">반드시 명함 사진을 함께 첨부하세요!</p>
+            <p class="text-sm text-ink-500 mt-0.5">AI가 색상·폰트·레이아웃을 정확히 분석하려면 <strong>명함 이미지 파일</strong>이 필수입니다. 프롬프트와 함께 첨부해야 DESIGN.md가 제대로 추출됩니다.</p>
+          </div>
+        </div>
+
+        <p class="text-ink-500 text-lg mb-6 leading-relaxed flex-1">
+          Google Labs에서 제시한 <code class="bg-ink-100 text-ink-700 px-1.5 py-0.5 rounded-lg text-base font-mono">design.md</code> 규격을 활용하여 명함 사진의 시각적 정체성을 AI가 기계와 인간 모두 읽을 수 있는 명세서로 추출하도록 지시합니다.
+        </p>
+        <div class="bg-ink-100/50 rounded-2xl p-5 border border-ink-100 mb-6 font-mono text-sm text-ink-500 h-28 overflow-hidden relative">
+          [입력 가이드] 사용자가 첨부한 명함 사진을 면밀히 분석하여 오프라인 명함이 가진 고유의 비주얼 정체성(색상, 타이포그래피 무드, 레이아웃 비율)을...
+          <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#f0eee9] to-transparent"></div>
+        </div>
+        <button id="btn-copy-1" class="w-full py-5 px-5 rounded-2xl font-black text-ink-700 bg-ink-100 hover:bg-ink-100/80 transition-all flex items-center justify-center gap-3 text-lg">
+          <i data-lucide="copy" class="w-5 h-5"></i> <span>1단계 지침 복사하기</span>
+        </button>
+      </div>
+
+      <!-- STEP 3 카드 -->
+      <div class="bg-white rounded-3xl border-2 border-ink-100 p-10 shadow-lg flex flex-col card relative">
+        <div class="absolute -top-6 left-9 w-12 h-12 bg-ink-900 text-white rounded-full flex items-center justify-center font-black text-xl border-4 border-warm shadow-md">3</div>
+        <div class="mt-6 mb-4">
+          <h3 class="text-2xl font-black text-ink-900">HTML 구조 및 스타일 빌드</h3>
+        </div>
+
+        <!-- ⚠️ 명함 + DESIGN.md 첨부 리마인더 -->
+        <div class="reminder-box p-5 mb-6 flex items-start gap-3">
+          <span class="text-2xl">📎</span>
+          <div>
+            <p class="text-base font-black text-ink-900">명함 사진 + DESIGN.md 둘 다 첨부하세요!</p>
+            <p class="text-sm text-ink-500 mt-0.5">2단계에서 완성된 <strong>DESIGN.md 내용</strong>과 <strong>명함 이미지</strong>를 함께 붙여넣어야 AI가 정확한 스타일로 HTML을 생성합니다.</p>
+          </div>
+        </div>
+
+        <p class="text-ink-500 text-lg mb-6 leading-relaxed flex-1">
+          추출된 <code class="bg-ink-100 text-ink-700 px-1.5 py-0.5 rounded-lg text-base font-mono">design.md</code>를 바탕으로 Tailwind CSS와 순수 Javascript 인터랙션이 결합된, 완성도 높은 단일 HTML 뼈대를 빌드하는 마스터 프롬프트입니다.
+        </p>
+        <div class="bg-ink-100/50 rounded-2xl p-5 border border-ink-100 mb-6 font-mono text-sm text-ink-500 h-28 overflow-hidden relative">
+          [2단계 지침] DESIGN.md + 명함 사진으로 프리미엄 싱글 파일 HTML 생성. 당신은 세계 최고 수준의 프론트엔드 디자이너이자...
+          <div class="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#f0eee9] to-transparent"></div>
+        </div>
+        <button id="btn-copy-2" class="w-full py-5 px-5 rounded-2xl font-black text-ink-700 bg-ink-100 hover:bg-ink-100/80 transition-all flex items-center justify-center gap-3 text-lg">
+          <i data-lucide="copy" class="w-5 h-5"></i> <span>2단계 지침 복사하기</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Gemini CTA -->
+    <div class="mt-14 text-center">
+      <p class="text-base text-ink-500 font-bold mb-5">지침을 복사했다면, 이제 AI에게 명령을 내릴 차례입니다.</p>
+      <a href="https://gemini.google.com" target="_blank" id="btn-gemini-global"
+         class="inline-flex items-center justify-center px-12 py-6 rounded-2xl font-black text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 gap-4 text-xl shadow-[0_12px_32px_rgba(37,99,235,0.3)] card">
+        <img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg" class="w-7 h-7 brightness-0 invert" alt="Gemini">
+        Gemini Canvas 접속하기 ↗
+      </a>
+    </div>
+  </section>
+
+
+  <!-- =========================================================== -->
+  <!-- STEP 4: 원하는 기능 직접 요청해보기                             -->
+  <!-- =========================================================== -->
+  <section id="step-4">
+    <div class="mb-12 flex items-center gap-5">
+      <div class="step-badge bg-seed text-white shadow-xl shadow-seed/30">4</div>
+      <div>
+        <h2 class="text-3xl md:text-4xl font-black text-ink-900">원하는 기능 직접 요청해보기</h2>
+        <p class="text-ink-500 mt-1.5 text-lg">명함을 감각적인 웹 HTML로 빌드할 때 수강생들이 자주 쓰는 실전 자연어 요청들입니다. 클릭하여 복사한 후 사용해보세요.</p>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <p class="text-sm font-black text-ink-400 uppercase tracking-widest flex items-center gap-1.5">
+        <i data-lucide="info" class="w-4 h-4 text-seed shrink-0"></i> 아래 예시를 클릭하면 내용이 클립보드에 자동으로 복사됩니다.
+      </p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        <!-- Category 1: 색상 & 무드 변경 -->
+        <div class="bg-white rounded-2xl border border-ink-100 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-base font-black text-ink-900 flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-orange-100 text-orange-500 flex items-center justify-center text-sm">🎨</span>
+              색상 & 무드 변경
+            </h4>
+            <button onclick="refreshCategory('colors')" class="text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> 새로고침
+            </button>
+          </div>
+          <div id="prompts-colors" class="space-y-2"></div>
+        </div>
+
+        <!-- Category 2: 레이아웃 & 구조 -->
+        <div class="bg-white rounded-2xl border border-ink-100 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-base font-black text-ink-900 flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-blue-100 text-blue-500 flex items-center justify-center text-sm">📐</span>
+              레이아웃 & 구조
+            </h4>
+            <button onclick="refreshCategory('layout')" class="text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> 새로고침
+            </button>
+          </div>
+          <div id="prompts-layout" class="space-y-2"></div>
+        </div>
+
+        <!-- Category 3: 타이포그래피 & 폰트 -->
+        <div class="bg-white rounded-2xl border border-ink-100 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-base font-black text-ink-900 flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-purple-100 text-purple-500 flex items-center justify-center text-sm">Aa</span>
+              타이포그래피 & 폰트
+            </h4>
+            <button onclick="refreshCategory('typography')" class="text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> 새로고침
+            </button>
+          </div>
+          <div id="prompts-typography" class="space-y-2"></div>
+        </div>
+
+        <!-- Category 4: 버튼 & 인터랙션 -->
+        <div class="bg-white rounded-2xl border border-ink-100 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-base font-black text-ink-900 flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-red-100 text-red-500 flex items-center justify-center text-sm">⚡</span>
+              버튼 & 인터랙션
+            </h4>
+            <button onclick="refreshCategory('interactions')" class="text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> 새로고침
+            </button>
+          </div>
+          <div id="prompts-interactions" class="space-y-2"></div>
+        </div>
+
+        <!-- Category 5: 아바타 & 프로필 스타일 -->
+        <div class="bg-white rounded-2xl border border-ink-100 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-base font-black text-ink-900 flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center text-sm">👤</span>
+              아바타 & 프로필 스타일
+            </h4>
+            <button onclick="refreshCategory('avatar')" class="text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> 새로고침
+            </button>
+          </div>
+          <div id="prompts-avatar" class="space-y-2"></div>
+        </div>
+
+        <!-- Category 6: 배지 & 태그 요소 -->
+        <div class="bg-white rounded-2xl border border-ink-100 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-base font-black text-ink-900 flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-green-100 text-green-600 flex items-center justify-center text-sm">🏷️</span>
+              배지 & 태그 요소
+            </h4>
+            <button onclick="refreshCategory('tags')" class="text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> 새로고침
+            </button>
+          </div>
+          <div id="prompts-tags" class="space-y-2"></div>
+        </div>
+
+        <!-- Category 7: 비주얼 효과 & 그래픽 -->
+        <div class="bg-white rounded-2xl border border-ink-100 p-6 shadow-sm flex flex-col justify-between space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="text-base font-black text-ink-900 flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-500 flex items-center justify-center text-sm">💎</span>
+              비주얼 효과 & 그래픽
+            </h4>
+            <button onclick="refreshCategory('graphics')" class="text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> 새로고침
+            </button>
+          </div>
+          <div id="prompts-graphics" class="space-y-2"></div>
+        </div>
+
+        <!-- Slot 8: 직접 요청 입력 -->
+        <div class="bg-white rounded-2xl border-2 border-dashed border-seed/40 p-6 flex flex-col justify-between space-y-4">
+          <div>
+            <h4 class="text-base font-black text-ink-900 flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-seed-light text-seed flex items-center justify-center text-sm">✍️</span>
+              직접 요청 입력
+            </h4>
+            <p class="text-xs text-ink-400 mt-1 font-semibold">예시 목록에 없는 나만의 특별한 요청사항을 직접 입력해보세요.</p>
+          </div>
+          <textarea id="custom-vibe-input" rows="3"
+            class="w-full border border-ink-100 rounded-xl p-4 text-base text-ink-700 focus:outline-none focus:ring-2 focus:ring-seed/30 resize-none bg-warm placeholder-ink-300"
+            placeholder="예) 인스타그램 아이콘 버튼을 추가하고, 이메일 주소 링크를 메일 전송이 가능하도록 연결해줘"></textarea>
+          <button onclick="handleCustomInputCopy()" class="w-full py-4 bg-seed hover:bg-seed-dark text-white font-black text-base rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-seed/20">
+            <i data-lucide="copy" class="w-5 h-5"></i> 작성한 요청 복사하기
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =========================================================== -->
+  <!-- STEP 5: 세상에 띄우기                                         -->
+  <!-- =========================================================== -->
+  <section id="step-5">
+    <div class="mb-12 flex items-center gap-5">
+      <div class="step-badge bg-teal-500 text-white shadow-xl shadow-teal-500/30">5</div>
+      <div>
+        <h2 class="text-3xl md:text-4xl font-black text-ink-900">세상에 띄우기</h2>
+        <p class="text-ink-500 mt-1.5 text-lg">서버 설정 없이 드래그 앤 드롭 하나로 완성되는 무료 웹 배포 시각 가이드</p>
+      </div>
+    </div>
+
+    <!-- Netlify What is it -->
+    <div class="bg-white rounded-3xl border border-ink-100 p-10 md:p-14 mb-12 shadow-sm">
+      <div class="flex items-start gap-5 mb-8">
+        <i data-lucide="rocket" class="w-8 h-8 text-teal-500 mt-1 shrink-0"></i>
+        <div>
+          <h3 class="text-2xl font-black text-ink-900 mb-3">Netlify Drop 이란?</h3>
+          <p class="text-ink-500 text-xl leading-relaxed">
+            전 세계 개발자들이 가장 사랑하는 클라우드 호스팅 서비스입니다. <strong class="text-ink-900">서버 구매, 도메인 연결, 복잡한 명령어 없이</strong> 완성된 <code class="bg-ink-100 px-2 rounded-lg font-mono text-base">index.html</code> 파일을 끌어다 놓기만 하면, 전 세계 누구나 접속할 수 있는 나만의 고유한 URL이 즉시 생성됩니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step-by-step visual guide -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Step A -->
+        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">1</div>
+          <i data-lucide="file-code" class="w-10 h-10 text-teal-600"></i>
+          <p class="font-bold text-ink-900 text-base">Gemini에서 생성된<br><code class="text-red-500 text-sm">index.html</code> 파일을 저장</p>
+          <p class="text-sm text-ink-500">Canvas에서 코드 전체 복사 → 메모장 붙여넣기 → index.html로 저장</p>
+        </div>
+        <!-- Step B -->
+        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">2</div>
+          <i data-lucide="globe" class="w-10 h-10 text-teal-600"></i>
+          <p class="font-bold text-ink-900 text-base">Netlify Drop 사이트<br>접속</p>
+          <a href="https://app.netlify.com/drop" target="_blank" class="text-sm font-bold text-teal-600 underline">app.netlify.com/drop →</a>
+        </div>
+        <!-- Step C -->
+        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">3</div>
+          <i data-lucide="folder-up" class="w-10 h-10 text-teal-600"></i>
+          <p class="font-bold text-ink-900 text-base">점선 박스에<br>파일 드래그 앤 드롭</p>
+          <p class="text-sm text-ink-500">저장한 index.html 파일을 아래 점선 박스 이미지처럼 끌어다 놓으세요</p>
+        </div>
+        <!-- Step D -->
+        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">4</div>
+          <i data-lucide="link" class="w-10 h-10 text-teal-600"></i>
+          <p class="font-bold text-ink-900 text-base">고유 URL 즉시 생성 🎉</p>
+          <p class="text-sm text-ink-500">예: <code class="bg-teal-100 px-1 rounded text-xs">random-name-123.netlify.app</code></p>
+        </div>
+      </div>
+
+      <!-- Visual Drop Zone Illustration -->
+      <div class="mt-10 flex flex-col items-center gap-4">
+        <p class="text-base font-bold text-ink-500">Netlify Drop 화면 미리보기</p>
+        <div class="w-full max-w-lg bg-[#0e1e2b] rounded-3xl p-10 flex flex-col items-center justify-center text-center border-2 border-dashed border-teal-400/60 gap-4">
+          <i data-lucide="folder-open" class="w-14 h-14 text-teal-400"></i>
+          <p class="text-white font-black text-xl">Drag and drop your<br>project folder, zip file,<br>or a single HTML file</p>
+          <p class="text-teal-300/70 text-sm">to deploy instantly.</p>
+          <div class="mt-2 flex gap-4 text-teal-400 text-sm">
+            <span class="underline cursor-pointer">browse files to upload</span>
+            <span class="underline cursor-pointer">choose a folder</span>
+          </div>
+        </div>
+        <p class="text-sm text-ink-500 flex items-center gap-2">
+          <i data-lucide="arrow-up" class="w-4 h-4 text-teal-500 animate-bounce"></i>
+          이 화면이 뜨면 index.html 파일을 저 위에 드래그해서 놓으세요
+        </p>
+        <a href="https://app.netlify.com/drop" target="_blank"
+           class="mt-4 inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-teal-800 bg-teal-100 hover:bg-teal-200 transition-all text-xl card shadow-md">
+          <i data-lucide="globe-2" class="w-6 h-6"></i> Netlify Drop 사이트 접속하기 ↗
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== -->
+  <!-- STEP 6: Open Graph로 공유 카드 만들기                         -->
+  <!-- =========================================================== -->
+  <section id="step-6">
+    <div class="mb-12 flex items-center gap-5">
+      <div class="step-badge bg-ink-900 text-white shadow-xl">6</div>
+      <div>
+        <h2 class="text-3xl md:text-4xl font-black text-ink-900">링크를 카드처럼 보이게 만들기</h2>
+        <p class="text-ink-500 mt-1.5 text-lg">카카오톡, 당근 커뮤니티, SNS에 공유했을 때 제목·설명·대표 이미지가 예쁘게 뜨도록 Open Graph를 넣습니다.</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-ink-100 p-10 md:p-14 shadow-sm">
+      <div class="grid lg:grid-cols-[1fr_360px] gap-10 items-start">
+        <div>
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-seed-light text-seed-dark text-sm font-black mb-6">
+            <i data-lucide="share-2" class="w-4 h-4"></i> 배포 다음에 꼭 해야 할 마지막 한 끗
+          </div>
+          <h3 class="text-3xl md:text-4xl font-black text-ink-900 mb-5 leading-tight">주소는 생겼는데, 공유했을 때 왜 밋밋하게 보일까요?</h3>
+          <p class="text-xl text-ink-500 leading-relaxed mb-6">
+            Netlify로 배포하면 URL은 생깁니다. 하지만 카카오톡이나 당근 커뮤니티에 그 주소를 붙였을 때, 서비스가 알아서 예쁜 썸네일을 만들어주지는 않습니다.
+            링크를 받는 서비스는 페이지의 <code class="bg-ink-100 text-red-500 px-2 py-0.5 rounded-lg font-mono text-base">&lt;head&gt;</code> 안에 있는 메타 태그를 읽고 “이 링크를 어떤 카드로 보여줄지” 결정합니다.
+          </p>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div class="rounded-2xl bg-ink-100/60 border border-ink-100 p-5">
+              <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">Without OG</p>
+              <h4 class="font-black text-ink-900 mb-1">주소만 덩그러니</h4>
+              <p class="text-sm text-ink-500 leading-relaxed">무슨 페이지인지 클릭 전에는 잘 모릅니다.</p>
+            </div>
+            <div class="rounded-2xl bg-seed-light border border-orange-100 p-5">
+              <p class="text-xs font-black text-seed-dark tracking-widest uppercase mb-2">Open Graph</p>
+              <h4 class="font-black text-ink-900 mb-1">미리보기 카드</h4>
+              <p class="text-sm text-ink-700 leading-relaxed">제목, 설명, 대표 이미지가 카드처럼 보입니다.</p>
+            </div>
+            <div class="rounded-2xl bg-ink-100/60 border border-ink-100 p-5">
+              <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">Result</p>
+              <h4 class="font-black text-ink-900 mb-1">클릭하고 싶게</h4>
+              <p class="text-sm text-ink-500 leading-relaxed">링크가 콘텐츠처럼 느껴집니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-ink-900 text-white rounded-3xl p-6 shadow-2xl">
+          <p class="text-xs font-black text-seed tracking-widest uppercase mb-4">Preview</p>
+          <div class="rounded-2xl overflow-hidden bg-white text-ink-900">
+            <div class="aspect-[2/1] bg-gradient-to-br from-[#FF7E36] via-[#ffb36b] to-[#191F28] flex items-center justify-center p-6">
+              <div class="text-white text-center">
+                <p class="font-black text-sm tracking-widest uppercase opacity-80">Shared Link</p>
+                <h4 class="text-3xl font-black mt-2">HEAT Carrot 프로젝트</h4>
+              </div>
+            </div>
+            <div class="p-5">
+              <p class="font-black text-lg">HEAT Carrot 프로젝트</p>
+              <p class="text-sm text-ink-500 mt-1 leading-relaxed">당근의 온기로 근처 이웃에게 따뜻함을 전합니다.</p>
+              <p class="text-xs text-ink-300 mt-3 font-mono">danggeun-dashboard.vercel.app</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 grid lg:grid-cols-3 gap-6">
+        <div class="bg-blue-50/70 border border-blue-100 rounded-2xl p-6">
+          <i data-lucide="tags" class="w-8 h-8 text-blue-600 mb-4"></i>
+          <h4 class="text-xl font-black text-ink-900 mb-3">OG 태그</h4>
+          <p class="text-ink-500 leading-relaxed text-sm">
+            <code class="bg-white px-1.5 py-0.5 rounded font-mono text-blue-700">og:title</code>,
+            <code class="bg-white px-1.5 py-0.5 rounded font-mono text-blue-700">og:description</code>,
+            <code class="bg-white px-1.5 py-0.5 rounded font-mono text-blue-700">og:image</code>가 핵심 3요소입니다.
+          </p>
+        </div>
+        <div class="bg-blue-50/70 border border-blue-100 rounded-2xl p-6">
+          <i data-lucide="search" class="w-8 h-8 text-blue-600 mb-4"></i>
+          <h4 class="text-xl font-black text-ink-900 mb-3">SEO와 세트</h4>
+          <p class="text-ink-500 leading-relaxed text-sm">
+            검색엔진에 보이는 제목/설명과 SNS 공유 카드 정보는 함께 정리하면 좋습니다. 사람이 클릭하기 전 읽는 첫 문장입니다.
+          </p>
+        </div>
+        <div class="bg-blue-50/70 border border-blue-100 rounded-2xl p-6">
+          <i data-lucide="panel-top" class="w-8 h-8 text-blue-600 mb-4"></i>
+          <h4 class="text-xl font-black text-ink-900 mb-3">Meta Tags</h4>
+          <p class="text-ink-500 leading-relaxed text-sm">
+            메타 태그는 화면에 직접 보이지 않지만, 브라우저와 SNS 서비스가 페이지 정보를 이해하도록 돕는 숨은 안내문입니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-10 grid lg:grid-cols-[1fr_1fr] gap-6">
+        <div class="rounded-3xl bg-ink-900 text-white p-7">
+          <div class="flex items-center justify-between gap-4 mb-5">
+            <h4 class="text-xl font-black text-seed">Open Graph 요청 프롬프트</h4>
+            <button onclick="copyToClipboard(openGraphPrompt, this, true)" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-sm font-black transition-colors">
+              복사
+            </button>
+          </div>
+          <p class="text-white/80 leading-relaxed italic">
+            “이 웹페이지를 카카오톡이나 SNS에 공유했을 때 제목, 설명, 대표 이미지가 예쁜 미리보기 카드로 나오게 하고 싶어.
+            HTML &lt;head&gt; 영역에 들어갈 필수 오픈 그래프(Open Graph) 메타 태그 코드를 작성해 줘.
+            주소, 제목, 설명, 이미지 경로 자리는 내가 나중에 바꿀 수 있게 주석으로 표시해 줘.”
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-slate-950 text-slate-100 p-7 overflow-hidden">
+          <h4 class="text-xl font-black text-white mb-5">붙여 넣을 위치: HTML의 &lt;head&gt;</h4>
+          <pre class="text-sm leading-relaxed overflow-x-auto"><code>&lt;meta property="og:title" content="HEAT Carrot 프로젝트"&gt;
+&lt;meta property="og:description" content="당근의 온기로 근처 이웃에게 따뜻함을 전합니다."&gt;
+&lt;meta property="og:image" content="https://내주소/og-image.png"&gt;
+&lt;meta property="og:url" content="https://내서비스주소.netlify.app"&gt;
+&lt;meta property="og:type" content="website"&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="mt-10 bg-seed-light rounded-3xl p-7 border border-orange-100">
+        <h4 class="text-2xl font-black text-ink-900 mb-5">센스 있게 퍼블리싱하는 체크리스트</h4>
+        <div class="grid md:grid-cols-4 gap-4">
+          <div class="bg-white rounded-2xl p-5 border border-orange-100">
+            <strong class="text-ink-900">1. 제목</strong>
+            <p class="text-sm text-ink-500 mt-2">서비스명을 먼저 쓰고, 무엇을 하는 페이지인지 짧게 정리합니다.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 border border-orange-100">
+            <strong class="text-ink-900">2. 설명</strong>
+            <p class="text-sm text-ink-500 mt-2">한 줄 소개는 클릭하고 싶게, 과장보다 선명함을 우선합니다.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 border border-orange-100">
+            <strong class="text-ink-900">3. 이미지</strong>
+            <p class="text-sm text-ink-500 mt-2">대표 이미지는 2:1 비율, 권장 크기는 1200 x 600px로 준비합니다.</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 border border-orange-100">
+            <strong class="text-ink-900">4. 재배포</strong>
+            <p class="text-sm text-ink-500 mt-2">메타 태그를 넣은 뒤 다시 배포해야 공유 카드가 새 정보로 읽힙니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== -->
+  <!-- STEP 7: 명함을 영상형 스크롤 페이지로 확장하기                 -->
+  <!-- =========================================================== -->
+  <section id="step-7">
+    <div class="mb-12 flex items-center gap-5">
+      <div class="step-badge bg-ink-900 text-white shadow-xl">7</div>
+      <div>
+        <h2 class="text-3xl md:text-4xl font-black text-ink-900">명함을 영상형 스크롤 페이지로 확장하기</h2>
+        <p class="text-ink-500 mt-1.5 text-lg">명함의 톤과 색상을 유지한 채, 직업과 연관된 오브젝트가 극적으로 열리는 영상 장면으로 바꿉니다.</p>
+      </div>
+    </div>
+
+    <div class="bg-ink-900 text-white rounded-3xl p-8 md:p-10 mb-8 shadow-xl relative overflow-hidden">
+      <div class="absolute right-8 top-8 opacity-10">
+        <i data-lucide="film" class="w-36 h-36"></i>
+      </div>
+      <div class="relative max-w-4xl">
+        <p class="text-seed font-black tracking-widest text-sm uppercase mb-3">Browser As Film Slicer</p>
+        <h3 class="text-2xl md:text-3xl font-black mb-4 leading-tight">브라우저는 이미 작은 영상 편집기입니다.</h3>
+        <p class="text-white/75 text-lg leading-relaxed">
+          참고 레포의 핵심은 단순합니다. 먼저 명함의 색, 여백, 재질을 기준으로 잡고, 직업과 연결되는 오브젝트를 하나의 시네마틱 장면으로 번역합니다.
+          그다음 <code class="bg-white/10 px-2 py-0.5 rounded font-mono">&lt;video&gt;</code>가 영상을 읽고,
+          <code class="bg-white/10 px-2 py-0.5 rounded font-mono">&lt;canvas&gt;</code>가 프레임을 이미지로 저장하고,
+          스크롤 진행률이 프레임 번호를 고릅니다. 서버도, 설치도, 빌드도 없이 HTML 하나로 동작합니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">01 Card DNA</p>
+        <h4 class="font-black text-ink-900 mb-1">명함을 데이터로 본다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">색상, 질감, 여백, 직업의 분위기에서 영상의 재료를 뽑습니다.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">02 Symbol Object</p>
+        <h4 class="font-black text-ink-900 mb-1">연관 오브젝트를 찾는다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">직업을 설명하는 물건, 재료, 환경, 자연 요소를 시각의 주인공으로 잡습니다.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">03 AI Film</p>
+        <h4 class="font-black text-ink-900 mb-1">극적인 한 장면으로 만든다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">8~10초, 컷 없이 전진·상승·회전 중 하나로 오브젝트를 통과합니다.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-ink-100 p-5 shadow-sm">
+        <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">04 Scroll Page</p>
+        <h4 class="font-black text-ink-900 mb-1">프레임으로 다시 조립한다</h4>
+        <p class="text-sm text-ink-500 leading-relaxed">브라우저가 프레임을 자르고, 스크롤형 단일 HTML로 저장합니다.</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-ink-100 p-8 md:p-10 shadow-sm mb-8">
+      <div class="max-w-3xl mb-7">
+        <p class="text-seed font-black tracking-widest text-sm uppercase mb-2">Symbolic Cinematic Object</p>
+        <h3 class="text-2xl font-black text-ink-900 mb-3">명함은 색과 톤을 주고, 직업은 오브젝트를 줍니다.</h3>
+        <p class="text-ink-500 leading-relaxed">
+          명함을 그대로 확대하거나 흔들면 금방 밋밋해집니다. 대신 명함의 디자인 언어는 색감과 조명으로 가져오고,
+          직업과 연결되는 상징 오브젝트를 영상의 주인공으로 세우면 훨씬 설득력 있는 스크롤 장면이 됩니다.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="rounded-2xl bg-warm border border-orange-100 p-5">
+          <h4 class="font-black text-ink-900 mb-2">직업의 상징</h4>
+          <p class="text-sm text-ink-500 leading-relaxed">업종을 바로 떠올리게 하는 오브젝트, 재료, 공간, 자연 요소를 찾습니다.</p>
+        </div>
+        <div class="rounded-2xl bg-warm border border-orange-100 p-5">
+          <h4 class="font-black text-ink-900 mb-2">톤앤매너 고정</h4>
+          <p class="text-sm text-ink-500 leading-relaxed">명함의 대표 색, 대비, 질감, 여백을 영상 전체의 조명과 배경에 반영합니다.</p>
+        </div>
+        <div class="rounded-2xl bg-warm border border-orange-100 p-5">
+          <h4 class="font-black text-ink-900 mb-2">히어로 기준 이미지</h4>
+          <p class="text-sm text-ink-500 leading-relaxed">먼저 한 장의 기준 이미지를 만들고, 그 이미지를 영상의 일관성 기준으로 씁니다.</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-ink-100 p-5">
+          <h4 class="font-black text-ink-900 mb-2">극적인 이동</h4>
+          <p class="text-sm text-ink-500 leading-relaxed">카메라는 오브젝트를 향해 전진하거나, 위로 상승하거나, 천천히 회전합니다.</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-ink-100 p-5">
+          <h4 class="font-black text-ink-900 mb-2">왜곡 금지</h4>
+          <p class="text-sm text-ink-500 leading-relaxed">텍스트, 사람 얼굴, 로고, 실제 명함 글자는 영상 안에서 변형시키지 않습니다.</p>
+        </div>
+        <div class="rounded-2xl bg-white border border-ink-100 p-5">
+          <h4 class="font-black text-ink-900 mb-2">마지막 프레임</h4>
+          <p class="text-sm text-ink-500 leading-relaxed">마지막은 웹페이지 히어로 배경처럼 안정적이고 읽기 좋은 구도로 멈춥니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-ink-100 p-8 md:p-10 shadow-sm">
+      <div class="grid lg:grid-cols-[1fr_420px] gap-8">
+        <div>
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div>
+              <h3 class="text-2xl font-black text-ink-900">명함 기반 AI 영상 프롬프트</h3>
+              <p class="text-ink-500 mt-1">명함의 디자인 언어와 직업의 상징 오브젝트를 하나의 장면으로 번역하는 요청문입니다.</p>
+            </div>
+            <button onclick="copyToClipboard(scrollFilmPrompt, this, true)" class="px-5 py-3 rounded-xl bg-ink-900 text-white hover:bg-ink-700 transition-colors font-black">
+              프롬프트 복사
+            </button>
+          </div>
+          <div class="bg-ink-100/60 rounded-2xl border border-ink-100 p-5 text-sm text-ink-700 leading-relaxed">
+            <strong class="text-ink-900">요청 방향:</strong> 명함 사진을 첨부하고, 명함의 색상·질감·여백을 기준으로 삼습니다.
+            여기에 직업과 연관된 상징 오브젝트를 더해 8~10초의 극적인 무빙 영상을 만들고, 마지막은 웹 히어로처럼 안정적으로 끝냅니다.
+          </div>
+
+          <div class="mt-8">
+            <p class="text-seed font-black tracking-widest text-sm uppercase mb-5">STEP 4 · 페이지 문구 (선택 - 비워두면 기본값)</p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-sm font-black text-ink-700 mb-2">브랜드명</label>
+              <input id="sf-brand" placeholder="HEAT Carrot Lab" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+            </div>
+            <div>
+              <label class="block text-sm font-black text-ink-700 mb-2">버튼 문구</label>
+              <input id="sf-button" placeholder="실험 결과 보기" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-black text-ink-700 mb-2">히어로 제목 (줄바꿈 가능, *별표*가 포인트 컬러)</label>
+              <textarea id="sf-title" rows="2" placeholder="목포의 온도가&#10;*AI 실험*이 되다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed"></textarea>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-black text-ink-700 mb-2">히어로 서브카피</label>
+              <textarea id="sf-sub" rows="3" placeholder="명함 한 장에서 뽑아낸 색과 온기가 목포 AI 실험실의 스크롤 장면으로 흐릅니다." class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-black text-ink-700 mb-2">중간 문구 ①</label>
+              <input id="sf-mid-1" placeholder="당근빛 온기로, 동네의 감각을 켜다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+            </div>
+            <div>
+              <label class="block text-sm font-black text-ink-700 mb-2">중간 문구 ②</label>
+              <input id="sf-mid-2" placeholder="목포의 일상을 AI 영상으로 다시 조립하다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-black text-ink-700 mb-2">마무리 문구 (CTA 위)</label>
+              <input id="sf-end" placeholder="이제 당신의 실험을 웹으로 건네세요" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-warm rounded-3xl border border-ink-100 p-6">
+          <h3 class="text-xl font-black text-ink-900 mb-4">영상 넣고 바로 만들기</h3>
+          <div id="sf-drop" class="rounded-3xl border-2 border-dashed border-ink-300 bg-white p-8 text-center cursor-pointer hover:border-seed transition-colors">
+            <i data-lucide="video" class="w-12 h-12 text-seed mx-auto mb-4"></i>
+            <p class="font-black text-ink-900">영상을 드래그하거나 클릭해서 선택</p>
+            <p class="text-sm text-ink-500 mt-2">MP4 권장 · 3~10초 · 한 방향으로 부드럽게 진행되는 영상</p>
+            <p id="sf-meta" class="hidden mt-4 text-sm font-bold text-seed"></p>
+          </div>
+          <input id="sf-file" type="file" accept="video/*" hidden>
+          <video id="sf-video" muted playsinline preload="auto" class="hidden"></video>
+          <canvas id="sf-work" hidden></canvas>
+
+          <div class="mt-6 space-y-5">
+            <div>
+              <div class="flex justify-between text-sm font-bold text-ink-500 mb-2">
+                <span>프레임 수</span><output id="sf-count-out">72</output>
+              </div>
+              <input id="sf-count" type="range" min="36" max="120" step="12" value="72" class="w-full accent-seed">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <label class="block text-sm font-bold text-ink-500">가로 해상도
+                <select id="sf-width" class="mt-2 w-full rounded-xl border border-ink-100 bg-white px-3 py-2 text-ink-900">
+                  <option value="640">640px</option>
+                  <option value="768" selected>768px</option>
+                  <option value="960">960px</option>
+                  <option value="1280">1280px</option>
+                </select>
+              </label>
+              <label class="block text-sm font-bold text-ink-500">JPEG 품질
+                <select id="sf-quality" class="mt-2 w-full rounded-xl border border-ink-100 bg-white px-3 py-2 text-ink-900">
+                  <option value="0.6">0.60</option>
+                  <option value="0.68" selected>0.68</option>
+                  <option value="0.78">0.78</option>
+                  <option value="0.9">0.90</option>
+                </select>
+              </label>
+            </div>
+            <button id="sf-extract" disabled class="w-full py-4 rounded-2xl bg-ink-900 disabled:bg-ink-300 text-white font-black transition-colors">
+              프레임 추출하기
+            </button>
+            <div id="sf-progress" class="hidden">
+              <div class="flex justify-between text-xs font-black text-ink-500 mb-2">
+                <span id="sf-progress-label">SLICING</span>
+                <span id="sf-progress-pct">0%</span>
+              </div>
+              <div class="h-2 rounded-full bg-ink-100 overflow-hidden">
+                <div id="sf-progress-fill" class="h-full bg-seed w-0 transition-all"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sf-preview" class="hidden mt-10 border-t border-ink-100 pt-8">
+        <div class="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
+          <div>
+            <h3 class="text-2xl font-black text-ink-900 mb-4">프레임 미리보기</h3>
+            <div class="bg-ink-900 rounded-3xl overflow-hidden shadow-xl">
+              <canvas id="sf-preview-canvas" class="w-full block"></canvas>
+            </div>
+            <input id="sf-slider" type="range" min="0" max="71" value="0" class="w-full mt-4 accent-seed">
+            <p id="sf-frame-info" class="mt-2 text-sm font-bold text-ink-500">FRAME 001 / 72</p>
+          </div>
+          <div class="bg-seed-light rounded-3xl p-6 border border-orange-100">
+            <h4 class="text-xl font-black text-ink-900 mb-3">완성 HTML</h4>
+            <p class="text-sm text-ink-700 leading-relaxed mb-5">추출된 프레임을 내장한 단일 HTML이 생성됩니다. 바로 새 탭에서 열어 확인하거나, 다운로드해서 Netlify Drop에 올리면 됩니다.</p>
+            <div class="flex flex-col gap-3">
+              <button id="sf-open" class="py-3 rounded-2xl bg-white text-ink-900 font-black hover:bg-orange-50 transition-colors">새 탭에서 열기</button>
+              <button id="sf-download" class="py-3 rounded-2xl bg-seed text-white font-black hover:bg-seed-dark transition-colors">scroll-film.html 다운로드</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- ============================================================ -->
+<!-- DESIGN.md MODAL                                             -->
+<!-- ============================================================ -->
+<div id="design-md-modal" class="fixed inset-0 z-[80] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink-900/50 backdrop-blur-sm" onclick="closeDesignMdModal()"></div>
+  <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative z-10 border border-ink-100">
+    <div class="sticky top-0 bg-white/95 backdrop-blur border-b border-ink-100 px-9 py-6 flex justify-between items-center">
+      <h3 class="text-2xl font-black text-ink-900 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-seed-light text-seed flex items-center justify-center">📋</span>
+        DESIGN.md — 쉽게 이해하기
+      </h3>
+      <button onclick="closeDesignMdModal()" class="p-2 hover:bg-ink-100 rounded-full text-ink-500 transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div class="p-9 space-y-8">
+
+      <div>
+        <h4 class="text-xl font-black text-ink-900 mb-3 flex items-center gap-2">❓ 이게 뭔가요?</h4>
+        <p class="text-ink-500 text-lg leading-relaxed">
+          <strong class="text-ink-900">DESIGN.md</strong>는 AI에게 "이런 느낌으로 만들어줘"라고 전달하기 위한 <strong class="text-ink-900">디자인 명세서 문서</strong>입니다. 마치 건축가에게 설계 도면을 주는 것처럼, AI에게 정확한 색상, 폰트, 여백, 분위기를 전달하는 일종의 '디자인 설명서'라고 생각하면 됩니다.
+        </p>
+      </div>
+
+      <div class="bg-orange-50 rounded-2xl p-6 border border-orange-100">
+        <h4 class="text-xl font-black text-ink-900 mb-3 flex items-center gap-2">💡 왜 만들어졌나요?</h4>
+        <p class="text-ink-500 text-lg leading-relaxed mb-4">
+          AI에게 "멋있게 만들어줘"라고만 하면 AI는 자기 마음대로 만들어버립니다. 하지만 여러분이 명함을 보며 고민했던 <strong class="text-ink-900">색상의 이유, 폰트의 느낌, 여백의 철학</strong>을 글로 정리해서 전달하면 AI는 훨씬 더 여러분의 의도에 맞는 결과물을 냅니다.
+        </p>
+        <p class="text-ink-500 text-lg leading-relaxed">
+          구글 엔지니어링 팀에서 AI와 협업할 때 디자인 의도를 정확히 전달하기 위해 제안한 포맷으로, 전 세계 개발자들이 이 방식을 따라 AI와 더 잘 소통하고 있습니다.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+          <h4 class="text-ink-900 font-black mb-3 flex items-center gap-2 text-lg">
+            <i data-lucide="code-2" class="w-5 h-5 text-blue-500"></i> 기계가 읽는 부분 (위쪽)
+          </h4>
+          <p class="text-sm text-ink-500 mb-4">AI가 즉각적으로 이해하는 정확한 수치와 색상 코드</p>
+          <pre class="bg-slate-800 text-green-400 p-4 rounded-xl text-xs overflow-x-auto"><code>---
+colors:
+  primary: "#191F28"
+  accent: "#FF7E36"
+fonts:
+  heading: "Outfit"
+  body: "Pretendard"
+---</code></pre>
+        </div>
+        <div class="bg-orange-50 p-6 rounded-2xl border border-orange-200">
+          <h4 class="text-orange-900 font-black mb-3 flex items-center gap-2 text-lg">
+            <i data-lucide="pen-tool" class="w-5 h-5 text-orange-500"></i> 사람이 읽는 부분 (아래쪽)
+          </h4>
+          <p class="text-sm text-orange-800 mb-4">단순한 수치를 넘어선 브랜드의 분위기와 의도를 자연어로 서술</p>
+          <div class="bg-white border border-orange-100 p-4 rounded-xl text-sm text-ink-700 leading-relaxed">
+            <strong class="text-black">## 브랜드 철학</strong><br>
+            이 오렌지는 따뜻한 종이 질감의 인간미를 나타냅니다. 차갑지 않게 여백을 넓게 가져가세요.
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-seed-light rounded-2xl p-6 text-center">
+        <p class="text-xl font-black text-seed-dark">
+          💬 한 마디로?<br>
+          <span class="text-ink-900 mt-2 block font-normal text-lg">"AI야, 내 명함처럼 만들되, 이런 느낌과 이런 색상으로 해줘" 라고 체계적으로 전달하는 문서입니다.</span>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- TOAST NOTIFICATION                                           -->
+<!-- ============================================================ -->
+<div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-ink-900 text-white px-7 py-4 rounded-full shadow-2xl font-bold text-base transform translate-y-24 opacity-0 z-[100] flex items-center gap-3">
+  <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400"></i>
+  <span>복사되었습니다!</span>
+</div>
+
+
+<!-- ============================================================ -->
+<!-- LOTTIE BUNNY + DRAWER (COMP_LOTTIE_DRAWER★.md 완전 준수)     -->
+<!-- ============================================================ -->
+
+<!-- Left-Bottom Floating Lottie Bunny Banner -->
+<div id="bunny-trigger" class="fixed bottom-6 left-6 z-50 cursor-pointer group flex items-center gap-3 opacity-0 pointer-events-none translate-y-3 transition-all duration-500" role="button" tabindex="0" aria-label="Heat Carrot project dashboard">
+  <!-- Left Column: Bunny + Under text -->
+  <div class="flex flex-col items-center">
+    <div id="bunny-lottie" class="w-32 h-32 md:w-40 md:h-40 transition-transform duration-300 group-hover:scale-105 select-none pointer-events-auto" style="min-width: 128px; min-height: 128px;"></div>
+    <div class="mt-1.5 flex items-center gap-1 text-xs md:text-sm font-sans tracking-tight bg-white/95 backdrop-blur-md py-1.5 px-3 rounded-full border border-black/5 shadow-lg">
+      <span class="bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent font-black drop-shadow-[0_1px_2px_rgba(239,68,68,0.2)]">HEAT</span>
+      <span class="bg-gradient-to-r from-[#FF7E36] to-[#10B981] bg-clip-text text-transparent font-black">Carrot</span>
+      <span class="text-ink-900 font-bold">프로젝트</span>
+    </div>
+  </div>
+  <!-- Right Column: Tooltip badge -->
+  <div class="ml-2 px-3 py-2 rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-black/5 text-sm font-bold text-seed tracking-tight opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 drawer-transition duration-300 self-center">
+    대시보드 열기 🐰
+  </div>
+</div>
+
+<!-- Left Sideboard (Drawer) System -->
+<div id="drawer-backdrop" class="fixed inset-0 bg-black/10 backdrop-blur-sm z-40 hidden opacity-0 drawer-transition"></div>
+<aside id="drawer" class="fixed top-0 left-0 h-full w-[450px] max-w-full bg-white shadow-2xl border-r border-black/5 z-50 transform -translate-x-full drawer-transition flex flex-col">
+  <!-- Drawer Header -->
+  <div class="p-6 border-b border-black/5 flex items-center justify-between bg-warm/30">
+    <div class="flex items-center space-x-2">
+      <span class="text-lg font-black text-ink-900 tracking-tight">당근 대시보드</span>
+      <span class="px-2 py-0.5 rounded-full bg-seed-light text-seed text-[10px] font-black">LIVE</span>
+    </div>
+    <button id="drawer-close" class="p-2 rounded-full hover:bg-black/5 text-ink-500 hover:text-ink-900 transition-colors" aria-label="대시보드 닫기">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+  <!-- Drawer Body (iframe) -->
+  <div class="flex-grow w-full relative overflow-hidden bg-warm/10">
+    <!-- Loading Indicator -->
+    <div id="iframe-spinner" class="absolute inset-0 flex items-center justify-center bg-white/80 z-10 drawer-transition">
+      <div class="animate-spin rounded-full h-8 w-8 border-4 border-seed-light border-t-seed"></div>
+    </div>
+    <!-- Sandbox Iframe (data-src를 통한 lazy load 처리) -->
+    <iframe src="" data-src="https://danggeun-dashboard.vercel.app/" class="w-full h-full border-none" id="dashboard-iframe"></iframe>
+  </div>
+</aside>
+
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT                                                    -->
+<!-- ============================================================ -->
+<script>
+  // Safe helper to create icons
+  try {
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  } catch (e) {
+    console.warn('Lucide initialization error:', e);
+  }
+
+  // ============================================================
+  // SPLASH SCREEN (COMP_THUMBNAIL★.md)
+  // ============================================================
+  const splashOverlay = document.getElementById('splash-overlay');
+  const splashCard = document.getElementById('splash-card');
+
+  function revealBunnyTrigger() {
+    const trigger = document.getElementById('bunny-trigger');
+    if (!trigger) return;
+    trigger.classList.remove('opacity-0','pointer-events-none','translate-y-3');
+    trigger.classList.add('opacity-100','translate-y-0');
+  }
+
+  // Trigger modal display animation immediately (independent of DOMContentLoaded)
+  if (splashCard) {
+    splashCard.style.opacity = '1';
+    splashCard.style.transform = 'scale(1)';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      document.body.style.overflow = 'hidden';
+      
+      // Shatter title chars
+      const titleEl = document.querySelector('#splash-card h2');
+      if (titleEl) {
+        const rawHtml = titleEl.innerHTML;
+        let newHtml = '', inTag = false, currentTag = '';
+        for (let i = 0; i < rawHtml.length; i++) {
+          const char = rawHtml[i];
+          if (char === '<') { inTag = true; currentTag = '<'; }
+          else if (char === '>') { inTag = false; currentTag += '>'; newHtml += currentTag; currentTag = ''; }
+          else if (inTag) { currentTag += char; }
+          else if (char.trim() === '') { newHtml += char; }
+          else { newHtml += `<span class="shatter-char inline-block cursor-default select-none">${char}</span>`; }
+        }
+        titleEl.innerHTML = newHtml;
+
+        let activeShatters = [];
+        function updateShatters() {
+          if (!activeShatters.length) return;
+          for (let i = activeShatters.length - 1; i >= 0; i--) {
+            const p = activeShatters[i];
+            p.x += p.vX; p.vY += 0.35; p.y += p.vY; p.rot += p.vRot; p.opacity -= 0.02;
+            p.element.style.transform = `translate3d(${p.x}px,${p.y}px,0) rotate(${p.rot}deg)`;
+            p.element.style.opacity = p.opacity;
+            if (p.opacity <= 0 || p.y > 600) { p.element.style.visibility = 'hidden'; activeShatters.splice(i,1); }
+          }
+          if (activeShatters.length) requestAnimationFrame(updateShatters);
+        }
+
+        const chars = titleEl.querySelectorAll('.shatter-char');
+        const totalChars = chars.length;
+        let shatteredCount = 0;
+
+        function triggerEasterEgg() {
+          const eggContainer = document.getElementById('easter-egg-container');
+          const eggLottie = document.getElementById('easter-egg-lottie');
+          if (eggContainer && eggLottie && typeof lottie !== 'undefined') {
+            eggContainer.classList.remove('hidden');
+            void eggContainer.offsetWidth;
+            eggContainer.classList.remove('scale-75','opacity-0');
+            eggContainer.classList.add('scale-100','opacity-100');
+            const opts = { container: eggLottie, renderer: 'svg', loop: false, autoplay: true };
+
+            const loadAndPlay = (animData) => {
+              opts.animationData = animData;
+              const anim = lottie.loadAnimation(opts);
+              anim.addEventListener('complete', () => {
+                eggContainer.classList.remove('scale-100','opacity-100');
+                eggContainer.classList.add('scale-110','opacity-0');
+                setTimeout(() => eggContainer.classList.add('hidden'), 500);
+              });
+            };
+
+            if (typeof bunnyLottieJson !== 'undefined') {
+              loadAndPlay(bunnyLottieJson);
+            } else {
+              fetch('./assets/bunny.json').then(r=>r.json()).then(data => {
+                loadAndPlay(data);
+              }).catch(() => {});
+            }
+          }
+        }
+
+        chars.forEach(span => {
+          span.addEventListener('mouseenter', () => {
+            if (!span.dataset.shattered) {
+              span.dataset.shattered = 'true';
+              span.style.position = 'relative'; span.style.zIndex = '10';
+              activeShatters.push({ element: span, x:0, y:0, vX:(Math.random()-0.5)*6, vY:-Math.random()*4-2, rot:0, vRot:(Math.random()-0.5)*15, opacity:1 });
+              if (activeShatters.length === 1) requestAnimationFrame(updateShatters);
+              shatteredCount++;
+              if (shatteredCount === totalChars) setTimeout(triggerEasterEgg, 600);
+            }
+          });
+        });
+      }
+    } catch (e) {
+      console.warn('Splash screen initialization error:', e);
+    }
+  });
+
+  window.closeSplash = function() {
+    try {
+      if (splashCard) {
+        splashCard.classList.remove('scale-100','opacity-100');
+        splashCard.classList.add('scale-105','opacity-0');
+      }
+      if (splashOverlay) {
+        splashOverlay.classList.add('opacity-0','pointer-events-none');
+      }
+      
+      // Scroll to the very top immediately
+      window.scrollTo(0, 0);
+
+      setTimeout(() => {
+        if (splashOverlay) splashOverlay.classList.add('hidden');
+        document.body.style.overflow = '';
+        revealBunnyTrigger();
+      }, 500);
+    } catch (e) {
+      console.error('Error closing splash screen:', e);
+    }
+  };
+
+  // ============================================================
+  // TAB SWITCH (Step 0)
+  // ============================================================
+  window.switchTab = function(tabId) {
+    for (let i = 1; i <= 3; i++) {
+      const btn = document.getElementById(`tab-btn-${i}`);
+      const content = document.getElementById(`tab-content-${i}`);
+      if (btn && content) {
+        if (i === tabId) {
+          btn.classList.add('active');
+          content.classList.remove('hidden');
+        } else {
+          btn.classList.remove('active');
+          content.classList.add('hidden');
+        }
+      }
+    }
+  };
+
+  // ============================================================
+  // PROMPTS
+  // ============================================================
+  const prompt1 = `[입력 가이드]
+사용자가 첨부한 명함 사진을 면밀히 분석하여, 오프라인 명함이 가진 고유의 비주얼 정체성(색상, 타이포그래피 무드, 레이아웃 비율)을 100% 계승하는 'DESIGN.md' 문서를 빌드해야 합니다.
+
+[작성 규칙 및 구조]
+구글 'DESIGN.md' 규격에 맞춰 반드시 다음 두 가지 레이어로 엄격하게 분리하여 작성하세요.
+
+1. Machine-Readable Design Tokens (YAML Front Matter)
+   - 명함에서 추출한 정확한 HEX 색상값(배경색, 텍스트 주색상, 악센트 컬러)을 매핑하세요. 특히 웹 렌더링 초기 화면 깜빡임(FOUC)을 막기 위한 전용 토큰을 지정해야 합니다.
+   - 타이포그래피는 헤드라인/로고용 display 서체군과 가독성용 body 서체군을 명확히 분리하고, 명함 특유의 넓은 자간(letter-spacing)과 행간 비율을 수치화하세요.
+
+2. Human & Agent-Readable Design Rationale (Markdown 본문)
+   - ## Brand Identity & Color Intent: 명함의 색상이 단순 코드가 아니라, 어떤 디자인 의도(예: 따뜻한 종이 질감의 인간미, 혹은 묵직한 오프블랙의 에디토리얼 감성 등)를 지니고 전체 웹 UI에 흘러야 하는지 서술하세요.
+   - ## Cinematic Typography: 화면을 압도하는 거대 폰트 스케일링 규칙과 텍스트 텍스처 필터 적용 룰을 명시하세요.
+   - ## Scroll-Linked Interactive Index (중요): 하위 코딩 에이전트(Cursor, Claude Code 등)가 구현할 수 있도록, 외부 라이브러리 없이 '순수 SVG + Tailwind CSS'로만 작동하는 스크롤/마우스 실시간 동적 추적 선형 그래프의 상호작용 명세(인디케이터 라인의 마우스 트래킹 룰 등)를 기술적 Prose로 정밀하게 정의하세요.
+   - ## Typography Ledger Grid: 정량적 가치를 분할 증명하는 미니멀 격자 명세서(Ledger) 레이아웃과 미세 배경 반전 호버 효과 룰을 기록하세요.
+
+[출력 규칙]
+인사말, 부연 설명, 마크다운 백틱(\`\`\`) 기호를 모두 배제하고, 오직 프로젝트 루트에 바로 저장할 수 있는 완성된 'DESIGN.md' 내용물(--- 시작부터 본문 끝까지)만 텍스트로 출력하세요.`;
+
+  const prompt2 = `2단계 지침: DESIGN.md + 명함 사진으로 프리미엄 싱글 파일 HTML 생성
+
+당신은 세계 최고 수준의 프론트엔드 디자이너이자 Tailwind 전문가입니다. 
+명함의 시각적 정체성을 완벽하게 이해하고, 웹 환경에 맞게 고급스럽고 따뜻하며 인간적인 개인 브랜딩 페이지를 만드는 데 탁월합니다.
+
+입력:
+- 사용자가 업로드한 명함 사진 1장
+- DESIGN.md (1단계에서 생성된 결과물. 명함의 모든 텍스트, 색상 팔레트, 로고 스타일, 타이포그래피 느낌, 레이아웃, 전체적인 톤앤매너, 색상 매핑, 로고 처리 방향 등이 상세히 정리되어 있음)
+
+목표:
+DESIGN.md의 가이드라인과 명함 사진의 시각적 정체성을 100% 반영하여, "이 명함 주인이 직접 만든 고급스럽고 따뜻한 프리미엄 개인 홈페이지"라는 느낌이 강하게 나는 완성도 높은 싱글 파일 HTML을 생성하세요.
+
+절대 준수 규칙:
+
+1. 기술 스택
+   - 오직 순수 HTML + Tailwind CSS (CDN) + 내장 SVG만 사용하세요.
+   - 외부 라이브러리(D3, Chart.js 등) 절대 사용하지 마세요.
+
+2. FOUC 방지
+   - 페이지가 처음 로드될 때 흰색 화면이 깜빡이지 않도록 <body>에 인라인 스타일로 배경색을 즉시 강제 고정하세요.
+   - 예: <body style="background-color: #f8f4ed;">
+
+3. INDEX 섹션 (마우스 트래킹 효과)
+   - 사용자가 이 섹션에 진입했을 때, 마우스 커서의 X축 움직임을 부드럽게 추적하는 세로 인디케이터 가이드선(<line>)을 SVG에 구현하세요.
+   - 각 타임라인 노드에 호버할 때마다 페이드인되며 등장하는 정교한 데이터 툴팁 박스를 구현하세요.
+   - 툴팁 내용은 DESIGN.md의 데이터나 프로젝트/철학 관련 정보로 채우세요.
+
+4. LEDGER 섹션 (데이터 명세 그리드)
+   - 가느다란 미니멀 라인으로 쪼개진 격자형 레이아웃을 구성하세요.
+   - 마우스 호버 시 배경과 텍스트 색상이 세련되게 반전되는 마이크로 transition을 적용하세요.
+
+5. 페이지 구조 (반드시 이 순서)
+   1. Hero (강력한 첫인상 + 이름 + 직함 + 핵심 메시지 + CTA)
+   2. About / Story
+   3. INDEX (위 마우스 트래킹 효과 포함)
+   4. LEDGER (위 그리드 효과 포함)
+   5. Work / Value
+   6. The Card (명함 디자인을 HTML로 재해석한 고품질 카드 컴포넌트)
+   7. Contact
+
+6. DESIGN.md + 사진 반영 규칙
+   - DESIGN.md에 기록된 색상, 로고, 타이포, 레이아웃, 전체 인상을 HTML에 최대한 충실히 반영하세요.
+   - 명함의 원래 느낌을 유지하면서도 웹에서는 훨씬 세련되고 가독성 있게 업그레이드하세요.
+   - 로고는 반드시 표현하세요.
+   - 색상은 명함에 있던 색 위주로 사용하세요.
+   - 텍스트는 명함보다 훨씬 크게, 가독성 좋게 확대하세요.
+
+7. 디자인 품질 기준
+   - 따뜻하고 인간적인 느낌을 유지하세요.
+   - 프리미엄하면서 과하지 않은 미니멀.
+   - 한국어 타이포그래피를 아름답고 현대적으로.
+   - 여백 충분, 시각적 계층 명확.
+   - 과한 그림자, 화려한 그라데이션, 과도한 애니메이션, 장식 요소 절대 금지.
+   - 완전 반응형 (모바일 우선).
+
+8. 출력 규칙
+   - 오직 완성된 단일 HTML 코드만 출력하세요.
+   - 설명, 마크다운, 추가 텍스트 일절 붙이지 마세요.
+   - Tailwind는 CDN으로 포함하세요.
+
+**(여기에 사용자가 작성한 내용을 붙여넣으세요)**
+
+위 모든 규칙과 DESIGN.md, 명함 사진을 철저히 반영하여 최고 품질의 HTML을 만들어주세요.`;
+
+  const openGraphPrompt = `이 웹페이지를 카카오톡이나 SNS에 공유했을 때 제목, 설명, 대표 이미지가 예쁜 미리보기 카드로 나오게 하고 싶어. HTML <head> 영역에 들어갈 필수 오픈 그래프(Open Graph) 메타 태그 코드를 작성해 줘. (주소, 제목, 설명, 이미지 경로 자리는 내가 나중에 바꿀 수 있게 주석으로 표시해 줘.)
+
+[예시]
+제목: [내 서비스명] HEAT carrot 프로젝트
+설명: [한 줄 소개] 당근의 온기로 근처 이웃에게 따뜻함을 전합니다.
+이미지: [내 이미지 절대 경로 URL] 이미지는 첨부하거나, 생성해서 2:1 사이즈로 첨부. 1200 x 600 픽셀
+URL: [내 서비스 메인 URL] 배포된 도메인주소 예: https://danggeun-dashboard.vercel.app/
+타입: website`;
+
+  const scrollFilmPrompt = `첨부한 명함 사진을 분석해서, 스크롤 웹페이지의 히어로 배경으로 사용할 8~10초짜리 시네마틱 AI 영상을 만들고 싶어.
+
+핵심 방향:
+- 명함 자체를 움직이거나 확대하는 영상이 아님
+- 명함의 디자인, 색상, 대비, 재질감, 여백, 전체 톤앤매너는 적극 반영
+- 직업이나 서비스와 연관된 상징 오브젝트를 영상의 주인공으로 설정
+- 예: 특정 직업을 떠올리게 하는 자연 요소, 도구, 재료, 장소, 빛, 움직임을 선택하되, 뻔한 예시를 그대로 복사하지 말고 명함의 업종에 맞게 새롭게 해석
+- 스크롤 페이지로 만들 예정이므로 비주얼은 극적으로 보여야 하고, 움직임은 한 방향으로 부드럽게 이어져야 함
+
+먼저 명함에서 아래를 추출해줘.
+1. 대표 색상 2~3개
+2. 명함의 톤: 프리미엄, 친근함, 전문적, 따뜻함, 차가움, 기술적, 자연적, 강렬함 등
+3. 질감과 재료감: 종이, 금속, 유리, 잉크, 섬유, 빛, 그림자, 입자 등
+4. 직업/서비스와 연관될 수 있는 상징 오브젝트 후보 3개
+5. 그중 가장 영상적으로 강한 오브젝트 1개
+
+영상 설계 방식:
+- 먼저 선택한 오브젝트를 중심으로 ONE HERO REFERENCE IMAGE를 만든다고 가정
+- 그 기준 이미지를 바탕으로 오브젝트의 형태, 색, 재질, 조명이 영상 내내 일관되게 유지되도록 작성
+- 8~10초 동안 하나의 연속 장면처럼 진행
+- 컷 전환 금지
+- 카메라는 천천히 전진하거나, 상승하거나, 오브젝트 주변을 부드럽게 회전하는 단일 움직임
+- 초반: 오브젝트가 분위기 속에서 등장
+- 중반: 명함의 색상과 재질감이 빛, 입자, 연기, 물결, 표면 반사, 공간감으로 확장
+- 후반: 오브젝트가 안정적인 웹 히어로 배경 구도로 정리
+- 마지막 프레임은 텍스트를 얹어도 잘 읽히는 안정적인 구도
+
+금지사항:
+- 명함의 텍스트 왜곡 금지
+- 로고 왜곡 금지
+- 사람 얼굴 생성 금지
+- 실제 명함을 복제하거나 찢거나 접거나 흔드는 연출 금지
+- 화면 안에 읽을 수 있는 글자 생성 금지
+- 과도한 판타지, 저품질 3D, 플라스틱 같은 질감 금지
+- 여러 장면으로 튀는 컷 편집 금지
+
+출력 형식:
+1. 명함 분석 요약
+2. 선택한 상징 오브젝트와 이유
+3. 바로 복사해서 쓸 수 있는 영어 영상 생성 프롬프트
+4. 네거티브 프롬프트
+5. 마지막 프레임이 웹 히어로 배경으로 적합한지 체크 포인트
+
+영어 프롬프트는 아래 스타일을 따라줘.
+- cinematic website hero video
+- award-winning visual direction
+- smooth scroll-driven motion
+- single continuous shot
+- dramatic but elegant
+- consistent object identity
+- full-bleed hero background
+- no text, no logo distortion, no faces`;
+
+  // Copy buttons
+  const toast = document.getElementById('toast');
+  let toastTimeout;
+
+  window.copyToClipboard = function(text, btnEl = null, isPrompt = false) {
+    navigator.clipboard.writeText(text).then(() => {
+      clearTimeout(toastTimeout);
+      toast.querySelector('span').innerText = isPrompt ? '마스터 프롬프트 복사 완료! ✅' : '바이브 코딩 예시 복사 완료!';
+      toast.classList.remove('translate-y-24','opacity-0');
+
+      if (btnEl) {
+        const orig = btnEl.innerHTML;
+        btnEl.innerHTML = `<i data-lucide="check" class="w-5 h-5 text-green-600"></i> <span class="text-green-700 font-black">복사 완료!</span>`;
+        btnEl.classList.replace('bg-ink-100','bg-green-50');
+        lucide.createIcons();
+        document.getElementById('btn-gemini-global').classList.add('glow');
+        toastTimeout = setTimeout(() => {
+          toast.classList.add('translate-y-24','opacity-0');
+          btnEl.innerHTML = orig;
+          btnEl.classList.replace('bg-green-50','bg-ink-100');
+          lucide.createIcons();
+        }, 3000);
+      } else {
+        toastTimeout = setTimeout(() => { toast.classList.add('translate-y-24','opacity-0'); }, 2000);
+      }
+    });
+  };
+
+  document.getElementById('btn-copy-1').addEventListener('click', function() { copyToClipboard(prompt1, this, true); });
+  document.getElementById('btn-copy-2').addEventListener('click', function() { copyToClipboard(prompt2, this, true); });
+
+  // ============================================================
+  // SCROLL FILM SLICER (Step 7)
+  // ============================================================
+  const sfState = { frames: [], videoUrl: null, frameWidth: 768, frameHeight: 432 };
+  const sfVideo = document.getElementById('sf-video');
+  const sfWork = document.getElementById('sf-work');
+  const sfWorkCtx = sfWork ? sfWork.getContext('2d') : null;
+
+  function sfEl(id) {
+    return document.getElementById(id);
+  }
+
+  function resetScrollFilm() {
+    sfState.frames = [];
+    const preview = sfEl('sf-preview');
+    const progress = sfEl('sf-progress');
+    const fill = sfEl('sf-progress-fill');
+    const pct = sfEl('sf-progress-pct');
+    const label = sfEl('sf-progress-label');
+    if (preview) preview.classList.add('hidden');
+    if (progress) progress.classList.add('hidden');
+    if (fill) fill.style.width = '0%';
+    if (pct) pct.textContent = '0%';
+    if (label) label.textContent = 'SLICING';
+  }
+
+      function loadScrollFilmVideo(file) {
+    if (!sfVideo) return;
+    if (sfState.videoUrl) URL.revokeObjectURL(sfState.videoUrl);
+    sfState.videoUrl = URL.createObjectURL(file);
+    sfVideo.src = sfState.videoUrl;
+    sfVideo.onloadedmetadata = () => {
+      const meta = sfEl('sf-meta');
+      if (meta) {
+        meta.classList.remove('hidden');
+        meta.textContent = `${file.name} · ${sfVideo.videoWidth}x${sfVideo.videoHeight} · ${sfVideo.duration.toFixed(1)}초`;
+      }
+      const extract = sfEl('sf-extract');
+      if (extract) extract.disabled = false;
+      resetScrollFilm();
+    };
+  }
+
+  function seekScrollFilm(time) {
+    return new Promise(resolve => {
+      sfVideo.onseeked = () => resolve();
+      sfVideo.currentTime = Math.min(time, Math.max(0, sfVideo.duration - 0.02));
+    });
+  }
+
+  async function extractScrollFilmFrames() {
+    if (!sfVideo || !sfWork || !sfWorkCtx || !sfVideo.duration) return;
+
+    const count = Number(sfEl('sf-count').value);
+    const width = Number(sfEl('sf-width').value);
+    const quality = Number(sfEl('sf-quality').value);
+    const height = Math.max(2, Math.round(width * sfVideo.videoHeight / sfVideo.videoWidth / 2) * 2);
+    sfState.frameWidth = width;
+    sfState.frameHeight = height;
+    sfWork.width = width;
+    sfWork.height = height;
+    sfState.frames = [];
+
+    const extract = sfEl('sf-extract');
+    const progress = sfEl('sf-progress');
+    const fill = sfEl('sf-progress-fill');
+    const pct = sfEl('sf-progress-pct');
+    const label = sfEl('sf-progress-label');
+
+    if (extract) extract.disabled = true;
+    if (progress) progress.classList.remove('hidden');
+    if (label) label.textContent = 'SLICING';
+
+    for (let i = 0; i < count; i++) {
+      await seekScrollFilm((i / Math.max(1, count - 1)) * sfVideo.duration);
+      sfWorkCtx.drawImage(sfVideo, 0, 0, width, height);
+      sfState.frames.push(sfWork.toDataURL('image/jpeg', quality));
+      const done = Math.round(((i + 1) / count) * 100);
+      if (fill) fill.style.width = `${done}%`;
+      if (pct) pct.textContent = `${done}%`;
+    }
+
+    if (label) {
+      const approxMb = (sfState.frames.join('').length / 1000000 * 0.75).toFixed(1);
+      label.textContent = `DONE · ${count}프레임 · 약 ${approxMb}MB`;
+    }
+    if (extract) extract.disabled = false;
+    showScrollFilmPreview();
+  }
+
+  function showScrollFilmPreview() {
+    const preview = sfEl('sf-preview');
+    const canvas = sfEl('sf-preview-canvas');
+    const slider = sfEl('sf-slider');
+    const info = sfEl('sf-frame-info');
+    if (!preview || !canvas || !slider || !sfState.frames.length) return;
+
+    preview.classList.remove('hidden');
+    canvas.width = sfState.frameWidth;
+    canvas.height = sfState.frameHeight;
+    slider.max = String(sfState.frames.length - 1);
+    slider.value = '0';
+
+    const ctx = canvas.getContext('2d');
+    const draw = index => {
+      const image = new Image();
+      image.onload = () => ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      image.src = sfState.frames[index];
+      if (info) info.textContent = `FRAME ${String(index + 1).padStart(3, '0')} / ${sfState.frames.length}`;
+    };
+
+    slider.oninput = event => draw(Number(event.target.value));
+    draw(0);
+  }
+
+  function escapeScrollFilmText(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function formatScrollFilmTitle(value) {
+    return escapeScrollFilmText(value)
+      .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>');
+  }
+
+  function formatScrollFilmCopy(value) {
+    return escapeScrollFilmText(value).replace(/\n/g, '<br>');
+  }
+
+  function buildScrollFilmHtml() {
+    const brand = escapeScrollFilmText(sfEl('sf-brand').value.trim() || 'HEAT Carrot Lab');
+    const title = formatScrollFilmTitle(sfEl('sf-title').value.trim() || '목포의 온도가\n*AI 실험*이 되다');
+    const sub = formatScrollFilmCopy(sfEl('sf-sub').value.trim() || '명함 한 장에서 뽑아낸 색과 온기가 목포 AI 실험실의 스크롤 장면으로 흐릅니다.');
+    const mid1 = formatScrollFilmCopy(sfEl('sf-mid-1').value.trim() || '당근빛 온기로, 동네의 감각을 켜다');
+    const mid2 = formatScrollFilmCopy(sfEl('sf-mid-2').value.trim() || '목포의 일상을 AI 영상으로 다시 조립하다');
+    const endText = formatScrollFilmCopy(sfEl('sf-end').value.trim() || '이제 당신의 실험을 웹으로 건네세요');
+    const button = escapeScrollFilmText(sfEl('sf-button').value.trim() || '실험 결과 보기');
+    const framesJson = JSON.stringify(sfState.frames);
+
+    return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${brand} Scroll Film</title>
+  <style>
+    :root { --bg:#0b0c10; --ink:#f8f4ed; --muted:#9aa0aa; --seed:#FF7E36; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html, body { min-height:100%; background:var(--bg); color:var(--ink); font-family: Arial, "Noto Sans KR", sans-serif; }
+    body { overflow-x:hidden; }
+    #film { position:fixed; inset:0; width:100%; height:100%; z-index:0; }
+    #shade { position:fixed; inset:0; z-index:1; pointer-events:none; background:radial-gradient(circle at 50% 38%, transparent 0 34%, rgba(11,12,16,.65) 82%), linear-gradient(to bottom, rgba(11,12,16,.35), transparent 35%, rgba(11,12,16,.78)); }
+    #track { height:460vh; position:relative; z-index:2; pointer-events:none; }
+    .layer { position:fixed; inset:0; z-index:3; display:flex; flex-direction:column; justify-content:center; padding:7vw; pointer-events:none; opacity:0; transform:translateY(28px); }
+    .right { align-items:flex-end; text-align:right; }
+    .eyebrow { color:var(--seed); font-size:12px; font-weight:900; letter-spacing:.34em; text-transform:uppercase; margin-bottom:18px; }
+    h1 { max-width:850px; font-size:clamp(44px,8vw,112px); line-height:1.05; letter-spacing:0; }
+    h1 em { color:var(--seed); font-style:normal; }
+    h2 { max-width:820px; font-size:clamp(32px,5.4vw,76px); line-height:1.15; letter-spacing:0; }
+    .sub { max-width:620px; margin-top:24px; color:var(--muted); font-size:clamp(16px,1.8vw,21px); line-height:1.75; }
+    #nav { position:fixed; top:0; left:0; right:0; z-index:6; display:flex; justify-content:space-between; padding:24px 7vw; font-size:12px; font-weight:900; letter-spacing:.24em; color:rgba(248,244,237,.78); }
+    #reel { position:fixed; left:50%; bottom:28px; transform:translateX(-50%); z-index:6; display:flex; align-items:center; gap:14px; color:var(--muted); font-size:12px; font-weight:900; letter-spacing:.16em; }
+    #line { width:min(340px,48vw); height:2px; border-radius:999px; background:rgba(248,244,237,.18); position:relative; }
+    #head { position:absolute; left:0; top:50%; width:10px; height:10px; border-radius:999px; background:var(--seed); transform:translate(-50%,-50%); box-shadow:0 0 18px var(--seed); }
+    #end { position:relative; z-index:8; min-height:80vh; background:var(--bg); border-top:1px solid rgba(248,244,237,.12); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:80px 24px; }
+    #end h2 { font-size:clamp(32px,5vw,72px); line-height:1.15; max-width:800px; }
+    .btn { margin-top:32px; padding:16px 34px; border:0; border-radius:16px; background:var(--seed); color:white; font-weight:900; font-size:16px; }
+    #loading { position:fixed; inset:0; z-index:99; background:var(--bg); color:var(--muted); display:flex; align-items:center; justify-content:center; font-weight:900; letter-spacing:.24em; transition:opacity .5s; }
+  </style>
+</head>
+<body>
+  <nav id="nav"><span>${brand}</span><span>SCROLL FILM</span></nav>
+  <canvas id="film"></canvas>
+  <div id="shade"></div>
+  <div id="track"></div>
+  <section class="layer" id="intro">
+    <div class="eyebrow">Business Card Motion</div>
+    <h1>${title}</h1>
+    <p class="sub">${sub}</p>
+  </section>
+  <section class="layer right" id="mid1">
+    <div class="eyebrow">01</div>
+    <h2>${mid1}</h2>
+  </section>
+  <section class="layer" id="mid2">
+    <div class="eyebrow">02</div>
+    <h2>${mid2}</h2>
+  </section>
+  <div id="reel"><span>FRAME</span><div id="line"><div id="head"></div></div><span id="num">001</span></div>
+  <div id="loading">LOADING FILM</div>
+  <section id="end">
+    <div class="eyebrow">${brand}</div>
+    <h2>${endText}</h2>
+    <button class="btn">${button}</button>
+  </section>
+  ${'<scr' + 'ipt>'}
+    const frames = ${framesJson};
+    const canvas = document.getElementById('film');
+    const ctx = canvas.getContext('2d');
+    const track = document.getElementById('track');
+    const loading = document.getElementById('loading');
+    const images = [];
+    let loaded = 0;
+    let target = 0;
+    let progress = 0;
+    let last = -1;
+
+    frames.forEach((src, index) => {
+      const img = new Image();
+      img.onload = () => {
+        loaded += 1;
+        if (loaded === frames.length) {
+          resize();
+          loading.style.opacity = '0';
+          setTimeout(() => loading.remove(), 550);
+        }
+      };
+      img.src = src;
+      images[index] = img;
+    });
+
+    function resize() {
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = innerWidth * ratio;
+      canvas.height = innerHeight * ratio;
+      draw(Math.max(0, last), true);
+    }
+
+    function draw(index, force = false) {
+      if (!force && index === last) return;
+      const img = images[index];
+      if (!img || !img.complete) return;
+      last = index;
+      const scale = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
+      const width = img.naturalWidth * scale;
+      const height = img.naturalHeight * scale;
+      ctx.drawImage(img, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+    }
+
+    function readScroll() {
+      const max = track.offsetHeight - innerHeight;
+      target = max > 0 ? Math.max(0, Math.min(1, scrollY / max)) : 0;
+    }
+
+    function fade(p, a, b, c, d) {
+      if (p < a) return 0;
+      if (p < b) return (p - a) / (b - a);
+      if (p < c) return 1;
+      if (p < d) return 1 - ((p - c) / (d - c));
+      return 0;
+    }
+
+    function tick() {
+      requestAnimationFrame(tick);
+      progress += (target - progress) * 0.1;
+      const index = Math.round(progress * (frames.length - 1));
+      draw(index);
+      document.getElementById('head').style.left = (progress * 100) + '%';
+      document.getElementById('num').textContent = String(index + 1).padStart(3, '0');
+      const intro = fade(progress, 0, 0.08, 0.2, 0.34);
+      const mid1 = fade(progress, 0.3, 0.38, 0.52, 0.64);
+      const mid2 = fade(progress, 0.66, 0.74, 0.88, 0.98);
+      document.getElementById('intro').style.opacity = intro;
+      document.getElementById('intro').style.transform = 'translateY(' + ((1 - intro) * 28) + 'px)';
+      document.getElementById('mid1').style.opacity = mid1;
+      document.getElementById('mid1').style.transform = 'translateY(' + ((1 - mid1) * 28) + 'px)';
+      document.getElementById('mid2').style.opacity = mid2;
+      document.getElementById('mid2').style.transform = 'translateY(' + ((1 - mid2) * 28) + 'px)';
+    }
+
+    addEventListener('resize', resize);
+    addEventListener('scroll', readScroll, { passive: true });
+    readScroll();
+    tick();
+  ${'</scr' + 'ipt>'}
+</body>
+</html>`;
+  }
+
+  function openGeneratedScrollFilm() {
+    if (!sfState.frames.length) {
+      alert('먼저 프레임을 추출해주세요.');
+      return;
+    }
+    const blob = new Blob([buildScrollFilmHtml()], { type: 'text/html' });
+    window.open(URL.createObjectURL(blob), '_blank');
+  }
+
+  function downloadGeneratedScrollFilm() {
+    if (!sfState.frames.length) {
+      alert('먼저 프레임을 추출해주세요.');
+      return;
+    }
+    const blob = new Blob([buildScrollFilmHtml()], { type: 'text/html' });
+    const anchor = document.createElement('a');
+    anchor.href = URL.createObjectURL(blob);
+    anchor.download = 'scroll-film.html';
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(anchor.href), 1000);
+  }
+
+  const sfDrop = sfEl('sf-drop');
+  const sfFile = sfEl('sf-file');
+  if (sfDrop && sfFile && sfVideo && sfWorkCtx) {
+    sfDrop.addEventListener('click', () => sfFile.click());
+    sfDrop.addEventListener('dragover', event => {
+      event.preventDefault();
+      sfDrop.classList.add('border-seed');
+    });
+    sfDrop.addEventListener('dragleave', () => sfDrop.classList.remove('border-seed'));
+    sfDrop.addEventListener('drop', event => {
+      event.preventDefault();
+      sfDrop.classList.remove('border-seed');
+      if (event.dataTransfer.files && event.dataTransfer.files[0]) loadScrollFilmVideo(event.dataTransfer.files[0]);
+    });
+    sfFile.addEventListener('change', () => {
+      if (sfFile.files && sfFile.files[0]) loadScrollFilmVideo(sfFile.files[0]);
+    });
+    sfEl('sf-count').addEventListener('input', event => {
+      sfEl('sf-count-out').textContent = event.target.value;
+    });
+    sfEl('sf-extract').addEventListener('click', extractScrollFilmFrames);
+    sfEl('sf-open').addEventListener('click', openGeneratedScrollFilm);
+    sfEl('sf-download').addEventListener('click', downloadGeneratedScrollFilm);
+  }
+
+  // DESIGN.md Modal
+  window.openDesignMdModal = () => {
+    document.getElementById('design-md-modal').classList.remove('hidden');
+    document.getElementById('design-md-modal').classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeDesignMdModal = () => {
+    document.getElementById('design-md-modal').classList.add('hidden');
+    document.getElementById('design-md-modal').classList.remove('flex');
+    document.body.style.overflow = '';
+  };
+
+  // ============================================================
+  // VIBE CODING CANVAS (Step 4)
+  // ============================================================
+  const preview = document.getElementById('vibe-preview');
+  const vpHero = preview.querySelector('.vp-hero');
+  const vpBody = preview.querySelector('.vp-body');
+  const vpName = preview.querySelector('.vp-name');
+  const vpRole = preview.querySelector('.vp-role');
+  const vpAvatar = preview.querySelector('.vp-avatar');
+  const vpBtn = preview.querySelector('.vp-btn');
+  const vpTags = preview.querySelectorAll('.vp-tag');
+  const vpText = preview.querySelector('.vp-text');
+  const vibeStatus = document.getElementById('vibe-status');
+  const appliedLog = document.getElementById('applied-log');
+  const appliedList = document.getElementById('applied-list');
+  let appliedVibes = [];
+
+  const vibeDefaults = {
+    heroBg: '#191F28', bodyBg: '#ffffff', nameColor: '#ffffff', roleColor: '#FF7E36',
+    avatarBg: '#FF7E36', btnBg: '#FF7E36', btnColor: '#ffffff',
+    tagBg: '#FFE4D0', tagColor: '#E66825', textColor: '#4E5968',
+    borderRadius: '1.5rem', fontSize: '1.875rem', fontFamily: "'Noto Sans KR', sans-serif"
+  };  function applyLayout(layoutType) {
+    // Reset layout styles
+    vpHero.style.display = '';
+    vpHero.style.flexDirection = '';
+    vpHero.style.alignItems = '';
+    vpHero.style.textAlign = '';
+    vpHero.style.gap = '';
+    vpHero.style.padding = '';
+    
+    vpAvatar.style.margin = '';
+    vpAvatar.style.marginBottom = '';
+    vpAvatar.style.borderRadius = '';
+    
+    vpBody.style.padding = '';
+    
+    const vpMeta = preview.querySelector('.vp-meta');
+    if (vpMeta) {
+      vpMeta.style.textAlign = '';
+      vpMeta.style.alignItems = '';
+    }
+
+    vpBtn.style.border = '';
+    vpBtn.style.background = '';
+    vpBtn.style.color = '';
+    
+    vpTags.forEach(t => {
+      t.style.border = '';
+      t.style.background = '';
+      t.style.color = '';
+    });
+
+    if (layoutType === 'card') {
+      vpHero.style.display = 'flex';
+      vpHero.style.flexDirection = 'row';
+      vpHero.style.alignItems = 'center';
+      vpHero.style.textAlign = 'left';
+      vpHero.style.gap = '1.5rem';
+      vpHero.style.padding = '2rem';
+      
+      vpAvatar.style.margin = '0';
+      vpAvatar.style.marginBottom = '0';
+      
+      if (vpMeta) {
+        vpMeta.style.textAlign = 'left';
+      }
+    } else if (layoutType === 'minimal') {
+      vpHero.style.textAlign = 'left';
+      vpHero.style.padding = '2.5rem 2.5rem 1rem 2.5rem';
+      vpHero.style.background = 'transparent';
+      
+      vpAvatar.style.margin = '0';
+      vpAvatar.style.marginBottom = '1.25rem';
+      
+      vpBody.style.padding = '1rem 2.5rem 2.5rem 2.5rem';
+      
+      if (vpMeta) {
+        vpMeta.style.textAlign = 'left';
+      }
+      
+      // Minimalist button outline
+      vpBtn.style.border = '2px solid #191F28';
+      vpBtn.style.background = 'transparent';
+      vpBtn.style.color = '#191F28';
+      
+      // Minimalist tags outline
+      vpTags.forEach(t => {
+        t.style.border = '1.5px solid #E66825';
+        t.style.background = 'transparent';
+        t.style.color = '#E66825';
+      });
+    }
+  }
+
+  function applyStyles(s) {
+    preview.style.borderRadius = s.borderRadius;
+    vpHero.style.background = s.heroBg;
+    vpBody.style.background = s.bodyBg;
+    vpName.style.color = s.nameColor;
+    vpName.style.fontSize = s.fontSize;
+    vpName.style.fontFamily = s.fontFamily;
+    vpRole.style.color = s.roleColor;
+    vpAvatar.style.background = s.avatarBg;
+    vpBtn.style.background = s.btnBg;
+    vpBtn.style.color = s.btnColor;
+    vpText.style.color = s.textColor;
+    vpTags.forEach(t => { t.style.background = s.tagBg; t.style.color = s.tagColor; });
+  }
+
+  const vibeMap = {
+    'theme-warm':     { heroBg:'#3d2b1f', bodyBg:'#f8f4ed', nameColor:'#fde8d8', roleColor:'#FF7E36', avatarBg:'#c0775a', btnBg:'#c0775a', btnColor:'#fff', tagBg:'#ffe4d0', tagColor:'#c0775a', textColor:'#5c4033', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'☀️ 따뜻한 아이보리 톤', layout:'default' },
+    'theme-dark':     { heroBg:'#0a0a0a', bodyBg:'#111111', nameColor:'#ffffff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#0a0a0a', tagBg:'#222', tagColor:'#FF7E36', textColor:'#9ca3af', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🌑 다크 모드', layout:'default' },
+    'theme-cool':     { heroBg:'#0d1b3e', bodyBg:'#f0f4ff', nameColor:'#e0e8ff', roleColor:'#6ea8fe', avatarBg:'#3b5bdb', btnBg:'#3b5bdb', btnColor:'#fff', tagBg:'#dce8ff', tagColor:'#3b5bdb', textColor:'#3d4f70', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Inter',sans-serif", label:'❄️ 딥 네이비 테마', layout:'default' },
+    'accent-green':   { heroBg:'#064e3b', bodyBg:'#f0fdf4', nameColor:'#d1fae5', roleColor:'#34d399', avatarBg:'#10b981', btnBg:'#10b981', btnColor:'#fff', tagBg:'#d1fae5', tagColor:'#065f46', textColor:'#374151', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🌿 에메랄드 그린 포인트', layout:'default' },
+    'layout-card':    { heroBg:'#191F28', bodyBg:'#f8f4ed', nameColor:'#fff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#fff', tagBg:'#e5e7eb', tagColor:'#374151', textColor:'#4E5968', borderRadius:'0.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🃏 카드 그리드 레이아웃', layout:'card' },
+    'layout-minimal': { heroBg:'#ffffff', bodyBg:'#ffffff', nameColor:'#191F28', roleColor:'#9ca3af', avatarBg:'#e5e7eb', btnBg:'#191F28', btnColor:'#fff', tagBg:'#f3f4f6', tagColor:'#6b7280', textColor:'#6b7280', borderRadius:'0rem', fontSize:'1.875rem', fontFamily:"'Inter',sans-serif", label:'▪️ 미니멀 단열 레이아웃', layout:'minimal' },
+    'radius-sharp':   { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#fff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#fff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'0px', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🔲 직선형 박스 스타일', layout:'default' },
+    'font-serif':     { heroBg:'#191F28', bodyBg:'#fff8f0', nameColor:'#fff', roleColor:'#c9956a', avatarBg:'#c9956a', btnBg:'#c9956a', btnColor:'#fff', tagBg:'#f5e6d8', tagColor:'#8b5e3c', textColor:'#5c4033', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Georgia','Times New Roman',serif", label:'📖 세리프(명조체) 폰트', layout:'default' },
+    'font-big':       { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#fff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#fff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'3rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🔠 대형 히어로 타이틀', layout:'default' },
+    'effect-shadow':  { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#fff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#fff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🌘 입체 그림자 효과', layout:'default' },
+    'effect-glow':    { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#fff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#fff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'💥 네온 글로우 버튼', layout:'default' },
+    'effect-gradient':{ heroBg:'linear-gradient(135deg,#FF7E36 0%,#e11d48 100%)', bodyBg:'#ffffff', nameColor:'#fff', roleColor:'#ffe4d0', avatarBg:'rgba(255,255,255,0.3)', btnBg:'#191F28', btnColor:'#fff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🌈 그라디언트 히어로 배경', layout:'default' },
+    
+    // JS dynamic components
+    'js-confetti':    { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#ffffff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#ffffff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🔀 클릭 팡파르 팝업', layout:'default' },
+    'js-magnetic':    { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#ffffff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#ffffff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'🔲 마우스 자석 효과', layout:'default' },
+    'js-dark-toggle': { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#ffffff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#ffffff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'⚡ 화면 전환 토글', layout:'default' },
+    'js-typing':      { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#ffffff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#ffffff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'✍️ 무한 루프 타자기 효과', layout:'default' },
+    'js-tilt':        { heroBg:'#191F28', bodyBg:'#ffffff', nameColor:'#ffffff', roleColor:'#FF7E36', avatarBg:'#FF7E36', btnBg:'#FF7E36', btnColor:'#ffffff', tagBg:'#FFE4D0', tagColor:'#E66825', textColor:'#4E5968', borderRadius:'1.5rem', fontSize:'1.875rem', fontFamily:"'Noto Sans KR',sans-serif", label:'💎 3D 입체 명함 패닝', layout:'default' },
+  };
+
+  const promptPools = {
+    colors: [
+      "전체 배경색을 차분한 미드나잇 블루(#0B132B)로 변경하고 글씨는 백색에 가까운 크림색으로 적용해줘",
+      "내 프로필 카드에 봄 분위기가 물씬 나도록 밝은 피치 퍼즈와 개나리색 조합 테마로 입혀줘",
+      "개발자 개인 사이트 느낌이 들도록 딥 네이비 배경에 텍스트와 보더는 에메랄드 그린 컬러로 강조해줘",
+      "포근한 커피숍 감성의 아이보리 배경에 텍스트는 에스프레소 브라운 색상으로 세팅해줘",
+      "사이버펑크 해커 감성으로 전체 블랙 배경에 포인트 컬러는 형광 핫핑크와 네온 레몬으로 변경해줘",
+      "디자이너 포트폴리오 사이트처럼 무채색 톤온톤 스타일로 극단적인 화이트 & 라이트 그레이 배색을 적용해줘",
+      "자연 친화적인 친환경 바이오 브랜드 느낌으로 배경은 올리브 그린, 본문은 짙은 차콜색으로 통일해줘",
+      "스타트업 제품 소개 페이지처럼 시원한 코발트 블루(#0052FF) 색상을 메인 포인트 컬러로 써줘",
+      "고급 수제 향수 브랜드 웹사이트처럼 뮤티드 라벤더와 차분한 모래색 컬러 조합을 입혀줘",
+      "따뜻하고 편안한 원목 공방 느낌의 베이지와 웜톤 브라운 계열 컬러 팔레트로 입혀줘",
+      "우아하고 세련된 갤러리 도슨트 카드 감성으로 다크 차콜 배경에 라이트 샌드베이지로 포인트 줘",
+      "MZ세대 타겟 힙한 셀렉트샵 감성의 일렉트릭 블루와 네온 오렌지를 믹스한 배색으로 지정해줘",
+      "신뢰감을 주는 금융 테크 서비스 무드로 짙은 그린 계열 배경과 골드 컬러 포인트로 설정해줘",
+      "부드러운 구름이 연상되는 베이비 블루와 파스텔 핑크 조합의 꿈꾸는 듯한 테마로 변경해줘",
+      "클래식 타자기 감성의 레트로 양식 느낌으로 누런 갱지 색상 배경에 차콜 글씨를 입혀줘"
+    ],
+    layout: [
+      "아바타 이미지와 이름 정보를 가로로 정렬해서 이름 오른쪽에 배치하고 모서리는 둥글게 깎아줘",
+      "프로필 카드의 흰색 배경 영역을 완전히 없애고 투명하게 만들어 1단 이력서 스타일로 깔끔하게 정리해줘",
+      "모든 요소의 모서리 둥글기 값을 0으로 통일하여 매우 각진 사각형 블록 느낌의 디자인으로 정돈해줘",
+      "이름과 자기소개 글을 나란히 한 행으로 배치하고 가로 비율을 4:6으로 분할해줘",
+      "이메일, 링크 버튼이 위치한 연락처 영역을 아바타 이미지보다 상단으로 배치해줘",
+      "모바일 화면에서 터치하기 편하도록 모든 버튼을 가로 꽉 차게 1열로 세로 정렬 구조로 재배치해줘",
+      "자기소개 영역을 좌우 여백을 넓게 쓴 와이드 미니멀 한 줄 구조로 재구성해줘",
+      "기술 스택 배지 목록이 가로로 한 행이 넘어가면 줄바꿈이 깔끔하게 되도록 Flex Wrap 속성을 켜줘",
+      "자기소개 글이 프로필 카드 정중앙에 위치하도록 Flex Align Items 속성을 Center로 지정해줘",
+      "이메일과 SNS 아이콘 버튼들을 오른쪽 끝으로 정렬하고 이름은 왼쪽 끝에 두는 양끝 정렬 구조로 만들어줘",
+      "프로필 카드 아래에 간단한 학력이나 경력 사항을 넣을 수 있는 3단 아코디언 컴포넌트를 추가해줘",
+      "모든 정보를 카드형 레이아웃으로 감싸고, 각 카드마다 24px의 여유로운 안쪽 여백을 줘",
+      "우측 하단에 상단으로 빠르게 스크롤 해주는 고정형 'Top' 버튼 레이아웃을 생성해줘",
+      "자기소개 텍스트 박스에 연한 회색의 테두리와 함께 살짝 안으로 들어간 듯한 음각 스타일을 입혀줘",
+      "스킬 칩 배지들을 카드 상단 우측 구석에 작고 오밀조밀하게 모아서 띄워줘"
+    ],
+    typography: [
+      "본문 폰트를 옛날 소설책 느낌이 나는 우아한 나눔명조 또는 Georgia 세리프 서체로 변경해줘",
+      "이름 텍스트의 두께를 Bold에서 Extra Bold로 변경하고 글씨 크기를 화면을 압도할 만큼 크게 키워줘",
+      "IT 스타트업 감성이 살도록 영문 숫자는 Inter 폰트로 적용하고 글자 간격을 좁게 세팅해줘",
+      "본문 줄간격을 1.8배로 넉넉하게 넓혀서 글씨가 빽빽하지 않고 눈이 편안하게 정돈해줘",
+      "모든 소제목들의 글씨 크기를 12px로 줄이고 영문은 대문자로 표기하며 자간을 넓혀서 세련되게 해줘",
+      "이름에는 두껍고 웅장한 느낌을, 직무 소개에는 얇고 가벼운 명조 서체를 적용해서 폰트 대비를 줘",
+      "디자인 문방구 감성을 담아 고정폭 폰트(Monospace)를 적용하고 줄번호처럼 숫자 마크를 달아줘",
+      "주요 업적 항목 텍스트에 마우스를 올리면 형광펜으로 칠한 듯 노란색 밑줄이 그어지게 디자인해줘",
+      "링크 텍스트 아래의 밑줄을 없애고 대신 링크 뒤에 작은 화살표 기호(→)가 붙도록 타이포를 손봐줘",
+      "스펙 요약 란의 영문 단어들을 모두 소문자로 변경하되 첫 글자만 대문자로 자동으로 치환되게 해줘",
+      "강조하고 싶은 중요 단어들만 메인 포인트 배색 컬러로 두껍게 강조해서 가독성을 높여줘",
+      "이름 글자 뒤에 부드러운 검은색 그림자를 얇게 깔아 텍스트가 배경으로부터 붕 뜨게 연출해줘",
+      "스킬 이름 텍스트의 크기를 본문 텍스트 크기보다 살짝 작게 조절하고 세련된 그레이 톤으로 낮춰줘",
+      "이메일 주소 주위에 코드 블록 형태인 백틱(`) 스타일의 둥근 모노스페이스 상자를 감싸줘",
+      "전체 영문 텍스트에 한해 세련된 산세리프 서체인 Montserrat를 구글 폰트에서 가져와 지정해줘"
+    ],
+    interactions: [
+      "연락하기 버튼에 마우스를 대면 자석에 이끌리듯 커서 방향으로 버튼이 미세하게 빨려오는 인터랙션을 추가해줘",
+      "연락하기 버튼을 클릭했을 때 꽃가루가 터지는 화려한 팡파레 효과를 연동해줘",
+      "메일 보내기 버튼에 호버 시 백그라운드 컬러가 좌측에서 우측으로 부드럽게 채워지는 그라디언트 슬라이드 애니메이션을 줘",
+      "인스타그램 링크 아이콘 마우스를 가져가면 360도 빙글 돌면서 커지는 회전 애니메이션 효과를 부여해줘",
+      "포트폴리오 다운로드 버튼에 다운로드 중인 듯한 느낌을 주게 화살표 아이콘이 아래위로 통통 튀는 모션을 줘",
+      "연락처 복사 버튼을 누르면 '복사 완료' 텍스트로 임시 변경되었다가 2초 뒤 원복되는 피드백 시스템을 구축해줘",
+      "버튼 클릭 시 부드럽게 전체 화면이 다크모드로 스위칭되는 고급 화면 전환 인터랙션을 심어줘",
+      "명함 카드 영역 위에서 마우스를 굴리면 카드가 마우스 각도에 반응해 3D 입체 명함처럼 기울어지게 구현해줘",
+      "버튼에 마우스를 올리면 마치 버튼 뒤에서 후광이 비추는 듯한 네온 글로우 발광 효과를 구현해줘",
+      "텍스트 입력란에 마우스를 포커싱하면 테두리 경계선 컬러가 메인 포인트 색으로 부드럽게 점멸하게 연출해줘",
+      "웹사이트 링크 버튼 클릭 시 팝업 창이 3D 형태로 튕기듯이 열리는 스프링 바운스 애니메이션을 구현해줘",
+      "버튼 위에 마우스를 얹으면 버튼 글씨 옆에 숨겨져 있던 오픈 화살표 아이콘이 스르륵 미끄러지듯 나타나게 해줘",
+      "연락처 버튼에 손가락 커서를 대면 버튼 자체가 살짝 아래로 2px 눌리는 듯한 물리적인 키감 피드백을 줘",
+      "SNS 버튼들을 누르면 클릭된 아이콘만 통통 튀어오르는 트램펄린 애니메이션 인터랙션을 적용해줘",
+      "프로필의 주요 스킬 배지에 마우스를 대면 툴팁 형태로 상세 설명 말풍선이 부드럽게 나타나게 구현해줘"
+    ],
+    avatar: [
+      "둥근 프로필 아바타 이미지를 힙한 사각형 액자 형태로 바꾸고 굵은 검은색 외곽선을 둘러줘",
+      "아바타 사진 영역을 완벽한 원형으로 자르고 테두리에 은은한 그라데이션 링을 둘러서 돋보이게 해줘",
+      "아바타 이미지가 평소에는 흑백으로 보이다가 마우스를 올리면 원본 컬러로 페이드인 되게 구현해줘",
+      "프로필 아바타의 모서리만 살짝 둥글게 깎은 아이폰 앱 아이콘 모양(Squircle)의 고급 프로필로 리모델링해줘",
+      "아바타 사진을 숨기고 이니셜 한 글자가 크게 박힌 심플한 텍스트 엠블럼형 아바타로 변경해줘",
+      "아바타 이미지를 카드 중앙에 아주 크게 배치하여 시선을 확실히 사로잡는 첫인상을 갖추도록 스타일링해줘",
+      "프로필 이미지 뒤에 살짝 삐뚤어진 파스텔 핑크 색상의 그림자 레이어를 겹쳐서 키치한 무드를 연출해줘",
+      "아바타 가장자리를 물결치는 파도 형상의 다이내믹 클리핑 마스크 형태로 오려내줘",
+      "프로필 사진 테두리에 얇은 도트 스타일의 점선 외곽선을 넣어서 아기자기한 다이어리 감성을 줘",
+      "아바타에 마우스를 대면 사진이 은은하게 줌인(Zoom-in)되면서 프로필 액자 밖으로 삐져나가지 않게 해줘",
+      "프로필 아바타를 왼쪽 구석에 아주 작고 심플하게 올리고 그 옆에 이름을 나란히 배치해줘",
+      "아바타 액자 주변에 얇은 링들이 궤도를 그리듯 회전하는 미래적인 디자인 요소를 데코해줘",
+      "프로필 이미지를 살짝 회전시켜 스티커가 삐딱하게 부착된 듯한 힙하고 러프한 디자인을 가미해줘",
+      "아바타 테두리에 아주 미세한 네온 라인을 감싸 다크 모드 화면에서 아바타가 빛나 보이도록 해줘",
+      "프로필 아바타 아래에 동그란 '활동 중'을 나타내는 초록색 라이브 상태 점 아이콘을 얹어줘"
+    ],
+    tags: [
+      "스킬 태그들의 모서리를 둥글게 깎아 알약 모양 배지로 만들고 배경은 파스텔 톤의 연한 오렌지빛으로 칠해줘",
+      "태그들의 화려한 색상을 모두 지우고 차분한 그레이 톤 외곽선만 남긴 투명 아웃라인 배지 스타일로 바꿔줘",
+      "핵심 기술 배지 하나만 다른 색상으로 강조하여 수많은 배지 사이에서 가장 먼저 눈에 띄게 설계해줘",
+      "스킬 배지 텍스트 크기를 작게 줄이고 배지 간격도 6px로 오밀조밀하게 모아서 칩 리스트 형태로 다듬어줘",
+      "모든 배지 박스의 모서리를 완전 직각으로 만들고 레트로 픽셀 느낌으로 디자인을 통일해줘",
+      "기술 스택 배지 글자 앞에 해당하는 프로그래밍 언어의 미니 브랜드 아이콘을 하나씩 박아줘",
+      "태그 배지에 마우스를 올리면 배지 자체가 위로 3px 가볍게 들리며 그림자가 깊어지는 인터랙션을 구현해줘",
+      "배지 뒤의 배경에 무지개색 그라데이션 컬러를 얇게 입혀 독특하고 트렌디한 감각을 표현해줘",
+      "태그 리스트 위에 '주요 스택'이라는 소제목 배지를 좀 더 굵고 확실한 테두리로 강조해 올려줘",
+      "태그 배지의 좌우 여백을 넓혀 넓고 쾌적한 느낌의 와이드형 칩 디자인으로 스타일링해줘",
+      "태그 배지 글씨 색을 흰색으로 지정하고 배경은 아주 쨍한 일렉트릭 블루 메인 컬러로 꽉 채워줘",
+      "스킬 배지 뒤에 손글씨 느낌으로 빗금 패턴을 연하게 깔아서 개성 넘치는 포인트 요소를 줘",
+      "배지들이 줄바꿈 될 때 행간 간격을 10px로 넓혀서 다닥다닥 붙어 보이지 않게 정돈해줘",
+      "프로필 하단 배지 목록의 맨 뒤에 새로운 태그를 추가할 수 있는 '+' 모양의 추가 버튼 배지를 추가해줘",
+      "기술 배지 하나하나마다 고유한 아이디 값을 매겨서 향후 제어하기 쉽도록 마크업을 다듬어줘"
+    ],
+    graphics: [
+      "프로필 카드 전체에 둥근 모서리와 함께 은은하고 넓게 번지는 고급스러운 소프트 드롭 섀도우를 깔아줘",
+      "카드 전체 배경에 아주 미세하고 세련된 격자무늬(Grid Pattern) 그래픽을 입혀 테크니컬한 무드를 연출해줘",
+      "카드 뒷배경에 형형색색의 오로라가 일렁이는 듯한 미세한 블러 그라디언트 비주얼 효과를 은은하게 적용해줘",
+      "전체 프로필 카드 컨테이너를 뿌연 반투명 유리 재질로 만들고 뒤가 비치는 글래스모피즘 효과로 처리해줘",
+      "카드 가장자리에 1px짜리 아주 미세한 그라디언트 보더 선을 둘러서 카드 경계가 미학적으로 돋보이게 해줘",
+      "카드 하단에 90년대 빈티지 게임 느낌의 굵고 강렬한 투톤 레트로 그림자를 그려줘",
+      "바디 영역에 마우스를 대면 은은한 미립자 노이즈 텍스처 그래픽이 오버레이되도록 비주얼 효과를 가미해줘",
+      "컨테이너 카드 좌측 상단에 입체적인 3D 엠보싱 엠블럼 로고를 박아 고급감을 더해줘",
+      "전체 카드 모서리에 무지개 빛깔로 서서히 변하는 다이내믹 그라디언트 라인을 둘러 화려하게 만들어줘",
+      "카드 배경에 사선 방향으로 흐르는 은은한 스트라이프 패턴 그래픽을 적용해 디테일을 더해줘",
+      "프로필 카드 테두리를 제거하는 대신 카드 뒤쪽에 네온 오렌지색 백라이트 발광 효과를 입혀줘",
+      "마우스 움직임에 따라 배경의 파스텔 컬러 뭉게구름 그래픽이 부드럽게 흘러가게 구현해줘",
+      "카드 내부에 얇은 종이를 여러 겹 겹쳐놓은 듯한 입체감 있는 페이퍼 레이어드 그래픽 효과를 줘",
+      "배경 이미지 위에 오래된 비디오 화면 필름 노이즈와 지글거리는 효과를 오버레이해줘",
+      "카드 배경 구석에 기하학적인 추상 형상의 벡터 그래픽 오브젝트들을 배치해 예술적인 무드를 살려줘"
+    ]
+  };
+
+  window.renderCategory = function(categoryId) {
+    const container = document.getElementById(`prompts-${categoryId}`);
+    if (!container) return;
+
+    const pool = promptPools[categoryId];
+    if (!pool) return;
+
+    // Pick 3 unique random items
+    const shuffled = [...pool].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 3);
+
+    container.innerHTML = selected.map(promptText => {
+      const escapedPrompt = promptText.replace(/'/g, "\\'");
+      return `
+        <button onclick="handlePromptClick(this, '${escapedPrompt}')" 
+          class="vibe-pill w-full border border-ink-100/70 hover:border-seed/40 hover:bg-seed-light rounded-xl px-4 py-3 text-sm text-ink-700 text-left transition-all flex items-center justify-between gap-2.5 bg-warm/30 cursor-pointer">
+          <span class="leading-relaxed">${promptText}</span>
+          <span class="copy-indicator flex items-center gap-1 text-xs text-ink-300 font-bold shrink-0">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          </span>
+        </button>
+      `;
+    }).join('');
+  };
+
+  window.refreshCategory = function(categoryId) {
+    window.renderCategory(categoryId);
+    lucide.createIcons();
+  };
+
+  window.handlePromptClick = function(btnEl, promptText) {
+    navigator.clipboard.writeText(promptText).then(() => {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.querySelector('span').innerText = '프롬프트 복사 완료! 📋';
+        toast.classList.remove('translate-y-24','opacity-0');
+        setTimeout(() => { toast.classList.add('translate-y-24','opacity-0'); }, 2000);
+      }
+
+      // Temporary success visual cue on the indicator
+      const indicator = btnEl.querySelector('.copy-indicator');
+      if (indicator) {
+        const originalHtml = indicator.innerHTML;
+        indicator.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-green-500"></i><span class="text-green-500 text-[10px] ml-0.5">복사 완료</span>';
+        indicator.classList.remove('text-ink-300');
+        indicator.classList.add('text-green-500');
+        lucide.createIcons();
+        setTimeout(() => {
+          indicator.innerHTML = originalHtml;
+          indicator.classList.remove('text-green-500');
+          indicator.classList.add('text-ink-300');
+          lucide.createIcons();
+        }, 2000);
+      }
+    });
+  };
+
+  window.handleCustomInputCopy = function() {
+    const textarea = document.getElementById('custom-vibe-input');
+    if (!textarea) return;
+    const text = textarea.value.trim();
+    if (!text) {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.querySelector('span').innerText = '복사할 요청사항을 먼저 입력해 주세요. ⚠️';
+        toast.classList.remove('translate-y-24','opacity-0');
+        setTimeout(() => { toast.classList.add('translate-y-24','opacity-0'); }, 2000);
+      }
+      return;
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.querySelector('span').innerText = '작성한 요청이 복사되었습니다! 📋';
+        toast.classList.remove('translate-y-24','opacity-0');
+        setTimeout(() => { toast.classList.add('translate-y-24','opacity-0'); }, 2000);
+      }
+    });
+  };
+
+
+  window.handlePromptClick = function(btnEl, promptText) {
+    navigator.clipboard.writeText(promptText).then(() => {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.querySelector('span').innerText = '프롬프트 복사 및 반영 완료! 📋';
+        toast.classList.remove('translate-y-24','opacity-0');
+        setTimeout(() => { toast.classList.add('translate-y-24','opacity-0'); }, 2000);
+      }
+
+      const textarea = document.getElementById('custom-vibe-input');
+      if (textarea) {
+        textarea.value = promptText;
+      }
+
+      window.applyCustomVibe();
+
+      const indicator = btnEl.querySelector('.copy-indicator');
+      if (indicator) {
+        const originalHtml = indicator.innerHTML;
+        indicator.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-green-500"></i><span class="text-green-500 text-[10px] ml-0.5">적용됨</span>';
+        indicator.classList.remove('text-ink-300');
+        indicator.classList.add('text-green-500');
+        lucide.createIcons();
+        setTimeout(() => {
+          indicator.innerHTML = originalHtml;
+          indicator.classList.remove('text-green-500');
+          indicator.classList.add('text-ink-300');
+          lucide.createIcons();
+        }, 2000);
+      }
+    });
+  };
+
+  window.applyVibe = function(key, btnEl) {
+    const v = vibeMap[key];
+    if (!v) return;
+
+    document.querySelectorAll('.vibe-pill').forEach(b => b.classList.remove('selected'));
+    if (btnEl) btnEl.classList.add('selected');
+
+    if (window.vibeCleanup) {
+      try {
+        window.vibeCleanup();
+      } catch (e) {
+        console.error('Vibe cleanup error:', e);
+      }
+      window.vibeCleanup = null;
+    }
+
+    vpBtn.style.transform = '';
+    vpBtn.style.transition = '';
+    vpBtn.style.boxShadow = '';
+    preview.style.transform = '';
+    preview.style.transition = '';
+    preview.style.perspective = '';
+    preview.style.transformStyle = '';
+    vpHero.style.transition = '';
+    vpHero.style.background = '';
+    vpBody.style.transition = '';
+    vpBody.style.background = '';
+    vpText.style.transition = '';
+    vpText.style.color = '';
+    vpName.style.transition = '';
+    vpName.style.color = '';
+    vpRole.style.transition = '';
+    vpRole.style.color = '';
+    vpAvatar.style.transition = '';
+    vpAvatar.style.background = '';
+    if (window.originalRoleText) {
+      vpRole.textContent = window.originalRoleText;
+    } else {
+      window.originalRoleText = vpRole.textContent;
+    }
+
+    applyStyles(v);
+    applyLayout(v.layout || 'default');
+
+    if (key === 'effect-shadow') {
+      vpBtn.style.boxShadow = '0 8px 24px rgba(255,126,54,0.4)';
+    } else if (key === 'effect-glow') {
+      vpBtn.style.boxShadow = '0 0 20px rgba(255,126,54,0.7), 0 0 40px rgba(255,126,54,0.3)';
+    } else if (key === 'js-confetti') {
+      const handleConfettiClick = (e) => {
+        confetti({
+          particleCount: 150,
+          spread: 85,
+          origin: { y: 0.6 },
+          colors: ['#FF7E36', '#FFE4D0', '#10B981', '#3b5bdb', '#e11d48']
+        });
+      };
+      vpBtn.addEventListener('click', handleConfettiClick);
+      window.vibeCleanup = () => {
+        vpBtn.removeEventListener('click', handleConfettiClick);
+      };
+    } else if (key === 'js-magnetic') {
+      const handleMagneticMove = (e) => {
+        const btnRect = vpBtn.getBoundingClientRect();
+        const btnCenterX = btnRect.left + btnRect.width / 2;
+        const btnCenterY = btnRect.top + btnRect.height / 2;
+        const distX = e.clientX - btnCenterX;
+        const distY = e.clientY - btnCenterY;
+        const dist = Math.sqrt(distX * distX + distY * distY);
+
+        if (dist < 100) {
+          const pullX = distX * 0.35;
+          const pullY = distY * 0.35;
+          vpBtn.style.transition = 'transform 0.08s ease-out';
+          vpBtn.style.transform = `translate(${pullX}px, ${pullY}px)`;
+        } else {
+          vpBtn.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+          vpBtn.style.transform = 'translate(0, 0)';
+        }
+      };
+      const handleMagneticLeave = () => {
+        vpBtn.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+        vpBtn.style.transform = 'translate(0, 0)';
+      };
+      preview.addEventListener('mousemove', handleMagneticMove);
+      preview.addEventListener('mouseleave', handleMagneticLeave);
+      window.vibeCleanup = () => {
+        preview.removeEventListener('mousemove', handleMagneticMove);
+        preview.removeEventListener('mouseleave', handleMagneticLeave);
+        vpBtn.style.transform = '';
+        vpBtn.style.transition = '';
+      };
+    } else if (key === 'js-dark-toggle') {
+      let isDark = false;
+      const handleDarkToggle = (e) => {
+        isDark = !isDark;
+        const elements = [vpHero, vpBody, vpText, vpName, vpRole, vpAvatar, vpBtn];
+        elements.forEach(el => {
+          el.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+
+        if (isDark) {
+          vpHero.style.background = '#0a0a0a';
+          vpBody.style.background = '#111111';
+          vpName.style.color = '#ffffff';
+          vpRole.style.color = '#34d399';
+          vpText.style.color = '#9ca3af';
+          vpAvatar.style.background = '#34d399';
+          vpBtn.style.background = '#34d399';
+          vpBtn.style.color = '#0a0a0a';
+        } else {
+          vpHero.style.background = '#191F28';
+          vpBody.style.background = '#ffffff';
+          vpName.style.color = '#ffffff';
+          vpRole.style.color = '#FF7E36';
+          vpText.style.color = '#4E5968';
+          vpAvatar.style.background = '#FF7E36';
+          vpBtn.style.background = '#FF7E36';
+          vpBtn.style.color = '#ffffff';
+        }
+
+        const rect = vpBtn.getBoundingClientRect();
+        const previewRect = preview.getBoundingClientRect();
+        const clickX = rect.left + rect.width / 2 - previewRect.left;
+        const clickY = rect.top + rect.height / 2 - previewRect.top;
+
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.pointerEvents = 'none';
+        overlay.style.zIndex = '1';
+        overlay.style.background = isDark ? '#111111' : '#ffffff';
+        overlay.style.opacity = '0.35';
+        overlay.style.clipPath = `circle(0% at ${clickX}px ${clickY}px)`;
+        overlay.style.transition = 'clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        preview.appendChild(overlay);
+
+        overlay.offsetHeight;
+        overlay.style.clipPath = `circle(150% at ${clickX}px ${clickY}px)`;
+
+        setTimeout(() => {
+          overlay.remove();
+        }, 500);
+      };
+      vpBtn.addEventListener('click', handleDarkToggle);
+      window.vibeCleanup = () => {
+        vpBtn.removeEventListener('click', handleDarkToggle);
+        const elements = [vpHero, vpBody, vpText, vpName, vpRole, vpAvatar, vpBtn];
+        elements.forEach(el => el.style.transition = '');
+      };
+    } else if (key === 'js-typing') {
+      const targetText = "AI 실험실 · 혁신가";
+      let isDeleting = false;
+      let charIndex = 0;
+      let typingTimeout = null;
+
+      const typeLoop = () => {
+        if (!isDeleting) {
+          vpRole.textContent = targetText.substring(0, charIndex) + '|';
+          charIndex++;
+          if (charIndex > targetText.length) {
+            vpRole.textContent = targetText;
+            isDeleting = true;
+            typingTimeout = setTimeout(typeLoop, 1000);
+          } else {
+            typingTimeout = setTimeout(typeLoop, 150);
+          }
+        } else {
+          vpRole.textContent = targetText.substring(0, charIndex) + '|';
+          charIndex--;
+          if (charIndex < 0) {
+            isDeleting = false;
+            charIndex = 0;
+            typingTimeout = setTimeout(typeLoop, 500);
+          } else {
+            typingTimeout = setTimeout(typeLoop, 150);
+          }
+        }
+      };
+
+      typeLoop();
+      window.vibeCleanup = () => {
+        clearTimeout(typingTimeout);
+        vpRole.textContent = window.originalRoleText || "AI 실험실 · 전략가";
+      };
+    } else if (key === 'js-tilt') {
+      preview.style.transformStyle = 'preserve-3d';
+      preview.style.perspective = '1000px';
+      preview.style.transition = 'transform 0.1s ease-out';
+
+      const handleTiltMove = (e) => {
+        const rect = preview.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const normX = (x - centerX) / centerX;
+        const normY = (y - centerY) / centerY;
+        const maxRotate = 15;
+        const rotateY = normX * maxRotate;
+        const rotateX = -normY * maxRotate;
+
+        preview.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      };
+
+      const handleTiltLeave = () => {
+        preview.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+        preview.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+      };
+
+      preview.addEventListener('mousemove', handleTiltMove);
+      preview.addEventListener('mouseleave', handleTiltLeave);
+
+      window.vibeCleanup = () => {
+        preview.removeEventListener('mousemove', handleTiltMove);
+        preview.removeEventListener('mouseleave', handleTiltLeave);
+        preview.style.transform = '';
+        preview.style.transition = '';
+        preview.style.perspective = '';
+        preview.style.transformStyle = '';
+      };
+    } else {
+      vpBtn.style.boxShadow = 'none';
+    }
+
+    vibeStatus.textContent = v.label + ' ✓';
+    vibeStatus.style.background = '#FFE4D0';
+    vibeStatus.style.color = '#E66825';
+
+    if (!appliedVibes.includes(v.label)) appliedVibes.push(v.label);
+    updateAppliedLog();
+  };
+
+  window.applyCustomVibe = function() {
+    const input = document.getElementById('custom-vibe-input').value.trim();
+    if (!input) return;
+
+    const lower = input.toLowerCase();
+    
+    vpAvatar.style.borderRadius = '';
+    vpAvatar.style.width = '';
+    vpAvatar.style.height = '';
+    vpAvatar.style.display = '';
+    vpBody.style.backgroundImage = '';
+    vpBody.style.backgroundSize = '';
+    preview.style.backdropFilter = '';
+    preview.style.border = '';
+    const tagContainer = vpTags[0] ? vpTags[0].parentElement : null;
+    if (tagContainer) tagContainer.style.gap = '';
+
+    if (lower.includes('어두') || lower.includes('다크') || lower.includes('검정') || lower.includes('사이버펑크')) {
+      applyVibe('theme-dark', null);
+      if (lower.includes('네온') || lower.includes('글로우')) {
+        setTimeout(() => applyVibe('effect-glow', null), 100);
+      }
+    } else if (lower.includes('밝') || lower.includes('따뜻') || lower.includes('아이보리') || lower.includes('베이지') || lower.includes('포근') || lower.includes('웰빙') || lower.includes('세피아')) {
+      applyVibe('theme-warm', null);
+      if (lower.includes('세리프') || lower.includes('명조') || lower.includes('폰트')) {
+        setTimeout(() => applyVibe('font-serif', null), 100);
+      }
+    } else if (lower.includes('초록') || lower.includes('그린') || lower.includes('민트')) {
+      applyVibe('accent-green', null);
+    } else if (lower.includes('파랑') || lower.includes('네이비') || lower.includes('블루') || lower.includes('스타트업')) {
+      applyVibe('theme-cool', null);
+    } else if (lower.includes('크') || lower.includes('큰') || lower.includes('크게')) {
+      applyVibe('font-big', null);
+    } else if (lower.includes('세리프') || lower.includes('명조') || lower.includes('서체')) {
+      applyVibe('font-serif', null);
+    } else if (lower.includes('그림자') || lower.includes('shadow')) {
+      applyVibe('effect-shadow', null);
+    } else if (lower.includes('그라디언트') || lower.includes('그라데이션') || lower.includes('오로라')) {
+      applyVibe('effect-gradient', null);
+    } else if (lower.includes('팡파르') || lower.includes('콘페티') || lower.includes('confetti') || lower.includes('클릭하면') || lower.includes('터지')) {
+      applyVibe('js-confetti', null);
+      if (lower.includes('자석')) {
+        setTimeout(() => applyVibe('js-magnetic', null), 100);
+      }
+    } else if (lower.includes('자석') || lower.includes('마그네틱') || lower.includes('magnetic') || lower.includes('이끌') || lower.includes('올리')) {
+      applyVibe('js-magnetic', null);
+    } else if (lower.includes('토글') || lower.includes('화면 전환') || lower.includes('dark-toggle') || lower.includes('화면전환')) {
+      applyVibe('js-dark-toggle', null);
+    } else if (lower.includes('타자기') || lower.includes('타이핑') || lower.includes('typing')) {
+      applyVibe('js-typing', null);
+    } else if (lower.includes('입체') || lower.includes('패닝') || lower.includes('tilt') || lower.includes('기울') || lower.includes('3d') || lower.includes('회전')) {
+      applyVibe('js-tilt', null);
+    } else if (lower.includes('나란히') || lower.includes('왼쪽') || lower.includes('카드 레이아웃') || lower.includes('카드형') || lower.includes('가로')) {
+      applyVibe('layout-card', null);
+    } else if (lower.includes('미니멀') || lower.includes('1단 이력서') || lower.includes('여백')) {
+      applyVibe('layout-minimal', null);
+    } else {
+      vibeStatus.textContent = '💬 요청 반영 중...';
+      setTimeout(() => {
+        vibeStatus.textContent = `"${input.substring(0,20)}..." 반영됐어요!`;
+      }, 600);
+    }
+
+    if (lower.includes('네모') || lower.includes('사각형') || lower.includes('각진')) {
+      vpAvatar.style.borderRadius = '0.25rem';
+    } else if (lower.includes('원형') || lower.includes('동그랗')) {
+      vpAvatar.style.borderRadius = '50%';
+    } else if (lower.includes('스쿼클') || lower.includes('모서리만')) {
+      vpAvatar.style.borderRadius = '1.25rem';
+    }
+    if (lower.includes('2배') || lower.includes('키우')) {
+      vpAvatar.style.width = '7.5rem';
+      vpAvatar.style.height = '7.5rem';
+    }
+    if (lower.includes('숨기') || lower.includes('제거')) {
+      vpAvatar.style.display = 'none';
+    }
+
+    if (lower.includes('알약') || lower.includes('둥글')) {
+      vpTags.forEach(t => t.style.borderRadius = '9999px');
+    }
+    if (lower.includes('그레이') || lower.includes('회색')) {
+      vpTags.forEach(t => {
+        t.style.background = '#e5e7eb';
+        t.style.color = '#374151';
+      });
+    }
+    if (lower.includes('테두리') || lower.includes('외곽선') || lower.includes('투명')) {
+      vpTags.forEach(t => {
+        t.style.border = '1.5px solid ' + (t.style.color || '#E66825');
+        t.style.background = 'transparent';
+      });
+    }
+    if (lower.includes('간격') || lower.includes('여백')) {
+      if (tagContainer) tagContainer.style.gap = '16px';
+    }
+
+    if (lower.includes('격자') || lower.includes('모눈') || lower.includes('그리드 패턴')) {
+      vpBody.style.backgroundImage = 'radial-gradient(circle, #e5e7eb 1.5px, transparent 1.5px)';
+      vpBody.style.backgroundSize = '16px 16px';
+    }
+    if (lower.includes('유리') || lower.includes('글래스')) {
+      preview.style.backdropFilter = 'blur(10px)';
+      preview.style.background = 'rgba(255,255,255,0.75)';
+    }
+    if (lower.includes('도트') || lower.includes('픽셀')) {
+      preview.style.border = '6px double #191F28';
+    }
+
+    if (!appliedVibes.includes(`✍️ "${input.substring(0,28)}..."`)) {
+      appliedVibes.push(`✍️ "${input.substring(0,28)}..."`);
+      updateAppliedLog();
+    }
+    copyToClipboard(input, null, false);
+  };
+
+  window.usePrompt = function(promptText) {
+    const textarea = document.getElementById('custom-vibe-input');
+    textarea.value = promptText;
+    window.applyCustomVibe();
+  };
+
+  function updateAppliedLog() {
+    if (!appliedLog || !appliedList) return;
+    if (appliedVibes.length === 0) { appliedLog.classList.add('hidden'); return; }
+    appliedLog.classList.remove('hidden');
+    appliedList.innerHTML = appliedVibes.map(v =>
+      `<div class="flex items-center gap-2 text-sm text-ink-700 bg-green-50 border border-green-100 px-3 py-1.5 rounded-lg"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-green-500 shrink-0"></i>${v}</div>`
+    ).join('');
+    lucide.createIcons();
+  }
+
+  window.resetVibe = function() {
+    document.querySelectorAll('.vibe-pill').forEach(b => b.classList.remove('selected'));
+    
+    if (window.vibeCleanup) {
+      try {
+        window.vibeCleanup();
+      } catch (e) {
+        console.error('Vibe cleanup error:', e);
+      }
+      window.vibeCleanup = null;
+    }
+
+    applyStyles(vibeDefaults);
+    applyLayout('default');
+    
+    vpAvatar.style.borderRadius = '';
+    vpAvatar.style.width = '';
+    vpAvatar.style.height = '';
+    vpAvatar.style.display = '';
+    vpBody.style.backgroundImage = '';
+    vpBody.style.backgroundSize = '';
+    preview.style.backdropFilter = '';
+    preview.style.border = '';
+    const tagContainer = vpTags[0] ? vpTags[0].parentElement : null;
+    if (tagContainer) tagContainer.style.gap = '';
+
+    vpBtn.style.boxShadow = 'none';
+    vpBtn.style.transform = '';
+    vpBtn.style.transition = '';
+    preview.style.transform = '';
+    preview.style.transition = '';
+    preview.style.perspective = '';
+    preview.style.transformStyle = '';
+    vpHero.style.transition = '';
+    vpBody.style.transition = '';
+    vpText.style.transition = '';
+    vpName.style.transition = '';
+    vpRole.style.transition = '';
+    vpAvatar.style.transition = '';
+    if (window.originalRoleText) {
+      vpRole.textContent = window.originalRoleText;
+    }
+
+    vibeStatus.textContent = '기본 상태';
+    vibeStatus.style.background = '#FFE4D0';
+    vibeStatus.style.color = '#E66825';
+    appliedVibes = [];
+    updateAppliedLog();
+    document.getElementById('custom-vibe-input').value = '';
+    
+    const categories = ['colors', 'layout', 'typography', 'interactions', 'avatar', 'tags', 'graphics'];
+    categories.forEach(cat => {
+      window.renderCategory(cat);
+    });
+    lucide.createIcons();
+  };
+
+  // Initial rendering of prompt category sets
+  const categories = ['colors', 'layout', 'typography', 'interactions', 'avatar', 'tags', 'graphics'];
+  categories.forEach(cat => {
+    window.renderCategory(cat);
+  });
+  lucide.createIcons();
+
+
+
+  // ============================================================
+  // LOTTIE BUNNY + DRAWER (COMP_LOTTIE_DRAWER★.md 완전 준수)
+  // ============================================================
+  const bunnyContainer = document.getElementById('bunny-lottie');
+  let bunnyAnim;
+
+  function mountBunnyLottie(animationData) {
+    if (!bunnyContainer || typeof lottie === 'undefined' || !animationData) return;
+    if (bunnyAnim) bunnyAnim.destroy();
+    bunnyContainer.innerHTML = '';
+    bunnyAnim = lottie.loadAnimation({
+      container: bunnyContainer,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      animationData
+    });
+  }
+
+  function mountFallbackBunny() {
+    const fallback = { v:'5.5.2', fr:30, ip:0, op:60, w:200, h:200, nm:'Fallback', layers:[{ty:4,nm:'C',sr:1,ks:{o:{a:0,k:100},r:{a:0,k:0},p:{a:0,k:[100,100,0]},a:{a:0,k:[0,0,0]},s:{a:1,k:[{i:{x:[.83,.83,.83],y:[.83,.83,.83]},o:{x:[.17,.17,.17],y:[.17,.17,.17]},t:0,s:[80,80,100]},{i:{x:[.83,.83,.83],y:[.83,.83,.83]},o:{x:[.17,.17,.17],y:[.17,.17,.17]},t:30,s:[95,95,100]},{t:60,s:[80,80,100]}]}},shapes:[{ty:'gr',it:[{ty:'el',s:{a:0,k:[120,120]},p:{a:0,k:[0,0]}},{ty:'fl',c:{a:0,k:[1,.49,.21,1]}}]}]}] };
+    mountBunnyLottie(fallback);
+  }
+
+  if (typeof bunnyLottieJson !== 'undefined') {
+    mountBunnyLottie(bunnyLottieJson);
+  } else {
+    fetch('./assets/bunny.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Bunny JSON load failed');
+        return response.json();
+      })
+      .then(mountBunnyLottie)
+      .catch(err => {
+        console.warn('bunny.json fetch failed, using fallback:', err);
+        mountFallbackBunny();
+      });
+  }
+
+  const trigger = document.getElementById('bunny-trigger');
+  const drawer = document.getElementById('drawer');
+  const backdrop = document.getElementById('drawer-backdrop');
+  const closeBtn = document.getElementById('drawer-close');
+  const iframe = document.getElementById('dashboard-iframe');
+  const spinner = document.getElementById('iframe-spinner');
+
+  if (trigger && drawer && backdrop && closeBtn) {
+    function openDrawer() {
+      backdrop.classList.remove('hidden');
+      void backdrop.offsetWidth;
+      backdrop.classList.remove('opacity-0');
+      backdrop.classList.add('opacity-100');
+      drawer.classList.remove('-translate-x-full');
+      document.body.style.overflow = 'hidden';
+      if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.getAttribute('src') === '')) {
+        if (spinner) spinner.classList.remove('opacity-0','hidden');
+        iframe.src = iframe.getAttribute('data-src');
+      }
+    }
+
+    function closeDrawer() {
+      backdrop.classList.remove('opacity-100');
+      backdrop.classList.add('opacity-0');
+      drawer.classList.add('-translate-x-full');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        if (drawer.classList.contains('-translate-x-full')) backdrop.classList.add('hidden');
+      }, 500);
+    }
+
+    trigger.addEventListener('click', openDrawer);
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openDrawer();
+      }
+    });
+    closeBtn.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+  }
+
+  if (iframe && spinner) {
+    iframe.addEventListener('load', () => {
+      spinner.classList.add('opacity-0');
+      setTimeout(() => spinner.classList.add('hidden'), 300);
+    });
+  }
+</script>
+
+</body>
+</html>
+
