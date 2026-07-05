@@ -856,12 +856,12 @@
       <div class="grid lg:grid-cols-[1fr_360px] gap-10 items-start">
         <div>
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-seed-light text-seed-dark text-sm font-black mb-6">
-            <i data-lucide="share-2" class="w-4 h-4"></i> 배포 다음에 꼭 해야 할 마지막 한 끗
+            <i data-lucide="share-2" class="w-4 h-4"></i> 배포 전에 꼭 작성해야 할 마지막 한 끗
           </div>
-          <h3 class="text-3xl md:text-4xl font-black text-ink-900 mb-5 leading-tight">주소는 생겼는데, 공유했을 때 왜 밋밋하게 보일까요?</h3>
+          <h3 class="text-3xl md:text-4xl font-black text-ink-900 mb-5 leading-tight">주소를 공유했을 때, 왜 썸네일 카드가 뜨지 않을까요?</h3>
           <p class="text-xl text-ink-500 leading-relaxed mb-6">
-            Netlify로 배포하면 URL은 생깁니다. 하지만 카카오톡이나 당근 커뮤니티에 그 주소를 붙였을 때, 서비스가 알아서 예쁜 썸네일을 만들어주지는 않습니다.
-            링크를 받는 서비스는 페이지의 <code class="bg-ink-100 text-red-500 px-2 py-0.5 rounded-lg font-mono text-base">&lt;head&gt;</code> 안에 있는 메타 태그를 읽고 “이 링크를 어떤 카드로 보여줄지” 결정합니다.
+            최종 배포(Deploy)를 하기 전에 HTML의 <code class="bg-ink-100 text-red-500 px-2 py-0.5 rounded-lg font-mono text-base">&lt;head&gt;</code> 영역에 오픈그래프 메타 태그를 미리 심어두어야 합니다. 
+            그렇지 않으면 카카오톡이나 SNS 봇이 내 페이지를 읽었을 때 정보가 없어 주소만 덩그러니 노출됩니다.
           </p>
           <div class="grid md:grid-cols-3 gap-4 mb-8">
             <div class="rounded-2xl bg-ink-100/60 border border-ink-100 p-5">
