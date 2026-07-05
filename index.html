@@ -217,8 +217,8 @@
     <a href="#step-1" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">명함 데이터</a>
     <a href="#step-2" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">AI 빌드</a>
     <a href="#step-4" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">원하는 기능 넣기</a>
-    <a href="#step-5" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">세상에 띄우기</a>
-    <a href="#step-6" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">공유 썸네일</a>
+    <a href="#step-5" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">공유 썸네일</a>
+    <a href="#step-6" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">세상에 띄우기</a>
     <a href="#step-7" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">영상 스크롤</a>
   </nav>
 </header>
@@ -761,91 +761,11 @@
 
 
   <!-- =========================================================== -->
-  <!-- STEP 5: 세상에 띄우기                                         -->
+  <!-- STEP 5: Open Graph로 공유 카드 만들기                         -->
   <!-- =========================================================== -->
   <section id="step-5">
     <div class="mb-12 flex items-center gap-5">
-      <div class="step-badge bg-teal-500 text-white shadow-xl shadow-teal-500/30">5</div>
-      <div>
-        <h2 class="text-3xl md:text-4xl font-black text-ink-900">세상에 띄우기</h2>
-        <p class="text-ink-500 mt-1.5 text-lg">서버 설정 없이 드래그 앤 드롭 하나로 완성되는 무료 웹 배포 시각 가이드</p>
-      </div>
-    </div>
-
-    <!-- Netlify What is it -->
-    <div class="bg-white rounded-3xl border border-ink-100 p-10 md:p-14 mb-12 shadow-sm">
-      <div class="flex items-start gap-5 mb-8">
-        <i data-lucide="rocket" class="w-8 h-8 text-teal-500 mt-1 shrink-0"></i>
-        <div>
-          <h3 class="text-2xl font-black text-ink-900 mb-3">Netlify Drop 이란?</h3>
-          <p class="text-ink-500 text-xl leading-relaxed">
-            전 세계 개발자들이 가장 사랑하는 클라우드 호스팅 서비스입니다. <strong class="text-ink-900">서버 구매, 도메인 연결, 복잡한 명령어 없이</strong> 완성된 <code class="bg-ink-100 px-2 rounded-lg font-mono text-base">index.html</code> 파일을 끌어다 놓기만 하면, 전 세계 누구나 접속할 수 있는 나만의 고유한 URL이 즉시 생성됩니다.
-          </p>
-        </div>
-      </div>
-
-      <!-- Step-by-step visual guide -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <!-- Step A -->
-        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">1</div>
-          <i data-lucide="file-code" class="w-10 h-10 text-teal-600"></i>
-          <p class="font-bold text-ink-900 text-base">Gemini에서 생성된<br><code class="text-red-500 text-sm">index.html</code> 파일을 저장</p>
-          <p class="text-sm text-ink-500">Canvas에서 코드 전체 복사 → 메모장 붙여넣기 → index.html로 저장</p>
-        </div>
-        <!-- Step B -->
-        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">2</div>
-          <i data-lucide="globe" class="w-10 h-10 text-teal-600"></i>
-          <p class="font-bold text-ink-900 text-base">Netlify Drop 사이트<br>접속</p>
-          <a href="https://app.netlify.com/drop" target="_blank" class="text-sm font-bold text-teal-600 underline">app.netlify.com/drop →</a>
-        </div>
-        <!-- Step C -->
-        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">3</div>
-          <i data-lucide="folder-up" class="w-10 h-10 text-teal-600"></i>
-          <p class="font-bold text-ink-900 text-base">점선 박스에<br>파일 드래그 앤 드롭</p>
-          <p class="text-sm text-ink-500">저장한 index.html 파일을 아래 점선 박스 이미지처럼 끌어다 놓으세요</p>
-        </div>
-        <!-- Step D -->
-        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">4</div>
-          <i data-lucide="link" class="w-10 h-10 text-teal-600"></i>
-          <p class="font-bold text-ink-900 text-base">고유 URL 즉시 생성 🎉</p>
-          <p class="text-sm text-ink-500">예: <code class="bg-teal-100 px-1 rounded text-xs">random-name-123.netlify.app</code></p>
-        </div>
-      </div>
-
-      <!-- Visual Drop Zone Illustration -->
-      <div class="mt-10 flex flex-col items-center gap-4">
-        <p class="text-base font-bold text-ink-500">Netlify Drop 화면 미리보기</p>
-        <div class="w-full max-w-lg bg-[#0e1e2b] rounded-3xl p-10 flex flex-col items-center justify-center text-center border-2 border-dashed border-teal-400/60 gap-4">
-          <i data-lucide="folder-open" class="w-14 h-14 text-teal-400"></i>
-          <p class="text-white font-black text-xl">Drag and drop your<br>project folder, zip file,<br>or a single HTML file</p>
-          <p class="text-teal-300/70 text-sm">to deploy instantly.</p>
-          <div class="mt-2 flex gap-4 text-teal-400 text-sm">
-            <span class="underline cursor-pointer">browse files to upload</span>
-            <span class="underline cursor-pointer">choose a folder</span>
-          </div>
-        </div>
-        <p class="text-sm text-ink-500 flex items-center gap-2">
-          <i data-lucide="arrow-up" class="w-4 h-4 text-teal-500 animate-bounce"></i>
-          이 화면이 뜨면 index.html 파일을 저 위에 드래그해서 놓으세요
-        </p>
-        <a href="https://app.netlify.com/drop" target="_blank"
-           class="mt-4 inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-teal-800 bg-teal-100 hover:bg-teal-200 transition-all text-xl card shadow-md">
-          <i data-lucide="globe-2" class="w-6 h-6"></i> Netlify Drop 사이트 접속하기 ↗
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- =========================================================== -->
-  <!-- STEP 6: Open Graph로 공유 카드 만들기                         -->
-  <!-- =========================================================== -->
-  <section id="step-6">
-    <div class="mb-12 flex items-center gap-5">
-      <div class="step-badge bg-ink-900 text-white shadow-xl">6</div>
+      <div class="step-badge bg-ink-900 text-white shadow-xl">5</div>
       <div>
         <h2 class="text-3xl md:text-4xl font-black text-ink-900">링크를 카드처럼 보이게 만들기</h2>
         <p class="text-ink-500 mt-1.5 text-lg">카카오톡, 당근 커뮤니티, SNS에 공유했을 때 제목·설명·대표 이미지가 예쁘게 뜨도록 Open Graph를 넣습니다.</p>
@@ -1055,6 +975,86 @@
             <p class="text-sm text-ink-500 mt-2">메타 태그를 넣은 뒤 다시 배포해야 공유 카드가 새 정보로 읽힙니다.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- =========================================================== -->
+  <!-- STEP 6: 세상에 띄우기                                         -->
+  <!-- =========================================================== -->
+  <section id="step-6">
+    <div class="mb-12 flex items-center gap-5">
+      <div class="step-badge bg-teal-500 text-white shadow-xl shadow-teal-500/30">6</div>
+      <div>
+        <h2 class="text-3xl md:text-4xl font-black text-ink-900">세상에 띄우기</h2>
+        <p class="text-ink-500 mt-1.5 text-lg">서버 설정 없이 드래그 앤 드롭 하나로 완성되는 무료 웹 배포 시각 가이드</p>
+      </div>
+    </div>
+
+    <!-- Netlify What is it -->
+    <div class="bg-white rounded-3xl border border-ink-100 p-10 md:p-14 mb-12 shadow-sm">
+      <div class="flex items-start gap-5 mb-8">
+        <i data-lucide="rocket" class="w-8 h-8 text-teal-500 mt-1 shrink-0"></i>
+        <div>
+          <h3 class="text-2xl font-black text-ink-900 mb-3">Netlify Drop 이란?</h3>
+          <p class="text-ink-500 text-xl leading-relaxed">
+            전 세계 개발자들이 가장 사랑하는 클라우드 호스팅 서비스입니다. <strong class="text-ink-900">서버 구매, 도메인 연결, 복잡한 명령어 없이</strong> 완성된 <code class="bg-ink-100 px-2 rounded-lg font-mono text-base">index.html</code> 파일을 끌어다 놓기만 하면, 전 세계 누구나 접속할 수 있는 나만의 고유한 URL이 즉시 생성됩니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step-by-step visual guide -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Step A -->
+        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">1</div>
+          <i data-lucide="file-code" class="w-10 h-10 text-teal-600"></i>
+          <p class="font-bold text-ink-900 text-base">오픈그래프 태그를 넣은<br><code class="text-red-500 text-sm">index.html</code> 저장</p>
+          <p class="text-sm text-ink-500">앞선 단계에서 작성한 메타 태그 코드를 &lt;head&gt; 안에 삽입하고 파일을 최종 저장합니다.</p>
+        </div>
+        <!-- Step B -->
+        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">2</div>
+          <i data-lucide="globe" class="w-10 h-10 text-teal-600"></i>
+          <p class="font-bold text-ink-900 text-base">Netlify Drop 사이트<br>접속</p>
+          <a href="https://app.netlify.com/drop" target="_blank" class="text-sm font-bold text-teal-600 underline">app.netlify.com/drop →</a>
+        </div>
+        <!-- Step C -->
+        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">3</div>
+          <i data-lucide="folder-up" class="w-10 h-10 text-teal-600"></i>
+          <p class="font-bold text-ink-900 text-base">점선 박스에<br>파일 드래그 앤 드롭</p>
+          <p class="text-sm text-ink-500">저장한 index.html 파일을 아래 점선 박스 이미지처럼 끌어다 놓으세요</p>
+        </div>
+        <!-- Step D -->
+        <div class="bg-teal-50 rounded-2xl p-6 border border-teal-100 flex flex-col items-center text-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-teal-500 text-white flex items-center justify-center font-black text-lg">4</div>
+          <i data-lucide="link" class="w-10 h-10 text-teal-600"></i>
+          <p class="font-bold text-ink-900 text-base">고유 URL 즉시 생성 🎉</p>
+          <p class="text-sm text-ink-500">예: <code class="bg-teal-100 px-1 rounded text-xs">random-name-123.netlify.app</code></p>
+        </div>
+      </div>
+
+      <!-- Visual Drop Zone Illustration -->
+      <div class="mt-10 flex flex-col items-center gap-4">
+        <p class="text-base font-bold text-ink-500">Netlify Drop 화면 미리보기</p>
+        <div class="w-full max-w-lg bg-[#0e1e2b] rounded-3xl p-10 flex flex-col items-center justify-center text-center border-2 border-dashed border-teal-400/60 gap-4">
+          <i data-lucide="folder-open" class="w-14 h-14 text-teal-400"></i>
+          <p class="text-white font-black text-xl">Drag and drop your<br>project folder, zip file,<br>or a single HTML file</p>
+          <p class="text-teal-300/70 text-sm">to deploy instantly.</p>
+          <div class="mt-2 flex gap-4 text-teal-400 text-sm">
+            <span class="underline cursor-pointer">browse files to upload</span>
+            <span class="underline cursor-pointer">choose a folder</span>
+          </div>
+        </div>
+        <p class="text-sm text-ink-500 flex items-center gap-2">
+          <i data-lucide="arrow-up" class="w-4 h-4 text-teal-500 animate-bounce"></i>
+          이 화면이 뜨면 index.html 파일을 저 위에 드래그해서 놓으세요
+        </p>
+        <a href="https://app.netlify.com/drop" target="_blank"
+           class="mt-4 inline-flex items-center gap-3 px-10 py-5 rounded-2xl font-black text-teal-800 bg-teal-100 hover:bg-teal-200 transition-all text-xl card shadow-md">
+          <i data-lucide="globe-2" class="w-6 h-6"></i> Netlify Drop 사이트 접속하기 ↗
+        </a>
       </div>
     </div>
   </section>
