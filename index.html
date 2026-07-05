@@ -1293,21 +1293,34 @@
       </div>
 
       <div id="sf-preview" class="hidden mt-10 border-t border-ink-100 pt-8">
-        <div class="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
-          <div>
+        <div class="max-w-3xl mx-auto space-y-10">
+          <!-- Frame Preview -->
+          <div class="text-center">
             <h3 class="text-2xl font-black text-ink-900 mb-4">프레임 미리보기</h3>
-            <div class="bg-ink-900 rounded-3xl overflow-hidden shadow-xl">
+            <div class="bg-ink-900 rounded-3xl overflow-hidden shadow-xl max-w-2xl mx-auto border border-black/5">
               <canvas id="sf-preview-canvas" class="w-full block"></canvas>
             </div>
-            <input id="sf-slider" type="range" min="0" max="119" value="0" class="w-full mt-4 accent-seed">
-            <p id="sf-frame-info" class="mt-2 text-sm font-bold text-ink-500">FRAME 001 / 120</p>
+            <div class="max-w-2xl mx-auto mt-4">
+              <input id="sf-slider" type="range" min="0" max="119" value="0" class="w-full accent-seed">
+              <p id="sf-frame-info" class="mt-2 text-sm font-bold text-ink-500">FRAME 001 / 120</p>
+            </div>
           </div>
-          <div class="bg-seed-light rounded-3xl p-6 border border-orange-100">
-            <h4 class="text-xl font-black text-ink-900 mb-3">완성 HTML</h4>
-            <p class="text-sm text-ink-700 leading-relaxed mb-5">추출된 프레임을 내장한 단일 HTML이 생성됩니다. 바로 새 탭에서 열어 확인하거나, 다운로드해서 Netlify Drop에 올리면 됩니다.</p>
-            <div class="flex flex-col gap-3">
-              <button id="sf-open" class="py-3 rounded-2xl bg-white text-ink-900 font-black hover:bg-orange-50 transition-colors">새 탭에서 열기</button>
-              <button id="sf-download" class="py-3 rounded-2xl bg-seed text-white font-black hover:bg-seed-dark transition-colors">scroll-film.html 다운로드</button>
+
+          <!-- Completed HTML Card -->
+          <div class="bg-seed-light rounded-3xl p-8 border border-orange-100 max-w-2xl mx-auto text-center shadow-sm">
+            <h4 class="text-2xl font-black text-ink-900 mb-3 flex items-center justify-center gap-2">
+              🎉 완성 HTML 패키지 준비 완료!
+            </h4>
+            <p class="text-base text-ink-700 leading-relaxed mb-6 max-w-md mx-auto">
+              추출된 프레임을 내장한 단일 HTML 파일이 생성되었습니다. 새 탭에서 작동을 미리 검증해 보거나 즉시 다운로드하세요.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <button id="sf-open" class="px-8 py-3.5 rounded-2xl bg-white text-ink-900 font-black hover:bg-orange-50 transition-colors border border-orange-200/50 shadow-sm cursor-pointer">
+                새 탭에서 열기
+              </button>
+              <button id="sf-download" class="px-8 py-3.5 rounded-2xl bg-seed text-white font-black hover:bg-seed-dark transition-all transform hover:scale-[1.02] shadow-md cursor-pointer">
+                scroll-film.html 다운로드
+              </button>
             </div>
           </div>
         </div>
