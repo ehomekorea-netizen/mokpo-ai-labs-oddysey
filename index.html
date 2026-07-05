@@ -151,6 +151,16 @@
     }
     .vibe-pill:hover { transform: translateX(4px); border-color: var(--seed); }
     .vibe-pill.selected { background: #FFE4D0; border-color: #FF7E36; color: #191F28; }
+
+    /* Prevent floating bunny Lottie trigger from overlapping main body content on laptop screens */
+    @media (min-width: 1024px) {
+      main {
+        /* Keep at least 220px of gutter on the left side of the main content on smaller laptop screens.
+           As the screen grows wider, this padding dynamically decreases to the default 3rem (48px)
+           to maintain centering with max-width [1440px]. */
+        padding-left: clamp(3rem, calc(220px - (100vw - 1440px) / 2), 220px) !important;
+      }
+    }
   </style>
 </head>
 
@@ -443,8 +453,9 @@
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- =========================================================== -->
+  <!-- =========================================================== -->
   <!-- STEP 1: 무엇을 데이터로 삼을 것인가?                           -->
   <!-- =========================================================== -->
   <section id="step-1">
@@ -565,11 +576,20 @@
         </div>
 
         <!-- ⚠️ 명함 + DESIGN.md 첨부 리마인더 -->
-        <div class="reminder-box p-5 mb-6 flex items-start gap-3">
-          <span class="text-2xl">📎</span>
-          <div>
-            <p class="text-base font-black text-ink-900">명함 사진 + DESIGN.md 둘 다 첨부하세요!</p>
-            <p class="text-sm text-ink-500 mt-0.5">1단계에서 완성된 <strong>DESIGN.md 내용</strong>과 <strong>명함 이미지</strong>를 함께 붙여넣어야 AI가 정확한 스타일로 HTML을 생성합니다.</p>
+        <div class="reminder-box p-5 mb-6 flex flex-col gap-4">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">📎</span>
+            <div>
+              <p class="text-base font-black text-ink-900">명함 사진 + DESIGN.md 둘 다 첨부하세요!</p>
+              <p class="text-sm text-ink-500 mt-0.5">1단계에서 완성된 <strong>DESIGN.md 내용</strong>과 <strong>명함 이미지</strong>를 함께 붙여넣어야 AI가 정확한 스타일로 HTML을 생성합니다.</p>
+            </div>
+          </div>
+          <div class="border-t border-seed/20 pt-4 flex items-start gap-3">
+            <span class="text-2xl">🎨</span>
+            <div>
+              <p class="text-base font-black text-blue-600">반드시 Gemini 도구(tool)에서 'Canvas'를 선택하세요!</p>
+              <p class="text-sm text-ink-500 mt-0.5">코드가 올바르게 생성되고 에디터 기능을 원활하게 사용하려면, Gemini 입력창 상단의 도구(tool)에서 <strong>'Canvas'</strong>를 반드시 활성화/선택하여 코드를 요청해야 합니다.</p>
+            </div>
           </div>
         </div>
 
@@ -843,7 +863,7 @@
             Netlify로 배포하면 URL은 생깁니다. 하지만 카카오톡이나 당근 커뮤니티에 그 주소를 붙였을 때, 서비스가 알아서 예쁜 썸네일을 만들어주지는 않습니다.
             링크를 받는 서비스는 페이지의 <code class="bg-ink-100 text-red-500 px-2 py-0.5 rounded-lg font-mono text-base">&lt;head&gt;</code> 안에 있는 메타 태그를 읽고 “이 링크를 어떤 카드로 보여줄지” 결정합니다.
           </p>
-          <div class="grid md:grid-cols-3 gap-4">
+          <div class="grid md:grid-cols-3 gap-4 mb-8">
             <div class="rounded-2xl bg-ink-100/60 border border-ink-100 p-5">
               <p class="text-xs font-black text-ink-300 tracking-widest uppercase mb-2">Without OG</p>
               <h4 class="font-black text-ink-900 mb-1">주소만 덩그러니</h4>
@@ -860,21 +880,72 @@
               <p class="text-sm text-ink-500 leading-relaxed">링크가 콘텐츠처럼 느껴집니다.</p>
             </div>
           </div>
+
+          <!-- Open Graph Builder Form -->
+          <div class="bg-warm/30 border border-ink-100 rounded-3xl p-6 md:p-8 space-y-6">
+            <div>
+              <h4 class="text-2xl font-black text-ink-900 flex items-center gap-2">
+                <span class="text-2xl">✍️</span> 오픈그래프 태그 빌더 (Open Graph Builder)
+              </h4>
+              <p class="text-sm text-ink-500 mt-1">내가 만들 웹사이트의 이름과 소개, 이미지를 입력해보세요. 실시간으로 오른쪽 미리보기에 반영됩니다.</p>
+            </div>
+            
+            <!-- Title Input -->
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <label for="og-input-title" class="text-sm font-black text-ink-900">제목 (og:title)</label>
+                <span class="text-xs text-ink-400 font-mono"><span id="og-title-char-count">0</span> / 60자</span>
+              </div>
+              <input type="text" id="og-input-title" placeholder="출강바이브" 
+                     class="w-full px-4 py-3 rounded-xl border border-ink-100 focus:outline-none focus:border-seed bg-white text-base transition-colors"
+                     oninput="updateOgPreview()">
+              <p class="text-xs text-ink-400">권장 길이: 60자 이내. 브랜드 이름이나 서비스 핵심명을 요약해 적습니다.</p>
+            </div>
+
+            <!-- Description Input -->
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <label for="og-input-desc" class="text-sm font-black text-ink-900">설명 (og:description)</label>
+                <span class="text-xs text-ink-400 font-mono"><span id="og-desc-char-count">0</span> / 160자</span>
+              </div>
+              <textarea id="og-input-desc" rows="3" placeholder="출강 기록부터 강의료 정산까지, 프리랜서를 위한 스마트 대시보드" 
+                        class="w-full px-4 py-3 rounded-xl border border-ink-100 focus:outline-none focus:border-seed bg-white text-base resize-none transition-colors"
+                        oninput="updateOgPreview()"></textarea>
+              <p class="text-xs text-ink-400">권장 길이: 150 ~ 160자 이내. 공유받은 사용자의 클릭을 유도하는 매력적인 요약글을 적습니다.</p>
+            </div>
+
+            <!-- Image Input -->
+            <div class="space-y-2">
+              <label for="og-input-image" class="text-sm font-black text-ink-900">대표 이미지 경로 (og:image)</label>
+              <input type="text" id="og-input-image" placeholder="https://lecture-payment-dashboard.vercel.app/og-image.png" 
+                     class="w-full px-4 py-3 rounded-xl border border-ink-100 focus:outline-none focus:border-seed bg-white text-base transition-colors"
+                     oninput="updateOgPreview()">
+              <p class="text-xs text-ink-400">권장 크기: 1200 x 630px (2:1 비율). 외부에서 접속 가능한 대표 이미지의 인터넷 절대 경로 URL을 입력합니다.</p>
+            </div>
+
+            <!-- Prompt Copy Button -->
+            <button id="btn-copy-og-prompt" onclick="copyCustomOgPrompt()" 
+                    class="w-full py-4 px-5 rounded-2xl font-black text-white bg-seed hover:bg-seed-dark transition-all flex items-center justify-center gap-3 text-lg cursor-pointer shadow-md mt-2">
+              <i data-lucide="copy" class="w-5 h-5"></i> <span>맞춤형 AI 프롬프트 복사하기</span>
+            </button>
+          </div>
         </div>
 
-        <div class="bg-ink-900 text-white rounded-3xl p-6 shadow-2xl">
-          <p class="text-xs font-black text-seed tracking-widest uppercase mb-4">Preview</p>
-          <div class="rounded-2xl overflow-hidden bg-white text-ink-900">
-            <div class="aspect-[2/1] bg-gradient-to-br from-[#FF7E36] via-[#ffb36b] to-[#191F28] flex items-center justify-center p-6">
-              <div class="text-white text-center">
-                <p class="font-black text-sm tracking-widest uppercase opacity-80">Shared Link</p>
-                <h4 class="text-3xl font-black mt-2">HEAT Carrot 프로젝트</h4>
+        <div class="bg-ink-900 text-white rounded-3xl p-6 shadow-2xl lg:sticky lg:top-28">
+          <p class="text-xs font-black text-seed tracking-widest uppercase mb-4">Preview (실시간 SNS 공유 미리보기)</p>
+          <div class="rounded-2xl overflow-hidden bg-white border border-black/5 shadow-md" style="color: #191F28 !important;">
+            <!-- Preview Image Area -->
+            <div id="og-preview-img-area" class="aspect-[2/1] bg-gradient-to-br from-[#FF7E36] via-[#ffb36b] to-[#191F28] flex items-center justify-center p-6 bg-cover bg-center transition-all duration-300">
+              <div id="og-preview-fallback-text" class="text-white text-center transition-opacity duration-300">
+                <p class="font-black text-[10px] tracking-widest uppercase opacity-75">Shared Link Preview</p>
+                <h4 id="og-preview-hero-title" class="text-2xl font-black mt-1">출강바이브</h4>
               </div>
             </div>
-            <div class="p-5">
-              <p class="font-black text-lg">HEAT Carrot 프로젝트</p>
-              <p class="text-sm text-ink-500 mt-1 leading-relaxed">당근의 온기로 근처 이웃에게 따뜻함을 전합니다.</p>
-              <p class="text-xs text-ink-300 mt-3 font-mono">danggeun-dashboard.vercel.app</p>
+            <!-- Preview Content Area -->
+            <div class="p-5 bg-white">
+              <p id="og-preview-card-title" class="font-black text-base line-clamp-1" style="color: #191F28 !important;">출강바이브</p>
+              <p id="og-preview-card-desc" class="text-xs mt-1.5 leading-relaxed line-clamp-2" style="color: #4e5968 !important;">출강 기록부터 강의료 정산까지, 프리랜서를 위한 스마트 대시보드</p>
+              <p class="text-[10px] mt-3 font-mono" style="color: #8b95a1 !important;">my-service-url.netlify.app</p>
             </div>
           </div>
         </div>
@@ -906,28 +977,61 @@
         </div>
       </div>
 
-      <div class="mt-10 grid lg:grid-cols-[1fr_1fr] gap-6">
-        <div class="rounded-3xl bg-ink-900 text-white p-7">
-          <div class="flex items-center justify-between gap-4 mb-5">
-            <h4 class="text-xl font-black text-seed">Open Graph 요청 프롬프트</h4>
-            <button onclick="copyToClipboard(openGraphPrompt, this, true)" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white text-sm font-black transition-colors">
-              복사
-            </button>
+      <!-- ⚠️ 배포 및 오픈그래프 도구 가이드 -->
+      <div class="mt-10 grid lg:grid-cols-[1.2fr_1fr] gap-8">
+        <!-- Where to paste -->
+        <div class="rounded-3xl bg-slate-950 text-slate-100 p-7 overflow-hidden flex flex-col justify-between">
+          <div>
+            <h4 class="text-xl font-black text-white mb-2 flex items-center gap-2">
+              <i data-lucide="file-code" class="text-emerald-400 w-5 h-5"></i> 붙여 넣을 위치: HTML의 &lt;head&gt;
+            </h4>
+            <p class="text-sm text-slate-400 mb-5">AI가 생성한 메타 태그 코드는 내 HTML 파일의 최상단 &lt;head&gt; 영역 내부에 삽입해야 브라우저와 SNS 봇이 읽어갈 수 있습니다.</p>
           </div>
-          <p class="text-white/80 leading-relaxed italic">
-            “이 웹페이지를 카카오톡이나 SNS에 공유했을 때 제목, 설명, 대표 이미지가 예쁜 미리보기 카드로 나오게 하고 싶어.
-            HTML &lt;head&gt; 영역에 들어갈 필수 오픈 그래프(Open Graph) 메타 태그 코드를 작성해 줘.
-            주소, 제목, 설명, 이미지 경로 자리는 내가 나중에 바꿀 수 있게 주석으로 표시해 줘.”
-          </p>
-        </div>
-
-        <div class="rounded-3xl bg-slate-950 text-slate-100 p-7 overflow-hidden">
-          <h4 class="text-xl font-black text-white mb-5">붙여 넣을 위치: HTML의 &lt;head&gt;</h4>
-          <pre class="text-sm leading-relaxed overflow-x-auto"><code>&lt;meta property="og:title" content="HEAT Carrot 프로젝트"&gt;
-&lt;meta property="og:description" content="당근의 온기로 근처 이웃에게 따뜻함을 전합니다."&gt;
-&lt;meta property="og:image" content="https://내주소/og-image.png"&gt;
+          <pre class="text-sm leading-relaxed overflow-x-auto bg-slate-900/60 p-4 rounded-2xl border border-slate-800 font-mono"><code id="og-code-block">&lt;!-- HTML 파일 &lt;head&gt; 내부 적절한 곳에 삽입 --&gt;
+&lt;meta property="og:title" content="출강바이브"&gt;
+&lt;meta property="og:description" content="출강 기록부터 강의료 정산까지, 프리랜서를 위한 스마트 대시보드"&gt;
+&lt;meta property="og:image" content="https://lecture-payment-dashboard.vercel.app/og-image.png"&gt;
 &lt;meta property="og:url" content="https://내서비스주소.netlify.app"&gt;
 &lt;meta property="og:type" content="website"&gt;</code></pre>
+        </div>
+
+        <!-- Testing tools -->
+        <div class="rounded-3xl bg-white border border-ink-100 p-7 flex flex-col justify-between shadow-sm">
+          <div>
+            <h4 class="text-xl font-black text-ink-900 mb-2 flex items-center gap-2">
+              <i data-lucide="wrench" class="text-seed w-5 h-5"></i> 배포 후 오픈그래프 검증 및 디버깅 도구
+            </h4>
+            <p class="text-sm text-ink-500 mb-5">Netlify 배포 후 실제로 오픈그래프 태그가 잘 작동하는지 다음 두 도구를 통해 바로 확인하세요.</p>
+          </div>
+          <div class="space-y-4">
+            <!-- Opengraph.dev -->
+            <a href="https://opengraph.dev/" target="_blank" class="flex items-center justify-between p-4 rounded-2xl bg-blue-50 border border-blue-100 hover:border-blue-300 hover:bg-blue-100/50 transition-all group">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center shrink-0">
+                  <i data-lucide="external-link" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h5 class="font-black text-ink-900 text-sm">오픈그래프 플레이그라운드</h5>
+                  <p class="text-xs text-ink-500">각 SNS별 미리보기를 모아서 확인</p>
+                </div>
+              </div>
+              <span class="text-blue-600 text-xs font-bold flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">이동 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
+            </a>
+
+            <!-- Kakao Sharing Debugger -->
+            <a href="https://developers.kakao.com/tool/debugger/sharing" target="_blank" class="flex items-center justify-between p-4 rounded-2xl bg-amber-50 border border-amber-100 hover:border-amber-300 hover:bg-amber-100/50 transition-all group">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 text-ink-900 flex items-center justify-center shrink-0">
+                  <i data-lucide="message-square-dashed" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                  <h5 class="font-black text-ink-900 text-sm">카카오톡 공유 디버거 (Kakao)</h5>
+                  <p class="text-xs text-ink-500">태그 수정 후 꼭 '캐시 초기화' 진행</p>
+                </div>
+              </div>
+              <span class="text-amber-600 text-xs font-bold flex items-center gap-0.5 group-hover:translate-x-1 transition-transform">이동 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -1045,59 +1149,91 @@
 
     <div class="bg-white rounded-3xl border border-ink-100 p-8 md:p-10 shadow-sm">
       <div class="grid lg:grid-cols-[1fr_420px] gap-8">
-        <div>
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 class="text-2xl font-black text-ink-900">명함 기반 AI 영상 프롬프트</h3>
-              <p class="text-ink-500 mt-1">명함의 디자인 언어와 직업의 상징 오브젝트를 하나의 장면으로 번역하는 요청문입니다.</p>
+        <!-- Left Column: Steps 1, 2, 3 -->
+        <div class="space-y-8">
+          
+          <!-- STEP 1: AI 영상 프롬프트 복사 -->
+          <div class="border-b border-ink-100 pb-6">
+            <div class="flex items-center gap-2.5 mb-3 text-seed font-black text-sm uppercase tracking-widest">
+              <span class="w-6 h-6 rounded-full bg-seed text-white flex items-center justify-center text-xs">1</span> STEP 1 · AI 영상 프롬프트 복사
             </div>
-            <button onclick="copyToClipboard(scrollFilmPrompt, this, true)" class="px-5 py-3 rounded-xl bg-ink-900 text-white hover:bg-ink-700 transition-colors font-black">
-              프롬프트 복사
-            </button>
-          </div>
-          <div class="bg-ink-100/60 rounded-2xl border border-ink-100 p-5 text-sm text-ink-700 leading-relaxed">
-            <strong class="text-ink-900">요청 방향:</strong> 명함 사진을 첨부하고, 명함의 색상·질감·여백을 기준으로 삼습니다.
-            여기에 직업과 연관된 상징 오브젝트를 더해 8~10초의 극적인 무빙 영상을 만들고, 마지막은 웹 히어로처럼 안정적으로 끝냅니다.
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h4 class="text-xl font-black text-ink-900">명함 기반 AI 영상 프롬프트</h4>
+                <p class="text-sm text-ink-500 mt-1">명함의 디자인 언어와 직업의 상징 오브젝트를 하나의 장면으로 번역하는 요청문입니다.</p>
+              </div>
+              <button onclick="copyToClipboard(scrollFilmPrompt, this, true)" class="px-5 py-3 rounded-xl bg-ink-900 text-white hover:bg-ink-700 transition-colors font-black shrink-0">
+                프롬프트 복사
+              </button>
+            </div>
+            <div class="bg-ink-100/60 rounded-2xl border border-ink-100 p-5 mt-4 text-sm text-ink-700 leading-relaxed">
+              <strong class="text-ink-900">요청 방향:</strong> 명함 사진을 첨부하고, 명함의 색상·질감·여백을 기준으로 삼습니다.
+              여기에 직업과 연관된 상징 오브젝트를 더해 8~10초의 극적인 무빙 영상을 만들고, 마지막은 웹 히어로처럼 안정적으로 끝냅니다.
+            </div>
           </div>
 
-          <div class="mt-8">
-            <p class="text-seed font-black tracking-widest text-sm uppercase mb-5">STEP 4 · 페이지 문구 (선택 - 비워두면 기본값)</p>
+          <!-- STEP 2: AI 영상 생성하기 -->
+          <div class="border-b border-ink-100 pb-6">
+            <div class="flex items-center gap-2.5 mb-3 text-seed font-black text-sm uppercase tracking-widest">
+              <span class="w-6 h-6 rounded-full bg-seed text-white flex items-center justify-center text-xs">2</span> STEP 2 · AI 영상 생성하기
+            </div>
+            <p class="text-sm text-ink-500 leading-relaxed">
+              복사한 프롬프트를 들고 아래 AI 비디오 생성기 사이트 중 하나에 접속하여 영상을 생성하세요.<br>
+              (가이드: 8~10초, 컷 전환 없음, 인물/텍스트 제외, 천천히 줌인/줌아웃되는 시네마틱 카메라 무빙)
+            </p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <a href="https://www.meta.ai/" target="_blank" class="px-3.5 py-2 rounded-xl bg-ink-100 hover:bg-seed hover:text-white transition-all text-xs font-bold text-ink-700">Meta AI ↗</a>
+              <a href="https://deepmind.google/technologies/veo/" target="_blank" class="px-3.5 py-2 rounded-xl bg-ink-100 hover:bg-seed hover:text-white transition-all text-xs font-bold text-ink-700">Google Veo ↗</a>
+              <a href="https://x.ai/" target="_blank" class="px-3.5 py-2 rounded-xl bg-ink-100 hover:bg-seed hover:text-white transition-all text-xs font-bold text-ink-700">Grok (x.ai) ↗</a>
+              <a href="https://runwayml.com/" target="_blank" class="px-3.5 py-2 rounded-xl bg-ink-100 hover:bg-seed hover:text-white transition-all text-xs font-bold text-ink-700">Runway Gen-3 ↗</a>
+            </div>
           </div>
-          <div class="grid md:grid-cols-2 gap-5">
-            <div>
-              <label class="block text-sm font-black text-ink-700 mb-2">브랜드명</label>
-              <input id="sf-brand" placeholder="HEAT Carrot Lab" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+
+          <!-- STEP 3: 스크롤 페이지 문구 작성 -->
+          <div>
+            <div class="flex items-center gap-2.5 mb-4 text-seed font-black text-sm uppercase tracking-widest">
+              <span class="w-6 h-6 rounded-full bg-seed text-white flex items-center justify-center text-xs">3</span> STEP 3 · 스크롤 페이지 문구 작성 (선택 - 비워두면 기본값)
             </div>
-            <div>
-              <label class="block text-sm font-black text-ink-700 mb-2">버튼 문구</label>
-              <input id="sf-button" placeholder="실험 결과 보기" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-black text-ink-700 mb-2">히어로 제목 (줄바꿈 가능, *별표*가 포인트 컬러)</label>
-              <textarea id="sf-title" rows="2" placeholder="목포의 온도가&#10;*AI 실험*이 되다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed"></textarea>
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-black text-ink-700 mb-2">히어로 서브카피</label>
-              <textarea id="sf-sub" rows="3" placeholder="명함 한 장에서 뽑아낸 색과 온기가 목포 AI 실험실의 스크롤 장면으로 흐릅니다." class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed"></textarea>
-            </div>
-            <div>
-              <label class="block text-sm font-black text-ink-700 mb-2">중간 문구 ①</label>
-              <input id="sf-mid-1" placeholder="당근빛 온기로, 동네의 감각을 켜다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
-            </div>
-            <div>
-              <label class="block text-sm font-black text-ink-700 mb-2">중간 문구 ②</label>
-              <input id="sf-mid-2" placeholder="목포의 일상을 AI 영상으로 다시 조립하다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-black text-ink-700 mb-2">마무리 문구 (CTA 위)</label>
-              <input id="sf-end" placeholder="이제 당신의 실험을 웹으로 건네세요" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-sm font-black text-ink-700 mb-2">브랜드명</label>
+                <input id="sf-brand" placeholder="HEAT Carrot Lab" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+              </div>
+              <div>
+                <label class="block text-sm font-black text-ink-700 mb-2">버튼 문구</label>
+                <input id="sf-button" placeholder="실험 결과 보기" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-black text-ink-700 mb-2">히어로 제목 (줄바꿈 가능, *별표*가 포인트 컬러)</label>
+                <textarea id="sf-title" rows="2" placeholder="목포의 온도가&#10;*AI 실험*이 되다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed"></textarea>
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-black text-ink-700 mb-2">히어로 서브카피</label>
+                <textarea id="sf-sub" rows="3" placeholder="명함 한 장에서 뽑아낸 색과 온기가 목포 AI 실험실의 스크롤 장면으로 흐릅니다." class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed"></textarea>
+              </div>
+              <div>
+                <label class="block text-sm font-black text-ink-700 mb-2">중간 문구 ①</label>
+                <input id="sf-mid-1" placeholder="당근빛 온기로, 동네의 감각을 켜다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+              </div>
+              <div>
+                <label class="block text-sm font-black text-ink-700 mb-2">중간 문구 ②</label>
+                <input id="sf-mid-2" placeholder="목포의 일상을 AI 영상으로 다시 조립하다" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+              </div>
+              <div class="md:col-span-2">
+                <label class="block text-sm font-black text-ink-700 mb-2">마무리 문구 (CTA 위)</label>
+                <input id="sf-end" placeholder="이제 당신의 실험을 웹으로 건네세요" class="w-full rounded-2xl border border-ink-100 bg-white px-4 py-3 text-ink-900 focus:outline-none focus:border-seed">
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-warm rounded-3xl border border-ink-100 p-6">
-          <h3 class="text-xl font-black text-ink-900 mb-4">영상 넣고 바로 만들기</h3>
-          <div id="sf-drop" class="rounded-3xl border-2 border-dashed border-ink-300 bg-white p-8 text-center cursor-pointer hover:border-seed transition-colors">
+        <!-- Right Column: STEP 4 영상 슬라이서 -->
+        <div class="bg-warm rounded-3xl border border-ink-100 p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2.5 mb-4 text-seed font-black text-sm uppercase tracking-widest">
+              <span class="w-6 h-6 rounded-full bg-seed text-white flex items-center justify-center text-xs">4</span> STEP 4 · 영상 업로드 및 스크롤 웹 완성
+            </div>
+            <div id="sf-drop" class="rounded-3xl border-2 border-dashed border-ink-300 bg-white p-8 text-center cursor-pointer hover:border-seed transition-colors">
             <i data-lucide="video" class="w-12 h-12 text-seed mx-auto mb-4"></i>
             <p class="font-black text-ink-900">영상을 드래그하거나 클릭해서 선택</p>
             <p class="text-sm text-ink-500 mt-2">MP4 권장 · 3~10초 · 한 방향으로 부드럽게 진행되는 영상</p>
@@ -1110,25 +1246,25 @@
           <div class="mt-6 space-y-5">
             <div>
               <div class="flex justify-between text-sm font-bold text-ink-500 mb-2">
-                <span>프레임 수</span><output id="sf-count-out">72</output>
+                <span>프레임 수</span><output id="sf-count-out">120</output>
               </div>
-              <input id="sf-count" type="range" min="36" max="120" step="12" value="72" class="w-full accent-seed">
+              <input id="sf-count" type="range" min="36" max="120" step="12" value="120" class="w-full accent-seed">
             </div>
             <div class="grid grid-cols-2 gap-4">
               <label class="block text-sm font-bold text-ink-500">가로 해상도
                 <select id="sf-width" class="mt-2 w-full rounded-xl border border-ink-100 bg-white px-3 py-2 text-ink-900">
                   <option value="640">640px</option>
-                  <option value="768" selected>768px</option>
+                  <option value="768">768px</option>
                   <option value="960">960px</option>
-                  <option value="1280">1280px</option>
+                  <option value="1280" selected>1280px</option>
                 </select>
               </label>
               <label class="block text-sm font-bold text-ink-500">JPEG 품질
                 <select id="sf-quality" class="mt-2 w-full rounded-xl border border-ink-100 bg-white px-3 py-2 text-ink-900">
                   <option value="0.6">0.60</option>
-                  <option value="0.68" selected>0.68</option>
+                  <option value="0.68">0.68</option>
                   <option value="0.78">0.78</option>
-                  <option value="0.9">0.90</option>
+                  <option value="0.9" selected>0.90</option>
                 </select>
               </label>
             </div>
@@ -1155,8 +1291,8 @@
             <div class="bg-ink-900 rounded-3xl overflow-hidden shadow-xl">
               <canvas id="sf-preview-canvas" class="w-full block"></canvas>
             </div>
-            <input id="sf-slider" type="range" min="0" max="71" value="0" class="w-full mt-4 accent-seed">
-            <p id="sf-frame-info" class="mt-2 text-sm font-bold text-ink-500">FRAME 001 / 72</p>
+            <input id="sf-slider" type="range" min="0" max="119" value="0" class="w-full mt-4 accent-seed">
+            <p id="sf-frame-info" class="mt-2 text-sm font-bold text-ink-500">FRAME 001 / 120</p>
           </div>
           <div class="bg-seed-light rounded-3xl p-6 border border-orange-100">
             <h4 class="text-xl font-black text-ink-900 mb-3">완성 HTML</h4>
@@ -1778,7 +1914,7 @@ URL: [내 서비스 메인 URL] 배포된 도메인주소 예: https://danggeun-
   // ============================================================
   // SCROLL FILM SLICER (Step 7)
   // ============================================================
-  const sfState = { frames: [], videoUrl: null, frameWidth: 768, frameHeight: 432 };
+  const sfState = { frames: [], videoUrl: null, frameWidth: 1280, frameHeight: 720 };
   const sfVideo = document.getElementById('sf-video');
   const sfWork = document.getElementById('sf-work');
   const sfWorkCtx = sfWork ? sfWork.getContext('2d') : null;
@@ -2638,6 +2774,90 @@ URL: [내 서비스 메인 URL] 배포된 도메인주소 예: https://danggeun-
       setTimeout(() => spinner.classList.add('hidden'), 300);
     });
   }
+
+  // ============================================================
+  // OPEN GRAPH GENERATOR (Step 6)
+  // ============================================================
+  window.updateOgPreview = function() {
+    const titleEl = document.getElementById('og-input-title');
+    const descEl = document.getElementById('og-input-desc');
+    const imageEl = document.getElementById('og-input-image');
+    if (!titleEl || !descEl || !imageEl) return;
+
+    const titleVal = titleEl.value;
+    const descVal = descEl.value;
+    const imageVal = imageEl.value.trim();
+
+    // Character counts
+    document.getElementById('og-title-char-count').textContent = titleVal.length;
+    document.getElementById('og-desc-char-count').textContent = descVal.length;
+
+    // Update preview titles
+    const displayTitle = titleVal || '출강바이브';
+    document.getElementById('og-preview-hero-title').textContent = displayTitle;
+    document.getElementById('og-preview-card-title').textContent = displayTitle;
+
+    // Update preview desc
+    const displayDesc = descVal || '출강 기록부터 강의료 정산까지, 프리랜서를 위한 스마트 대시보드';
+    document.getElementById('og-preview-card-desc').textContent = displayDesc;
+
+    // Update preview image
+    const imgArea = document.getElementById('og-preview-img-area');
+    const fallbackText = document.getElementById('og-preview-fallback-text');
+    if (imgArea && fallbackText) {
+      if (imageVal && (imageVal.startsWith('http://') || imageVal.startsWith('https://') || imageVal.startsWith('./') || imageVal.startsWith('/'))) {
+        imgArea.style.backgroundImage = `url('${imageVal}')`;
+        fallbackText.style.opacity = '0'; // Hide text when image is shown
+      } else {
+        imgArea.style.backgroundImage = 'none';
+        fallbackText.style.opacity = '1'; // Show fallback text on gradient background
+      }
+    }
+
+    // Update head preview code block
+    const codeBlock = document.getElementById('og-code-block');
+    if (codeBlock) {
+      const displayUrl = 'https://내서비스주소.netlify.app';
+      codeBlock.innerHTML = `&lt;!-- HTML 파일 &lt;head&gt; 내부 적절한 곳에 삽입 --&gt;
+&lt;meta property="og:title" content="${displayTitle}"&gt;
+&lt;meta property="og:description" content="${displayDesc}"&gt;
+&lt;meta property="og:image" content="${imageVal || 'https://내주소/og-image.png'}"&gt;
+&lt;meta property="og:url" content="${displayUrl}"&gt;
+&lt;meta property="og:type" content="website"&gt;`;
+    }
+  };
+
+  window.copyCustomOgPrompt = function() {
+    const titleEl = document.getElementById('og-input-title');
+    const descEl = document.getElementById('og-input-desc');
+    const imageEl = document.getElementById('og-input-image');
+    if (!titleEl || !descEl || !imageEl) return;
+
+    const title = titleEl.value.trim() || '출강바이브';
+    const desc = descEl.value.trim() || '출강 기록부터 강의료 정산까지, 프리랜서를 위한 스마트 대시보드';
+    const image = imageEl.value.trim() || 'https://lecture-payment-dashboard.vercel.app/og-image.png';
+
+    const promptText = `이 웹페이지를 카카오톡이나 SNS에 공유했을 때 제목, 설명, 대표 이미지가 예쁜 미리보기 카드로 나오게 하고 싶어.
+HTML <head> 영역에 들어갈 필수 오픈 그래프(Open Graph) 메타 태그 코드를 작성해 줘.
+
+[내가 설정한 오픈그래프 정보]
+- 제목 (og:title): ${title}
+- 설명 (og:description): ${desc}
+- 대표 이미지 (og:image): ${image}
+- 페이지 URL (og:url): (배포된 내 서비스 주소에 맞게 설정해줘)
+- 페이지 타입 (og:type): website
+
+위 정보를 바탕으로 HTML <head> 태그 안에 바로 들어갈 완성도 높은 메타 태그 코드를 작성하고, 각 태그에 대한 짤막한 주석을 달아줘.`;
+
+    copyToClipboard(promptText, document.getElementById('btn-copy-og-prompt'), true);
+  };
+
+  // Initialize preview on page load
+  setTimeout(() => {
+    if (document.getElementById('og-input-title')) {
+      updateOgPreview();
+    }
+  }, 100);
 </script>
 
 </body>
