@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oh Jin Shil - Action Over Knowledge</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@600;900&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         /* FOUC Prevention */
         body { background-color: #282A5E; }
 
         /* Custom Fonts & Typography */
         .font-display {
-            font-family: 'Alfa Slab One', 'Playfair Display', serif;
+            font-family: 'Alfa Slab One', serif;
             font-weight: 900;
             font-style: italic;
             letter-spacing: -0.03em;
@@ -40,47 +40,80 @@
 
         /* Custom Cursor Styling for Index Section */
         .cursor-tracker-area { cursor: crosshair; }
+
+        /* 3D Card Perspective & Flip */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .preserve-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
     </style>
 </head>
-<body class="bg-[#282A5E] text-[#FDE02F] font-body overflow-x-hidden relative">
+<body class="bg-[#282A5E] text-[#FDE02F] font-body overflow-x-hidden relative selection:bg-[#FDE02F] selection:text-[#282A5E] antialiased">
 
     <!-- Noise Texture -->
     <div class="noise-overlay fixed inset-0 pointer-events-none z-50"></div>
 
     <!-- Header / Navigation -->
     <header class="fixed w-full top-0 z-40 px-6 py-4 flex justify-between items-center mix-blend-difference">
-        <div class="font-display text-xl md:text-2xl">AOK.</div>
-        <nav class="hidden md:flex space-x-8 font-body text-sm">
-            <a href="#about" class="hover:underline">About</a>
-            <a href="#index" class="hover:underline">Index</a>
-            <a href="#ledger" class="hover:underline">Ledger</a>
-            <a href="#card" class="hover:underline">The Card</a>
+        <a href="#" class="font-display text-xl md:text-2xl hover:opacity-80 transition-opacity">AOK.</a>
+        
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex space-x-8 font-body text-xs tracking-wider">
+            <a href="#about" class="hover:underline transition-all">About</a>
+            <a href="#index" class="hover:underline transition-all">Index</a>
+            <a href="#ledger" class="hover:underline transition-all">Ledger</a>
+            <a href="#philosophy" class="hover:underline transition-all">Philosophy</a>
+            <a href="#card" class="hover:underline transition-all">The Card</a>
         </nav>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="flex md:hidden font-body text-xs border-2 border-[#FDE02F] px-3 py-1 bg-transparent text-[#FDE02F] cursor-pointer hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all select-none active:scale-95">
+            MENU
+        </button>
     </header>
+
+    <!-- Mobile Nav Overlay -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 z-30 bg-[#282A5E]/98 flex flex-col justify-center items-center space-y-8 font-body text-2xl text-[#FDE02F] opacity-0 pointer-events-none transition-all duration-300">
+        <a href="#about" onclick="toggleMobileMenu()" class="hover:underline tracking-widest">[ABOUT]</a>
+        <a href="#index" onclick="toggleMobileMenu()" class="hover:underline tracking-widest">[INDEX]</a>
+        <a href="#ledger" onclick="toggleMobileMenu()" class="hover:underline tracking-widest">[LEDGER]</a>
+        <a href="#philosophy" onclick="toggleMobileMenu()" class="hover:underline tracking-widest">[PHILOSOPHY]</a>
+        <a href="#card" onclick="toggleMobileMenu()" class="hover:underline tracking-widest">[CARD]</a>
+        <button onclick="toggleMobileMenu()" class="font-body text-sm border-2 border-[#FDE02F] px-6 py-2 mt-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all active:scale-95">
+            CLOSE
+        </button>
+    </div>
 
     <main>
         <!-- 1. Hero Section -->
-        <section class="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 relative pt-24">
-            <h1 class="font-display text-6xl sm:text-7xl md:text-8xl lg:text-[10vw] leading-none mb-8 break-words tracking-tighter">
+        <section class="min-h-[100dvh] flex flex-col justify-center px-6 md:px-12 lg:px-24 relative pt-24">
+            <h1 class="font-display text-5xl sm:text-7xl md:text-8xl lg:text-[9vw] leading-none mb-8 break-words tracking-tighter">
                 The Great Aim<br>
                 Of Education<br>
                 Is Not Knowledge<br>
                 But Action
             </h1>
-            <div class="mt-12 md:mt-16">
-                <h2 class="text-2xl md:text-3xl font-black mb-2">OH JIN SHIL</h2>
-                <p class="text-lg md:text-xl opacity-80 mb-8">Action-Oriented Educator & Strategist</p>
-                <a href="#contact" class="inline-block border-2 border-[#FDE02F] px-8 py-4 font-black text-lg hover:bg-[#FDE02F] hover:text-[#282A5E] transition-colors duration-200">
+            <div class="mt-8 md:mt-12">
+                <h2 class="text-2xl md:text-3xl font-black mb-2 tracking-tight">OH JIN SHIL</h2>
+                <p class="text-base md:text-lg opacity-80 mb-8 max-w-md normal-case leading-relaxed font-normal text-white">Action-Oriented Educator & Strategist dedicated to transformational learning experiences.</p>
+                <a href="#contact" class="inline-block border-2 border-[#FDE02F] px-8 py-4 font-black text-base hover:bg-[#FDE02F] hover:text-[#282A5E] transform active:scale-95 active:translate-y-[1px] transition-all duration-200 select-none shadow-[4px_4px_0px_#FDE02F] hover:shadow-none">
                     Initiate Action
                 </a>
             </div>
         </section>
 
         <!-- 2. About / Story Section -->
-        <section id="about" class="py-24 px-6 md:px-12 lg:px-24 border-t border-[#FDE02F]">
+        <section id="about" class="py-32 px-6 md:px-12 lg:px-24 border-t-2 border-[#FDE02F]">
             <div class="max-w-4xl mx-auto">
+                <span class="text-xs uppercase tracking-[0.2em] opacity-60 font-mono block mb-4">01 // INTRODUCTION</span>
                 <h3 class="font-display text-4xl md:text-5xl mb-12">Our Core Philosophy</h3>
-                <p class="text-xl md:text-2xl leading-relaxed font-light opacity-90 normal-case">
+                <p class="text-lg md:text-2xl leading-relaxed font-light opacity-90 normal-case text-white">
                     우리는 지식의 축적 그 자체가 아닌, 지식이 세상에 미치는 실질적인 변화와 행동에 집중합니다. 
                     진정한 교육의 가치는 머릿속에 머무는 것이 아니라, 손과 발을 통해 세상 밖으로 표현될 때 비로소 완성됩니다.
                     생각하고, 움직이고, 변화를 만들어내는 것. 그것이 우리의 유일한 목표입니다.
@@ -89,142 +122,169 @@
         </section>
 
         <!-- 3. INDEX Section (Mouse Tracking) -->
-        <section id="index" class="py-24 px-6 md:px-12 lg:px-24 border-t border-[#FDE02F] relative cursor-tracker-area overflow-hidden min-h-[80vh]">
-            <h3 class="font-display text-4xl md:text-5xl mb-16 relative z-10">Action Index</h3>
+        <section id="index" class="py-32 px-6 md:px-12 lg:px-24 border-t-2 border-[#FDE02F] relative cursor-tracker-area overflow-hidden min-h-[80vh]">
+            <span class="text-xs uppercase tracking-[0.2em] opacity-60 font-mono block mb-4 relative z-10">02 // MILESTONES</span>
+            <h3 class="font-display text-4xl md:text-5xl mb-20 relative z-10">Action Index</h3>
             
             <div class="relative flex justify-between h-full w-full z-10">
                 <!-- Timeline Nodes -->
-                <div class="flex flex-col justify-between h-full w-1/3 pr-12 space-y-24 md:space-y-32">
+                <div class="flex flex-col justify-between h-full w-full md:w-1/3 space-y-16 md:space-y-32">
                     <div class="timeline-node group relative">
-                        <span class="block text-3xl font-black mb-2">2024</span>
-                        <h4 class="text-xl md:text-2xl">Project 'Ignite' Launch</h4>
-                        <div class="absolute left-full top-0 ml-4 w-64 bg-[#FDE02F] text-[#282A5E] p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
-                            <p class="font-body text-sm normal-case">실행 중심의 교육 플랫폼 'Ignite' 런칭. 3개월 만에 5,000명 이상의 'Actioner' 배출.</p>
+                        <span class="block text-2xl font-black mb-1">2024</span>
+                        <h4 class="text-lg md:text-xl">Project 'Ignite' Launch</h4>
+                        <div class="relative md:absolute md:left-full md:top-0 md:ml-4 w-full md:w-64 bg-[#FDE02F] text-[#282A5E] p-4 mt-2 md:mt-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 md:pointer-events-none z-20 border border-[#282A5E] shadow-lg">
+                            <p class="font-body text-xs normal-case">실행 중심의 교육 플랫폼 'Ignite' 런칭. 3개월 만에 5,000명 이상의 'Actioner' 배출.</p>
                         </div>
                     </div>
                     <div class="timeline-node group relative">
-                        <span class="block text-3xl font-black mb-2">2023</span>
-                        <h4 class="text-xl md:text-2xl">Strategic Partnership</h4>
-                        <div class="absolute left-full top-0 ml-4 w-64 bg-[#FDE02F] text-[#282A5E] p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
-                            <p class="font-body text-sm normal-case">글로벌 에듀테크 기업과 전략적 파트너십 체결. 행동 기반 학습 모델 공동 개발.</p>
+                        <span class="block text-2xl font-black mb-1">2023</span>
+                        <h4 class="text-lg md:text-xl">Strategic Partnership</h4>
+                        <div class="relative md:absolute md:left-full md:top-0 md:ml-4 w-full md:w-64 bg-[#FDE02F] text-[#282A5E] p-4 mt-2 md:mt-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 md:pointer-events-none z-20 border border-[#282A5E] shadow-lg">
+                            <p class="font-body text-xs normal-case">글로벌 에듀테크 기업과 전략적 파트너십 체결. 행동 기반 학습 모델 공동 개발.</p>
                         </div>
                     </div>
                     <div class="timeline-node group relative">
-                        <span class="block text-3xl font-black mb-2">2021</span>
-                        <h4 class="text-xl md:text-2xl">Philosophy Established</h4>
-                        <div class="absolute left-full top-0 ml-4 w-64 bg-[#FDE02F] text-[#282A5E] p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
-                            <p class="font-body text-sm normal-case">"Not Knowledge But Action" 철학 정립. Herbert Spencer의 사상을 현대적으로 재해석.</p>
+                        <span class="block text-2xl font-black mb-1">2021</span>
+                        <h4 class="text-lg md:text-xl">Philosophy Established</h4>
+                        <div class="relative md:absolute md:left-full md:top-0 md:ml-4 w-full md:w-64 bg-[#FDE02F] text-[#282A5E] p-4 mt-2 md:mt-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 md:pointer-events-none z-20 border border-[#282A5E] shadow-lg">
+                            <p class="font-body text-xs normal-case">"Not Knowledge But Action" 철학 정립. Herbert Spencer의 사상을 현대적으로 재해석.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- SVG Tracker -->
-                <div class="absolute top-0 left-1/3 h-full w-px pointer-events-none">
+                <div class="hidden md:block absolute top-0 left-1/3 h-full w-px pointer-events-none">
                      <svg id="tracker-svg" class="h-full w-full overflow-visible" preserveAspectRatio="none">
                         <path id="tracker-path" d="M0,0 L0,1000" stroke="#FDE02F" stroke-width="2" fill="none" vector-effect="non-scaling-stroke"></path>
-                    </svg>
+                     </svg>
                 </div>
             </div>
         </section>
 
         <!-- 4. LEDGER Section (Grid) -->
-        <section id="ledger" class="py-24 border-t border-[#FDE02F]">
+        <section id="ledger" class="py-32 border-t-2 border-[#FDE02F]">
              <div class="px-6 md:px-12 lg:px-24 mb-16">
+                <span class="text-xs uppercase tracking-[0.2em] opacity-60 font-mono block mb-4">03 // METRICS</span>
                 <h3 class="font-display text-4xl md:text-5xl">Data Ledger</h3>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-b border-[#FDE02F]">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-b-2 border-[#FDE02F]">
                 <!-- Grid Items -->
-                <div class="group border-t border-r border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-none cursor-default">
-                    <span class="block text-sm opacity-60 mb-2">Metric</span>
-                    <h4 class="text-2xl md:text-3xl font-black">Projects Initiated</h4>
-                    <p class="text-xl font-bold mt-4">150+</p>
+                <div class="group border-t-2 border-r-0 md:border-r-2 border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all duration-150 cursor-default">
+                    <span class="block text-xs opacity-60 mb-2 font-mono">Metric.01</span>
+                    <h4 class="text-xl font-black">Projects Initiated</h4>
+                    <p class="text-3xl font-black mt-4 font-mono">150+</p>
                 </div>
-                <div class="group border-t border-r border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-none cursor-default">
-                    <span class="block text-sm opacity-60 mb-2">Metric</span>
-                    <h4 class="text-2xl md:text-3xl font-black">Active Partners</h4>
-                    <p class="text-xl font-bold mt-4">35</p>
+                <div class="group border-t-2 border-r-0 lg:border-r-2 border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all duration-150 cursor-default">
+                    <span class="block text-xs opacity-60 mb-2 font-mono">Metric.02</span>
+                    <h4 class="text-xl font-black">Active Partners</h4>
+                    <p class="text-3xl font-black mt-4 font-mono">35</p>
                 </div>
-                <div class="group border-t border-r border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-none cursor-default">
-                    <span class="block text-sm opacity-60 mb-2">Contact</span>
-                    <h4 class="text-2xl md:text-3xl font-black">Direct Line</h4>
-                    <p class="text-xl font-bold mt-4">010.4977.9328</p>
+                <div class="group border-t-2 border-r-0 md:border-r-2 border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all duration-150 cursor-default">
+                    <span class="block text-xs opacity-60 mb-2 font-mono">Contact.01</span>
+                    <h4 class="text-xl font-black">Direct Line</h4>
+                    <p class="text-2xl font-black mt-4 font-mono">010.4977.9328</p>
                 </div>
-                <div class="group border-t border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-none cursor-default lg:border-r-0">
-                    <span class="block text-sm opacity-60 mb-2">Location</span>
-                    <h4 class="text-2xl md:text-3xl font-black">Base</h4>
-                    <p class="text-xl font-bold mt-4">Seoul, KR</p>
+                <div class="group border-t-2 border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all duration-150 cursor-default lg:border-r-0">
+                    <span class="block text-xs opacity-60 mb-2 font-mono">Location.01</span>
+                    <h4 class="text-xl font-black">Base</h4>
+                    <p class="text-3xl font-black mt-4 font-mono">Seoul, KR</p>
                 </div>
-                <div class="group border-t border-r border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-none cursor-default">
-                    <span class="block text-sm opacity-60 mb-2">Specialty</span>
-                    <h4 class="text-2xl md:text-3xl font-black">Action Design</h4>
+                <div class="group border-t-2 border-r-0 md:border-r-2 border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all duration-150 cursor-default">
+                    <span class="block text-xs opacity-60 mb-2 font-mono">Specialty.01</span>
+                    <h4 class="text-xl font-black">Action Design</h4>
                 </div>
-                <div class="group border-t border-r border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-none cursor-default">
-                    <span class="block text-sm opacity-60 mb-2">Specialty</span>
-                    <h4 class="text-2xl md:text-3xl font-black">Strategy</h4>
+                <div class="group border-t-2 border-r-0 lg:border-r-2 border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all duration-150 cursor-default">
+                    <span class="block text-xs opacity-60 mb-2 font-mono">Specialty.02</span>
+                    <h4 class="text-xl font-black">Strategy</h4>
                 </div>
-                <div class="group border-t border-r border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-none cursor-default">
-                    <span class="block text-sm opacity-60 mb-2">Specialty</span>
-                    <h4 class="text-2xl md:text-3xl font-black">Execution</h4>
+                <div class="group border-t-2 border-r-0 md:border-r-2 border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all duration-150 cursor-default">
+                    <span class="block text-xs opacity-60 mb-2 font-mono">Specialty.03</span>
+                    <h4 class="text-xl font-black">Execution</h4>
                 </div>
-                <div class="group border-t border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-none cursor-default lg:border-r-0">
-                     <span class="block text-sm opacity-60 mb-2">Status</span>
-                    <h4 class="text-2xl md:text-3xl font-black text-green-400 group-hover:text-[#282A5E]">Available</h4>
+                <div class="group border-t-2 border-[#FDE02F] p-8 hover:bg-[#FDE02F] hover:text-[#282A5E] transition-all duration-150 cursor-default lg:border-r-0">
+                     <span class="block text-xs opacity-60 mb-2 font-mono">Status.01</span>
+                    <h4 class="text-xl font-black text-green-400 group-hover:text-[#282A5E]">Available</h4>
                 </div>
             </div>
         </section>
 
-        <!-- 5. Work / Value Section -->
-        <section class="py-24 px-6 md:px-12 lg:px-24 border-t border-[#FDE02F]">
-            <div class="max-w-4xl mx-auto text-center">
-                <h3 class="font-display text-4xl md:text-5xl mb-12">Value In Action</h3>
-                <p class="text-xl md:text-2xl leading-relaxed font-light opacity-90 normal-case mb-16">
-                    우리는 추상적인 이론을 구체적인 결과물로 전환합니다. <br class="hidden md:block">
-                    모든 프로젝트는 명확한 목표와 측정 가능한 행동 지표를 기반으로 설계됩니다.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="border border-[#FDE02F] p-8">
+        <!-- 5. Work / Value Section (Asymmetric Split Flow) -->
+        <section id="philosophy" class="py-32 px-6 md:px-12 lg:px-24 border-t-2 border-[#FDE02F]">
+            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16">
+                <!-- Left Side: Title & Paragraph -->
+                <div class="w-full lg:w-2/5 lg:sticky lg:top-32 h-fit">
+                    <span class="text-xs uppercase tracking-[0.2em] opacity-60 font-mono block mb-4">04 // FLOW</span>
+                    <h3 class="font-display text-4xl md:text-5xl mb-6">Value In Action</h3>
+                    <p class="text-lg md:text-xl leading-relaxed opacity-90 normal-case text-white">
+                        우리는 추상적인 이론을 구체적인 결과물로 전환합니다. <br class="hidden md:block">
+                        모든 프로젝트는 명확한 목표와 측정 가능한 행동 지표를 기반으로 설계됩니다.
+                    </p>
+                </div>
+                
+                <!-- Right Side: Asymmetric Cards -->
+                <div class="w-full lg:w-3/5 space-y-8">
+                    <!-- Step 1 -->
+                    <div class="border-2 border-[#FDE02F] p-8 md:p-10 transform hover:translate-x-2 transition-transform duration-200 bg-[#22244d]">
+                        <div class="flex items-start justify-between mb-6">
+                            <span class="font-display text-3xl">01</span>
+                            <span class="px-3 py-1 text-xs border border-[#FDE02F] font-bold">STAGE 1</span>
+                        </div>
                         <h4 class="text-2xl font-black mb-4">Define</h4>
-                        <p class="font-body text-sm normal-case opacity-80">문제를 정의하고 핵심 행동 목표를 수립합니다.</p>
+                        <p class="font-body text-xs sm:text-sm normal-case opacity-80 text-white">문제를 정의하고 핵심 행동 목표를 수립합니다. 행동 중심적인 분석을 통해 목표의 방향성을 확립합니다.</p>
                     </div>
-                    <div class="border border-[#FDE02F] p-8 bg-[#FDE02F] text-[#282A5E]">
+                    <!-- Step 2 -->
+                    <div class="border-2 border-[#FDE02F] p-8 md:p-10 transform hover:translate-x-2 transition-transform duration-200 bg-[#FDE02F] text-[#282A5E]">
+                        <div class="flex items-start justify-between mb-6">
+                            <span class="font-display text-3xl">02</span>
+                            <span class="px-3 py-1 text-xs border border-[#282A5E] font-bold">STAGE 2</span>
+                        </div>
                         <h4 class="text-2xl font-black mb-4">Design</h4>
-                        <p class="font-body text-sm normal-case opacity-80">행동을 유발하는 최적의 경험과 도구를 설계합니다.</p>
+                        <p class="font-body text-xs sm:text-sm normal-case opacity-80">행동을 유발하는 최적의 경험과 도구를 설계합니다. 실체화된 프로토타입과 인터랙티브 기술을 융합합니다.</p>
                     </div>
-                    <div class="border border-[#FDE02F] p-8">
+                    <!-- Step 3 -->
+                    <div class="border-2 border-[#FDE02F] p-8 md:p-10 transform hover:translate-x-2 transition-transform duration-200 bg-[#22244d]">
+                        <div class="flex items-start justify-between mb-6">
+                            <span class="font-display text-3xl">03</span>
+                            <span class="px-3 py-1 text-xs border border-[#FDE02F] font-bold">STAGE 3</span>
+                        </div>
                         <h4 class="text-2xl font-black mb-4">Deploy</h4>
-                        <p class="font-body text-sm normal-case opacity-80">현장에 적용하고 데이터를 통해 지속적으로 개선합니다.</p>
+                        <p class="font-body text-xs sm:text-sm normal-case opacity-80 text-white">현장에 적용하고 데이터를 통해 지속적으로 개선합니다. 끊임없는 분석과 행동 피드백으로 완성도를 높집니다.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 6. The Card Section -->
-        <section id="card" class="py-24 px-6 md:px-12 lg:px-24 border-t border-[#FDE02F] bg-[#22244d]">
-            <h3 class="font-display text-4xl md:text-5xl mb-16 text-center">The Artifact</h3>
-            <div class="flex flex-col lg:flex-row justify-center items-center gap-12 lg:gap-24">
-                <!-- Front Card -->
-                <div class="relative w-full max-w-md aspect-[1.586/1] bg-[#282A5E] rounded-xl overflow-hidden shadow-2xl noise-overlay transform hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 p-8 md:p-10 flex flex-col justify-center items-center text-center">
-                        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl leading-tight break-words tracking-tighter">
+        <!-- 6. The Card Section (3D Flippable Namecard) -->
+        <section id="card" class="py-32 px-6 md:px-12 lg:px-24 border-t-2 border-[#FDE02F] bg-[#22244d] flex flex-col items-center">
+            <span class="text-xs uppercase tracking-[0.2em] opacity-60 font-mono block mb-4 text-center">05 // ARTIFACT</span>
+            <h3 class="font-display text-4xl md:text-5xl mb-16 text-center">The Card</h3>
+            
+            <!-- 3D Card Flip Container -->
+            <div class="group perspective-1000 w-full max-w-md aspect-[1.586/1] cursor-pointer" onclick="this.classList.toggle('flipped')">
+                <div class="relative w-full h-full duration-700 preserve-3d group-hover:[transform:rotateY(180deg)] [.flipped_&]:[transform:rotateY(180deg)] shadow-2xl rounded-2xl">
+                    <!-- Front Side -->
+                    <div class="absolute inset-0 w-full h-full backface-hidden bg-[#282A5E] rounded-2xl overflow-hidden noise-overlay p-8 flex flex-col justify-center items-center text-center border-2 border-[#FDE02F]/30">
+                        <h2 class="font-display text-2xl sm:text-3xl leading-tight tracking-tighter">
                             THE GREAT<br>AIM OF<br>EDUCATION IS<br>NOT KNOWLEDGE<br>BUT ACTION
                         </h2>
-                        <div class="mt-6 sm:mt-8 border-2 border-[#FDE02F] px-4 py-1">
-                            <span class="font-black text-sm sm:text-base">HERBERT SPENCER</span>
+                        <div class="mt-6 border-2 border-[#FDE02F] px-4 py-1">
+                            <span class="font-black text-xs sm:text-sm">HERBERT SPENCER</span>
                         </div>
+                        <div class="absolute bottom-4 right-6 text-[9px] opacity-40 font-mono">CLICK TO FLIP</div>
                     </div>
-                </div>
-                <!-- Back Card -->
-                <div class="relative w-full max-w-md aspect-[1.586/1] bg-[#282A5E] rounded-xl overflow-hidden shadow-2xl noise-overlay transform hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 p-8 md:p-10 flex flex-col justify-center items-center text-center relative">
-                        <h2 class="font-display text-3xl sm:text-4xl md:text-5xl leading-tight mb-2">
-                            OH<br>JIN SHIL
-                        </h2>
-                        <div class="mt-4 border-2 border-[#FDE02F] px-4 py-1 inline-block">
-                             <span class="font-black text-sm sm:text-base">TEL. 010.4977.9328</span>
+                    <!-- Back Side -->
+                    <div class="absolute inset-0 w-full h-full [transform:rotateY(180deg)] backface-hidden bg-[#282A5E] rounded-2xl overflow-hidden noise-overlay p-6 flex flex-row items-center justify-between gap-6 border-2 border-[#FDE02F]/30">
+                        <div class="text-left flex flex-col justify-center">
+                            <h2 class="font-display text-2xl sm:text-3xl leading-none mb-4">
+                                OH<br>JIN SHIL
+                            </h2>
+                            <div class="border-2 border-[#FDE02F] px-3 py-1 inline-block w-fit">
+                                 <span class="font-black text-xs sm:text-sm">010.4977.9328</span>
+                            </div>
                         </div>
-                         <div class="mt-6 sm:mt-8">
-                            <!-- Placeholder QR Code SVG -->
-                            <svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#FDE02F] fill-current" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <div class="flex flex-col items-center">
+                            <!-- QR Code SVG -->
+                            <svg class="w-16 h-16 sm:w-20 sm:h-20 text-[#FDE02F] fill-current" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="0" y="0" width="100" height="100" fill="none" stroke="currentColor" stroke-width="4"/>
                                 <rect x="10" y="10" width="30" height="30" fill="currentColor"/>
                                 <rect x="60" y="10" width="30" height="30" fill="currentColor"/>
@@ -239,36 +299,55 @@
                                 <rect x="70" y="20" width="10" height="10" fill="#282A5E"/>
                                 <rect x="20" y="70" width="10" height="10" fill="#282A5E"/>
                             </svg>
+                            <span class="text-[8px] mt-2 tracking-wider opacity-60">SCAN CONTACT</span>
                         </div>
+                        <div class="absolute bottom-3 left-6 text-[9px] opacity-40 font-mono">CLICK TO FLIP</div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 7. Contact Section -->
-        <section id="contact" class="py-24 px-6 md:px-12 lg:px-24 border-t border-[#FDE02F] text-center">
+        <section id="contact" class="py-32 px-6 md:px-12 lg:px-24 border-t-2 border-[#FDE02F] text-center">
             <h3 class="font-display text-5xl md:text-6xl mb-12">Ready For Action?</h3>
-            <p class="text-xl md:text-2xl font-light opacity-90 mb-16 normal-case max-w-2xl mx-auto">
+            <p class="text-lg md:text-2xl font-light opacity-90 mb-16 normal-case max-w-2xl mx-auto text-white">
                 생각만으로는 아무것도 변하지 않습니다. <br>지금 바로 행동을 시작하세요.
             </p>
-            <a href="tel:01049779328" class="inline-block border-2 border-[#FDE02F] px-12 py-6 font-black text-2xl hover:bg-[#FDE02F] hover:text-[#282A5E] transition-colors duration-200 mb-12">
+            <a href="tel:01049779328" class="inline-block border-2 border-[#FDE02F] px-10 py-5 font-black text-xl md:text-2xl hover:bg-[#FDE02F] hover:text-[#282A5E] transform active:scale-95 active:translate-y-[1px] transition-all duration-200 select-none shadow-[6px_6px_0px_#FDE02F] hover:shadow-none">
                 Call: 010.4977.9328
             </a>
-            <div class="flex justify-center space-x-8 font-black text-sm sm:text-base">
-                <a href="#" class="hover:underline">Email</a>
-                <a href="#" class="hover:underline">LinkedIn</a>
-                <a href="#" class="hover:underline">Instagram</a>
+            <div class="flex justify-center space-x-8 font-black text-sm tracking-wider mt-16">
+                <a href="#" class="hover:underline transition-all">Email</a>
+                <a href="#" class="hover:underline transition-all">LinkedIn</a>
+                <a href="#" class="hover:underline transition-all">Instagram</a>
             </div>
         </section>
-
     </main>
 
-    <footer class="py-8 px-6 md:px-12 lg:px-24 border-t border-[#FDE02F] flex justify-between items-center text-sm opacity-60">
+    <footer class="py-12 px-6 md:px-12 lg:px-24 border-t-2 border-[#FDE02F] flex justify-between items-center text-xs opacity-60 font-mono">
         <p>© 2024 Oh Jin Shil. All Rights Reserved.</p>
         <p>Action Over Knowledge.</p>
     </footer>
 
     <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const menuOverlay = document.getElementById('mobile-menu-overlay');
+        
+        function toggleMobileMenu() {
+            if (menuOverlay.classList.contains('opacity-0')) {
+                menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                menuOverlay.classList.add('opacity-100');
+                document.body.style.overflow = 'hidden';
+            } else {
+                menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+                menuOverlay.classList.remove('opacity-100');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        menuBtn.addEventListener('click', toggleMobileMenu);
+
         // Magnetic Cursor Tracking for INDEX Section
         const indexSection = document.getElementById('index');
         const trackerPath = document.getElementById('tracker-path');
@@ -309,21 +388,21 @@
             }
 
             // Create bezier curve path
-            // M start-x, start-y Q control-x, control-y end-x, end-y
             const pathString = `M0,0 Q${pull},${relativeY} 0,${sectionHeight}`;
-            
-            // Smooth transition using requestAnimationFrame is implicit here for simple updates
             trackerPath.setAttribute('d', pathString);
         });
 
         // Initial path setup
         window.addEventListener('load', () => {
-             trackerPath.setAttribute('d', `M0,0 L0,${indexSection.offsetHeight}`);
+            if (trackerPath && indexSection) {
+                trackerPath.setAttribute('d', `M0,0 L0,${indexSection.offsetHeight}`);
+            }
         });
         window.addEventListener('resize', () => {
-             trackerPath.setAttribute('d', `M0,0 L0,${indexSection.offsetHeight}`);
+            if (trackerPath && indexSection) {
+                trackerPath.setAttribute('d', `M0,0 L0,${indexSection.offsetHeight}`);
+            }
         });
-
     </script>
 </body>
 </html>
