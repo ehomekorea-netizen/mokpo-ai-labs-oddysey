@@ -162,12 +162,34 @@
       }
     }
 
-    /* Force all buttons and tactile links to center text & elements */
-    button, .btn-tactile, a.btn-tactile {
+    /* Force ONLY tactile links and specific CTA buttons to center text & elements */
+    .btn-tactile, a.btn-tactile {
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
       text-align: center !important;
+    }
+
+    /* Tab buttons specific styling (Dynamic Active states) */
+    .tab-btn {
+      transition: all 0.25s ease;
+      background: white;
+      border-color: #d1c8b8 !important;
+    }
+    .tab-btn:hover {
+      border-color: #FF7E36 !important;
+    }
+    .tab-btn.active {
+      background: #FFE4D0 !important; /* Soft orange bg */
+      border-color: #FF7E36 !important;
+      box-shadow: 0 4px 16px -4px rgba(255,126,54,0.25) !important;
+    }
+    .tab-btn.active .tab-icon {
+      color: #FF7E36 !important;
+    }
+    .tab-btn.active .tab-label {
+      color: #191F28 !important;
+      font-weight: 800 !important;
     }
 
     /* Prevent SVG icons and i tags inside buttons from stretching and pushing text */
@@ -327,33 +349,32 @@
 
     <div class="bg-white rounded-3xl border border-ink-100 overflow-hidden shadow-sm flex flex-col lg:flex-row min-h-[500px]">
       <!-- Tab Menu Left Panel -->
-      <div class="w-full lg:w-[340px] bg-ink-100/40 border-b lg:border-b-0 lg:border-r border-ink-100 p-6 flex flex-col gap-3 shrink-0">
+      <div class="w-full lg:w-[350px] bg-ink-100/40 border-b lg:border-b-0 lg:border-r border-ink-100 p-8 flex flex-col justify-between shrink-0 min-h-[500px] gap-4">
         <!-- Tab 1 Menu -->
-        <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn active text-left p-5 rounded-2xl border-2 border-seed bg-seed/5 flex items-start gap-4 shadow-sm hover:border-seed transition-all duration-200">
-          <i data-lucide="clock" class="w-6 h-6 text-seed tab-icon mt-0.5 shrink-0"></i>
+        <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn active text-left p-6 px-8 rounded-2xl border-2 border-ink-200/80 bg-white flex items-center gap-5 shadow-sm transition-all duration-200 h-[125px] cursor-pointer">
+          <i data-lucide="clock" class="w-7 h-7 text-ink-400 tab-icon shrink-0"></i>
           <div>
-            <h3 class="text-ink-900 tab-label text-xl font-bold transition-all">기존 3단계의 한계</h3>
-            <p class="text-sm text-ink-500 mt-1">STT ➔ LLM ➔ TTS 지연시간</p>
+            <h3 class="text-ink-700 tab-label text-lg font-bold transition-all leading-snug">기존 3단계의 한계</h3>
+            <p class="text-xs text-ink-400 mt-1 leading-normal">STT ➔ LLM ➔ TTS 지연시간</p>
           </div>
         </button>
         <!-- Tab 2 Menu -->
-        <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn text-left p-5 rounded-2xl border-2 border-ink-200/60 bg-white hover:border-seed/60 flex items-start gap-4 shadow-sm transition-all duration-200">
-          <i data-lucide="braces" class="w-6 h-6 text-ink-300 tab-icon mt-0.5 shrink-0"></i>
+        <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn text-left p-6 px-8 rounded-2xl border-2 border-ink-200/80 bg-white flex items-center gap-5 shadow-sm transition-all duration-200 h-[125px] cursor-pointer">
+          <i data-lucide="braces" class="w-7 h-7 text-ink-400 tab-icon shrink-0"></i>
           <div>
-            <h3 class="text-ink-500 tab-label text-xl font-medium">AI의 심부름 쪽지</h3>
-            <p class="text-sm text-ink-300 mt-1">AI가 쓰는 "이거 대신 해줘" 메모장</p>
+            <h3 class="text-ink-500 tab-label text-lg font-bold transition-all leading-snug">AI의 심부름 쪽지</h3>
+            <p class="text-xs text-ink-400 mt-1 leading-normal">AI가 쓰는 "이거 대신 해줘" 메모장</p>
           </div>
         </button>
         <!-- Tab 3 Menu -->
-        <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn text-left p-5 rounded-2xl border-2 border-ink-200/60 bg-white hover:border-seed/60 flex items-start gap-4 shadow-sm transition-all duration-200">
-          <i data-lucide="zap" class="w-6 h-6 text-ink-300 tab-icon mt-0.5 shrink-0"></i>
+        <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn text-left p-6 px-8 rounded-2xl border-2 border-ink-200/80 bg-white flex items-center gap-5 shadow-sm transition-all duration-200 h-[125px] cursor-pointer">
+          <i data-lucide="zap" class="w-7 h-7 text-ink-400 tab-icon shrink-0"></i>
           <div>
-            <h3 class="text-ink-500 tab-label text-xl font-medium">실시간 음성 연결</h3>
-            <p class="text-sm text-ink-300 mt-1">Grok Voice의 무지연 통화</p>
+            <h3 class="text-ink-500 tab-label text-lg font-bold transition-all leading-snug">실시간 음성 연결</h3>
+            <p class="text-xs text-ink-400 mt-1 leading-normal">Grok Voice의 무지연 통화</p>
           </div>
         </button>
       </div>
-
       <!-- Tab Content Right Panel -->
       <div class="flex-grow p-10 lg:p-14 bg-white flex flex-col justify-between">
         <!-- Tab 1: Legacy STT-LLM-TTS Latency Simulator -->
