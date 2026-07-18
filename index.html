@@ -191,7 +191,7 @@
 
     <h2 class="font-pixel text-4xl md:text-5xl text-ink-900 leading-snug">
       YouTube Finder<br>
-      <span class="text-seed">AI 음성 에이전트</span><br>
+      <span class="text-seed">AI 음성<br>에이전트</span><br>
       실무 워크숍
     </h2>
 
@@ -1031,7 +1031,7 @@
     <div class="flex items-center justify-between p-6 border-b border-black/5 bg-white z-10 sticky top-0">
       <div class="flex items-center space-x-3">
         <span class="w-8 h-8 rounded-lg bg-seed-light text-seed flex items-center justify-center font-bold text-sm">💡</span>
-        <h3 class="text-2xl font-black text-ink-900">Grok Voice Realtime 에이전트 시스템 아키텍처</h3>
+        <h3 class="text-2xl font-black text-ink-900">Grok Voice Realtime 에이전트 시스템 아키텍처 대서사시</h3>
       </div>
       <button onclick="closeModal('modal-frontend-history')" class="p-2 bg-warm hover:bg-black/5 rounded-full transition-colors cursor-pointer">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -1041,35 +1041,84 @@
     <!-- Modal Body -->
     <div class="p-6 md:p-10 overflow-y-auto flex-grow bg-[#f8f4ed]/30 space-y-8">
       <div class="text-center max-w-2xl mx-auto space-y-3">
-        <h4 class="text-2xl font-black text-ink-900 leading-tight">클라이언트-서버-인공지능을 잇는 실시간 파이프라인</h4>
+        <h4 class="text-2xl font-black text-ink-900 leading-tight">클라이언트 - 중계 서버 - 인공지능이 톱니바퀴처럼 맞물리는 실시간 파이프라인</h4>
         <p class="text-ink-600 text-base leading-relaxed">
-          유튜브 파인더는 브라우저의 오디오 캡처망, Vercel의 프록시 게이트웨이, 그리고 xAI의 실시간 음성 두뇌망이 긴밀하게 얽혀 있는 에이전트의 작동 원리입니다.
+          유튜브 파인더 앱은 사용자의 음성 입력을 가볍게 가공하여 전송하고, 외부 API 차단을 우회하며, AI의 심부름 명세서(JSON)를 해독해 실시간 화면을 그려내는 정밀한 6단계 파이프라인으로 구동됩니다.
         </p>
       </div>
 
-      <!-- Architecture steps layout -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- End-to-End visual layout flowchart -->
+      <div class="bg-warm/40 border border-black/5 p-6 rounded-2xl space-y-4">
+        <span class="text-xs font-bold text-seed uppercase tracking-wider block">📡 데이터의 흐름과 아키텍처 구조도</span>
+        <div class="flex flex-col lg:flex-row items-stretch justify-between gap-4 text-center text-xs font-mono font-bold text-ink-700">
+          <div class="flex-1 bg-white border border-seed p-5 rounded-xl shadow-sm flex flex-col justify-between">
+            <span class="text-seed block mb-1">1. 브라우저 (HTML/CSS/JS)</span>
+            <span class="text-ink-500 font-normal font-sans">마이크 오디오 수집<br>+24kHz 압축 ➔ 웹소켓 전송<br>+유튜브 API 카드 화면 렌더링</span>
+          </div>
+          <div class="flex items-center justify-center text-seed text-xl lg:rotate-0 rotate-90">◀ ➔ ▶</div>
+          <div class="flex-1 bg-white border border-ink-900 p-5 rounded-xl shadow-sm flex flex-col justify-between">
+            <span class="text-ink-900 block mb-1">2. Vercel 중계 서버 (Express)</span>
+            <span class="text-ink-500 font-normal font-sans">진짜 API Key 금고 보관<br>+CORS 차단 우회 대행<br>+5분 임시 세션 토큰 중계</span>
+          </div>
+          <div class="flex items-center justify-center text-seed text-xl lg:rotate-0 rotate-90">◀ ➔ ▶</div>
+          <div class="flex-1 bg-seed text-white p-5 rounded-xl shadow-sm flex flex-col justify-between">
+            <span class="text-white block mb-1">3. xAI Grok Realtime API</span>
+            <span class="text-seed-light font-normal font-sans">사용자 목소리 즉시 청취<br>+답변 소리 조각 실시간 전송<br>+유튜브 검색 주문서(JSON) 발행</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 Steps architecture narrative cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
         <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
           <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">01</div>
-          <h5 class="font-black text-ink-900 text-lg">마이크 오디오 프레임 변환</h5>
+          <h5 class="font-black text-ink-900 text-lg">마이크 오디오 프레임 압축</h5>
           <p class="text-xs text-ink-500 leading-relaxed">
-            사용자의 목소리를 브라우저가 직접 마이크 스트림으로 캡처한 후, Float32 배열을 48kHz에서 24kHz로 낮추고 PCM16 16비트 인코딩하여 웹소켓 버퍼에 차례로 밀어 넣습니다.
+            브라우저가 수집하는 무거운 48,000Hz 소리를 JavaScript(JS) 필터링을 통해 AI 모델 맞춤형인 24,000Hz PCM16 형식으로 가볍게 리사이징하여 통신 속도를 극대화합니다.
           </p>
         </div>
+
         <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
           <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">02</div>
-          <h5 class="font-black text-ink-900 text-lg">WebSocket 양방향 터널</h5>
+          <h5 class="font-black text-ink-900 text-lg">5분 일회용 임시 통로 가설</h5>
           <p class="text-xs text-ink-500 leading-relaxed">
-            한 번 열리면 통신이 계속 유지되는 웹소켓(WebSocket) 규격 위에 임시 보안 토큰을 태워 xAI와 가상 연결선을 엽니다. 지연 시간이 약 20ms 수준으로 최소화됩니다.
+            진짜 API 비밀번호를 브라우저 소스코드에 노출하지 않기 위해, 백엔드 중계소(Express)에 노크하여 5분만 유효한 임시 토큰을 얻어 xAI와의 실시간 웹소켓(WebSocket) 전화선을 연결합니다.
           </p>
         </div>
+
         <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
           <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">03</div>
-          <h5 class="font-black text-ink-900 text-lg">Function Calling Gateway</h5>
+          <h5 class="font-black text-ink-900 text-lg">실시간 청취 &amp; AI 인격 주입</h5>
           <p class="text-xs text-ink-500 leading-relaxed">
-            AI가 음성을 듣고 유튜브 검색 주문(JSON)을 쓰면, 브라우저가 이를 납치하여 백엔드 Vercel 게이트웨이를 경유해 YouTube API 결과 카드를 렌더링하고 다시 음성 웰컴 응답을 재생시킵니다.
+            API 연결이 열리자마자 23줄의 퍼소나 프롬프트를 전송하여 성격을 규정하고, AI 모델이 사용자의 목소리 파동을 지연 없이 직접 듣고 해석하도록 세션을 유지합니다.
           </p>
         </div>
+
+        <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
+          <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">04</div>
+          <h5 class="font-black text-ink-900 text-lg">JSON 심부름 주문서 발행</h5>
+          <p class="text-xs text-ink-500 leading-relaxed">
+            AI가 사용자 목소리에서 검색 의도를 파악하면, 직접 움직이는 대신 브라우저가 실행할 수 있는 표준 규격의 JSON 주문서(예: youtube_search_videos)를 작성해 웹소켓 패킷으로 내려보냅니다.
+          </p>
+        </div>
+
+        <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
+          <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">05</div>
+          <h5 class="font-black text-ink-900 text-lg">주문 해독 및 유튜브 렌더링</h5>
+          <p class="text-xs text-ink-500 leading-relaxed">
+            브라우저(JS)는 AI의 주문서를 가로채 유튜브 API를 즉시 기동하고, 최신 검색 알고리즘 정렬 파라미터를 추가하여 썸네일 영상 카드를 화면에 동적으로 생성합니다.
+          </p>
+        </div>
+
+        <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
+          <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">06</div>
+          <h5 class="font-black text-ink-900 text-lg">오디오 재생 큐 &amp; 스케줄러</h5>
+          <p class="text-xs text-ink-500 leading-relaxed">
+            AI의 대답 음성이 잘게 쪼개져 딜레이로 들어올 때, 소리가 튀는 틱 노이즈(Clicks)를 방지하기 위해 DJ가 다음 곡을 예약하듯 절대 시간축에 맞춰 오디오 조각을 매끄럽게 이어붙여 들려줍니다.
+          </p>
+        </div>
+
       </div>
     </div>
   </div>
