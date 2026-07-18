@@ -162,6 +162,30 @@
       }
     }
 
+    /* Force all buttons and tactile links to center text & elements */
+    button, .btn-tactile, a.btn-tactile {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+
+    /* Prevent SVG icons inside buttons from stretching and pushing text */
+    button svg, .btn-tactile svg, a.btn-tactile svg {
+      width: 1.25rem !important;
+      height: 1.25rem !important;
+      flex-shrink: 0 !important;
+      display: inline-block !important;
+    }
+    button svg.w-4, .btn-tactile svg.w-4, a.btn-tactile svg.w-4 {
+      width: 1rem !important;
+      height: 1rem !important;
+    }
+    button svg.w-6, .btn-tactile svg.w-6, a.btn-tactile svg.w-6 {
+      width: 1.5rem !important;
+      height: 1.5rem !important;
+    }
+
     /* Tactile buttons scaling feedback */
     .btn-tactile {
       transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, background-color 0.2s ease, opacity 0.2s ease;
@@ -465,7 +489,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 1: 기획 및 브레인스토밍                                   -->
   <!-- =========================================================== -->
-  <section id="step-1" class="space-y-12">
+  <section id="step-1" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">1</div>
       <div>
@@ -509,7 +533,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 2: 퍼소나 대본 설계                                       -->
   <!-- =========================================================== -->
-  <section id="step-2" class="space-y-12">
+  <section id="step-2" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">2</div>
       <div>
@@ -556,7 +580,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 3: 실시간 음성 패러다임의 혁명                            -->
   <!-- =========================================================== -->
-  <section id="step-3" class="space-y-12">
+  <section id="step-3" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">3</div>
       <div>
@@ -601,7 +625,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 4: 식당 운영 비유로 이해하는 기술 스택                       -->
   <!-- =========================================================== -->
-  <section id="step-4" class="space-y-12">
+  <section id="step-4" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">4</div>
       <div>
@@ -650,7 +674,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 5: CORS 차단 해결 & 보안 게이트웨이                           -->
   <!-- =========================================================== -->
-  <section id="step-5" class="space-y-12">
+  <section id="step-5" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">5</div>
       <div>
@@ -714,7 +738,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 6: 오디오 다운샘플링 & 비트 압축                           -->
   <!-- =========================================================== -->
-  <section id="step-6" class="space-y-12">
+  <section id="step-6" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">6</div>
       <div>
@@ -789,7 +813,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 7: AI에게 손과 발을 달아주는 Function Calling             -->
   <!-- =========================================================== -->
-  <section id="step-7" class="space-y-12">
+  <section id="step-7" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">7</div>
       <div>
@@ -850,7 +874,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 8: 재생 큐 & 디버그                                      -->
   <!-- =========================================================== -->
-  <section id="step-8" class="space-y-12">
+  <section id="step-8" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">8</div>
       <div>
@@ -938,7 +962,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 9: 글로벌 원클릭 릴리즈 & 정산                             -->
   <!-- =========================================================== -->
-  <section id="step-9" class="space-y-12">
+  <section id="step-9" class="space-y-12 border-t border-ink-200/30 pt-20 mt-20 md:pt-28 md:mt-28">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">9</div>
       <div>
