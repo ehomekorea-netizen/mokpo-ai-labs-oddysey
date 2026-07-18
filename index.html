@@ -557,11 +557,32 @@
     </div>
 
     <!-- Vibe-Coding Prompt Box -->
-    <div class="bg-warm/40 border-l-4 border-seed rounded-r-2xl p-6 mb-8 font-sans space-y-2">
-      <span class="text-xs font-bold text-seed uppercase tracking-wider block">💬 바이브코딩 핵심 지시문</span>
-      <p class="text-ink-900 font-extrabold italic text-lg md:text-xl lg:text-2xl leading-relaxed">
-        "브라우저에서 유튜브 API나 xAI API를 직접 호출하니까 보안 키가 코드에 다 드러나고 CORS 에러가 뜨면서 연결이 거부돼. 백엔드 서버를 우회 중계소(Proxy)로 만들고, 임시 세션 토큰을 발급받아 브라우저에 던져주게 구조를 짜줘."
-      </p>
+    <div class="bg-warm/40 border-l-4 border-seed rounded-r-2xl p-6 mb-8 font-sans space-y-4">
+      <span class="text-xs font-bold text-seed uppercase tracking-wider block">💬 바이브코딩 핵심 지시문 &amp; 추론 번역</span>
+      
+      <div class="grid md:grid-cols-2 gap-6 items-stretch">
+        <div class="bg-white/60 p-5 rounded-xl border border-seed/10">
+          <span class="text-[11px] font-black text-ink-400 block mb-1">💡 초급자의 날것 그대로의 요청 (자연어)</span>
+          <p class="text-ink-800 font-bold italic text-base leading-relaxed">
+            "인터넷 창에 직접 유튜브 API 키를 적어두니까 다 노출되어서 해킹 위험이 있다고 경고가 떠. 그리고 다른 사이트에서 접속을 차단했다고 에러가 뜨는데 이거 코딩 모르는 내가 어떻게 해결해?"
+          </p>
+        </div>
+        <div class="bg-seed/5 p-5 rounded-xl border border-seed/20">
+          <span class="text-[11px] font-black text-seed block mb-1">🧠 추론 모델(Grok/Gemini)의 기술적 맥락 해석</span>
+          <p class="text-ink-900 font-semibold text-xs leading-relaxed space-y-1">
+            • '보안 키 노출 경고' ➔ 클라이언트 코드 노출 방지를 위해 환경변수(process.env) 처리 및 백엔드 서버 보관이 필요하다고 자동 판단.<br>
+            • '다른 사이트에서 차단' ➔ 브라우저 보안 정책인 <strong>CORS(Cross-Origin Resource Sharing)</strong> 위반임을 감지, 백엔드를 우회 중계소(Proxy)로 설계.<br>
+            • 'xAI 실시간 통신' ➔ API Key 탈취 방지를 위한 5분 임시 세션 토큰(client_secrets) 발급 API 자동 설계.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-seed/10">
+        <span class="text-[11px] font-black text-ink-400 block mb-1">🛠️ 이를 통해 빌드된 기술 지시서 (프롬프트 내부 변환)</span>
+        <p class="text-ink-900 font-extrabold italic text-base md:text-lg leading-relaxed">
+          "브라우저에서 유튜브 API나 xAI API를 직접 호출하니까 보안 키가 코드에 다 드러나고 CORS 에러가 뜨면서 연결이 거부돼. 백엔드 서버를 우회 중계소(Proxy)로 만들고, 임시 세션 토큰을 발급받아 브라우저에 던져주게 구조를 짜줘."
+        </p>
+      </div>
     </div>
 
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
@@ -705,11 +726,32 @@
     </div>
 
     <!-- Vibe-Coding Prompt Box -->
-    <div class="bg-warm/40 border-l-4 border-seed rounded-r-2xl p-6 mb-8 font-sans space-y-2">
-      <span class="text-xs font-bold text-seed uppercase tracking-wider block">💬 바이브코딩 핵심 지시문</span>
-      <p class="text-ink-900 font-extrabold italic text-lg md:text-xl lg:text-2xl leading-relaxed">
-        "브라우저 마이크 음성 신호는 데이터량이 너무 많아서 네트워크로 실시간 스트리밍하면 소리가 다 깨져. 데이터양을 절반으로 경량화하고 xAI가 요구하는 24,000Hz PCM16 규격으로 변환하는 수식을 구현해줘."
-      </p>
+    <div class="bg-warm/40 border-l-4 border-seed rounded-r-2xl p-6 mb-8 font-sans space-y-4">
+      <span class="text-xs font-bold text-seed uppercase tracking-wider block">💬 바이브코딩 핵심 지시문 &amp; 추론 번역</span>
+      
+      <div class="grid md:grid-cols-2 gap-6 items-stretch">
+        <div class="bg-white/60 p-5 rounded-xl border border-seed/10">
+          <span class="text-[11px] font-black text-ink-400 block mb-1">💡 초급자의 날것 그대로의 요청 (자연어)</span>
+          <p class="text-ink-800 font-bold italic text-base leading-relaxed">
+            "마이크로 들어오는 내 목소리 데이터 용량이 너무 무거워서 전송할 때 자꾸 버벅거리는 것 같아. xAI 인공지능이 좋아하는 오디오 규격에 맞춰서 크기를 날씬하게 깎아내는 변환기 코드를 만들어줘."
+          </p>
+        </div>
+        <div class="bg-seed/5 p-5 rounded-xl border border-seed/20">
+          <span class="text-[11px] font-black text-seed block mb-1">🧠 추론 모델(Grok/Gemini)의 기술적 맥락 해석</span>
+          <p class="text-ink-900 font-semibold text-xs leading-relaxed space-y-1">
+            • '데이터 용량이 무거움' ➔ 브라우저의 기본 48,000Hz 주파수 오디오 스트림을 분석.<br>
+            • 'xAI가 좋아하는 규격' ➔ xAI Realtime 모델 규격인 24,000Hz에 맞춰 2:1 샘플 비율로 프레임을 건너뛰며 용량을 50% 절감(Downsampling)하는 공식 도출.<br>
+            • '날씬하게 깎음' ➔ Float32(32비트 실수) 타입의 데이터를 네트워크 전송 효율이 높은 16비트 정수(Int16/PCM16) 구조로 압축하는 비트 연산 장착.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-seed/10">
+        <span class="text-[11px] font-black text-ink-400 block mb-1">🛠️ 이를 통해 빌드된 기술 지시서 (프롬프트 내부 변환)</span>
+        <p class="text-ink-900 font-extrabold italic text-base md:text-lg leading-relaxed">
+          "브라우저 마이크 음성 신호는 데이터량이 너무 많아서 네트워크로 실시간 스트리밍하면 소리가 다 깨져. 데이터양을 절반으로 경량화하고 xAI가 요구하는 24,000Hz PCM16 규격으로 변환하는 수식을 구현해줘."
+        </p>
+      </div>
     </div>
 
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
@@ -742,11 +784,32 @@
     </div>
 
     <!-- Vibe-Coding Prompt Box -->
-    <div class="bg-warm/40 border-l-4 border-seed rounded-r-2xl p-6 mb-8 font-sans space-y-2">
-      <span class="text-xs font-bold text-seed uppercase tracking-wider block">💬 바이브코딩 핵심 지시문</span>
-      <p class="text-ink-900 font-extrabold italic text-lg md:text-xl lg:text-2xl leading-relaxed">
-        "인터넷 상태에 따라 오디오 패킷이 늦게 도달하거나 일찍 도달하면서 버퍼 조각 사이에 미세한 시간 공백이 생겨. 소리 재생할 때마다 틱 틱 튀는 기계음 노이즈가 심한데, 이전 조각이 끝나는 절대 시간을 추적해서 완벽하게 이어붙이는 큐 스케줄러를 짜줘."
-      </p>
+    <div class="bg-warm/40 border-l-4 border-seed rounded-r-2xl p-6 mb-8 font-sans space-y-4">
+      <span class="text-xs font-bold text-seed uppercase tracking-wider block">💬 바이브코딩 핵심 지시문 &amp; 추론 번역</span>
+      
+      <div class="grid md:grid-cols-2 gap-6 items-stretch">
+        <div class="bg-white/60 p-5 rounded-xl border border-seed/10">
+          <span class="text-[11px] font-black text-ink-400 block mb-1">💡 초급자의 날것 그대로의 요청 (자연어)</span>
+          <p class="text-ink-800 font-bold italic text-base leading-relaxed">
+            "인공지능이 대답하는 소리가 조금씩 끊기면서 들어올 때마다 지지직거리거나 틱 틱 하는 기계 잡음이 심해. 부드러운 라디오 소리처럼 매끄럽게 연결해서 들려주게 개선해줘."
+          </p>
+        </div>
+        <div class="bg-seed/5 p-5 rounded-xl border border-seed/20">
+          <span class="text-[11px] font-black text-seed block mb-1">🧠 추론 모델(Grok/Gemini)의 기술적 맥락 해석</span>
+          <p class="text-ink-900 font-semibold text-xs leading-relaxed space-y-1">
+            • '소리가 끊기고 잡음이 남' ➔ 비동기식 패킷 도달 시차(Jitter)로 오디오 출력 장치에 무음 공백(Buffer Underflow)이 생겨 발생하는 <strong>Clicks &amp; Pops 노이즈</strong>로 판정.<br>
+            • '매끄럽게 연결' ➔ 브라우저 내장 오디오 절대 시계(currentTime)를 기준으로 다음 오디오 조각이 이어질 시작 예정 시각(nextPlaybackTime)을 메모리에 누적 계산.<br>
+            • '큐 예약' ➔ Web Audio API의 정밀 타이머에 오디오 버퍼 재생을 시간 단위로 미리 밀어 예약해두는 스케줄링 로직 구현.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-seed/10">
+        <span class="text-[11px] font-black text-ink-400 block mb-1">🛠️ 이를 통해 빌드된 기술 지시서 (프롬프트 내부 변환)</span>
+        <p class="text-ink-900 font-extrabold italic text-base md:text-lg leading-relaxed">
+          "인터넷 상태에 따라 오디오 패킷이 늦게 도달하거나 일찍 도달하면서 버퍼 조각 사이에 미세한 시간 공백이 생겨. 소리 재생할 때마다 틱 틱 튀는 기계음 노이즈가 심한데, 이전 조각이 끝나는 절대 시간을 추적해서 완벽하게 이어붙이는 큐 스케줄러를 짜줘."
+        </p>
+      </div>
     </div>
 
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
@@ -787,11 +850,32 @@
     </div>
 
     <!-- Vibe-Coding Prompt Box -->
-    <div class="bg-warm/40 border-l-4 border-seed rounded-r-2xl p-6 mb-8 font-sans space-y-2">
-      <span class="text-xs font-bold text-seed uppercase tracking-wider block">💬 바이브코딩 핵심 지시문</span>
-      <p class="text-ink-900 font-extrabold italic text-lg md:text-xl lg:text-2xl leading-relaxed">
-        "카카오톡 Link API는 로그인 절차도 복잡하고 개발자 센터 등록 과정에서 실습 흐름이 모두 막히고 진입 장벽이 너무 높아. 더 가볍고 확실하게 10초 만에 보관할 수 있게 텔레그램 봇(Telegram Bot API)으로 전체 연동 설계를 바꾸고 카카오 관련 코드는 다 청소해줘."
-      </p>
+    <div class="bg-warm/40 border-l-4 border-seed rounded-r-2xl p-6 mb-8 font-sans space-y-4">
+      <span class="text-xs font-bold text-seed uppercase tracking-wider block">💬 바이브코딩 핵심 지시문 &amp; 추론 번역</span>
+      
+      <div class="grid md:grid-cols-2 gap-6 items-stretch">
+        <div class="bg-white/60 p-5 rounded-xl border border-seed/10">
+          <span class="text-[11px] font-black text-ink-400 block mb-1">💡 초급자의 날것 그대로의 요청 (자연어)</span>
+          <p class="text-ink-800 font-bold italic text-base leading-relaxed">
+            "유튜브 영상을 단체 톡방이나 나한테 보내두고 싶은데, 카카오톡은 인증이랑 가입 절차가 너무 꼬여서 수업 시간에 다들 가입하느라 헤맬 것 같아. 그냥 10초 만에 토큰 복사 하나로 연동되는 간단한 봇 알림 기능은 없어?"
+          </p>
+        </div>
+        <div class="bg-seed/5 p-5 rounded-xl border border-seed/20">
+          <span class="text-[11px] font-black text-seed block mb-1">🧠 추론 모델(Grok/Gemini)의 기술적 맥락 해석</span>
+          <p class="text-ink-900 font-semibold text-xs leading-relaxed space-y-1">
+            • '인증과 로그인 절차가 꼬임' ➔ OAuth2 세션 연결 및 카카오톡 Redirect URL 설정의 높은 교육 장벽을 파악.<br>
+            • '10초 만에 토큰 복사 연동' ➔ 계정 로그인이나 복잡한 인증 모듈 없이 고유 토큰값 하나만으로 무인증 POST API를 쏠 수 있는 <strong>텔레그램 봇 API(Telegram Bot API)</strong>를 대체 기술로 낙점.<br>
+            • '연동 설계 피봇' ➔ 카카오 SDK 의존성 코드를 전체 삭제하고 Telegram URL 구조로 전격 피봇하여 아키텍처 극단적 경량화 유도.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-seed/10">
+        <span class="text-[11px] font-black text-ink-400 block mb-1">🛠️ 이를 통해 빌드된 기술 지시서 (프롬프트 내부 변환)</span>
+        <p class="text-ink-900 font-extrabold italic text-base md:text-lg leading-relaxed">
+          "카카오톡 Link API는 로그인 절차도 복잡하고 개발자 센터 등록 과정에서 실습 흐름이 모두 막히고 진입 장벽이 너무 높아. 더 가볍고 확실하게 10초 만에 보관할 수 있게 텔레그램 봇(Telegram Bot API)으로 전체 연동 설계를 바꾸고 카카오 관련 코드는 다 청소해줘."
+        </p>
+      </div>
     </div>
 
     <!-- Live simulator block -->
