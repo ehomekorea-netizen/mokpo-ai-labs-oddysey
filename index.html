@@ -1,1826 +1,3653 @@
 <!DOCTYPE html>
+
 <html lang="ko" class="scroll-smooth">
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>목포 AI 실험실 - 웹 인터랙션 교안</title>
+
   <meta name="description" content="명함 한 장으로 만드는 프리미엄 랜딩페이지 — 목포 AI 실험실 실전 압축 교안">
 
+
+
   <script src="https://cdn.tailwindcss.com"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+
   <script src="./js/bunny_data.js"></script>
+
   <script src="https://unpkg.com/lucide@latest"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
+
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 
+
+
   <script>
+
     tailwind.config = {
+
       theme: {
+
         extend: {
+
           colors: {
+
             seed: { DEFAULT: '#FF7E36', light: '#FFE4D0', dark: '#E66825' },
+
             warm: '#f8f4ed',
+
             ink: { 900: '#191F28', 700: '#2D3540', 500: '#4E5968', 300: '#8B95A1', 100: '#EDF0F3' }
+
           },
+
           fontSize: {
+
             '2xs': '0.65rem',
+
           }
+
         }
+
       }
+
     };
+
   </script>
 
+
+
   <style>
+
     @font-face {
+
       font-family: 'PixelFont';
+
       src: url('./fonts/x12y12pxMaruMinyaHangul.woff2') format('woff2'),
+
            url('./fonts/x12y12pxMaruMinyaHangul.ttf') format('truetype');
+
       font-display: swap;
+
     }
 
+
+
     :root {
+
       --seed: #FF7E36;
+
       --bg: #f8f4ed;
+
       --ink: #191F28;
+
     }
+
+
 
     html { background: var(--bg); }
 
+
+
     body {
+
       font-family: 'Noto Sans KR', -apple-system, sans-serif;
+
       background: var(--bg);
+
       color: var(--ink);
+
       overflow-x: hidden;
+
       background-image: radial-gradient(#d1c8b8 0.8px, transparent 0.8px);
+
       background-size: 28px 28px;
+
     }
+
+
 
     .font-pixel { font-family: 'PixelFont', 'Courier New', monospace; }
+
     .font-inter { font-family: 'Inter', sans-serif; }
 
+
+
     /* Scrollbar */
+
     ::-webkit-scrollbar { width: 6px; }
+
     ::-webkit-scrollbar-thumb { background: #c9bfb4; border-radius: 3px; }
 
+
+
     /* Josh Cards */
+
     .card {
+
       transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+
       will-change: transform;
+
     }
+
     .card:hover {
+
       transform: translateY(-6px);
+
       box-shadow: 0 20px 40px -12px rgba(25,31,40,0.12);
+
     }
+
+
 
     /* Tab styles */
+
     .tab-btn { transition: all 0.2s ease; }
+
     .tab-btn.active {
+
       background: white;
+
       border-color: var(--seed);
+
       box-shadow: 0 4px 12px -4px rgba(255,126,54,0.2);
+
     }
+
     .tab-btn.active .tab-icon { color: var(--seed); }
+
     .tab-btn.active .tab-label { color: var(--ink); font-weight: 700; }
 
+
+
     /* Animations */
+
     @keyframes portalOut {
+
       0%   { transform: scale(1);    opacity: 1; }
+
       100% { transform: scale(1.06); opacity: 0; visibility: hidden; }
+
     }
+
     .portal-out { animation: portalOut 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 
+
+
     @keyframes flyMail {
+
       0%   { transform: translate(0, 0) scale(1) rotate(0deg);   opacity: 0; }
+
       15%  { opacity: 1; }
+
       80%  { transform: translate(130px, -65px) scale(0.55) rotate(-8deg); opacity: 1; }
+
       100% { transform: translate(150px, -55px) scale(0); opacity: 0; }
+
     }
+
     .mail-fly { animation: flyMail 3s infinite ease-in-out; }
 
+
+
     @keyframes stylePulse {
+
       0%, 25% { background: #f3f4f6; border-color: #d1d5db; color: #9ca3af; }
+
       60%, 85% { background: #FFE4D0; border-color: #FF7E36; color: #E66825; box-shadow: 0 4px 16px rgba(255,126,54,0.25); }
+
       100% { background: #f3f4f6; border-color: #d1d5db; color: #9ca3af; }
+
     }
+
     .style-pulse { animation: stylePulse 4s infinite alternate ease-in-out; }
 
+
+
     /* Drawer */
+
     .drawer-transition { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; }
 
+
+
     /* Vibe Canvas */
+
     #vibe-preview {
+
       transition: background 0.6s ease, color 0.6s ease, border-radius 0.4s ease, font-family 0.3s ease;
+
     }
+
     #vibe-preview .vp-hero { transition: background 0.6s ease; }
+
     #vibe-preview .vp-btn { transition: all 0.4s ease; }
 
+
+
     /* Step badge */
+
     .step-badge {
+
       width: 3.5rem; height: 3.5rem;
+
       border-radius: 18px;
+
       display: flex; align-items: center; justify-content: center;
+
       font-family: 'Inter', sans-serif;
+
       font-weight: 900; font-size: 1.5rem;
+
       flex-shrink: 0;
+
     }
+
+
 
     /* Reminder callout */
+
     .reminder-box {
+
       background: linear-gradient(135deg, #fff9f5 0%, #fff3ec 100%);
+
       border-left: 4px solid var(--seed);
+
       border-radius: 0 16px 16px 0;
+
     }
+
+
 
     /* Glow button */
+
     @keyframes glowPulse {
+
       0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.4); }
+
       50%       { box-shadow: 0 0 0 14px rgba(37,99,235,0); }
+
     }
+
     .glow { animation: glowPulse 1.8s cubic-bezier(0.4,0,0.6,1) infinite; }
 
+
+
     /* Toast */
+
     #toast { transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; }
 
+
+
     /* Vibe topic pills */
+
     .vibe-pill {
+
       cursor: pointer;
+
       transition: all 0.2s ease;
+
       text-align: left;
+
     }
+
     .vibe-pill:hover { transform: translateX(4px); border-color: var(--seed); }
+
     .vibe-pill.selected { background: #FFE4D0; border-color: #FF7E36; color: #191F28; }
 
+
+
     /* Prevent floating bunny Lottie trigger from overlapping main body content on laptop screens */
+
     @media (min-width: 1024px) {
+
       main {
+
         /* Keep at least 220px of gutter on the left side of the main content on smaller laptop screens.
+
            As the screen grows wider, this padding dynamically decreases to the default 3rem (48px)
+
            to maintain centering with max-width [1440px]. */
+
         padding-left: clamp(3rem, calc(220px - (100vw - 1440px) / 2), 220px) !important;
+
       }
+
     }
 
+
+
     /* Tactile buttons scaling feedback */
+
     .btn-tactile {
+
       transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, background-color 0.2s ease, opacity 0.2s ease;
+
       will-change: transform;
+
     }
+
     .btn-tactile:active {
+
       transform: scale(0.97) translateY(0.5px) !important;
+
     }
+
   </style>
+
 </head>
+
+
 
 <body class="antialiased">
 
+
+
 <!-- ============================================================ -->
+
 <!-- SPLASH OVERLAY (COMP_THUMBNAIL★.md 준수)                     -->
+
 <!-- ============================================================ -->
+
 <div id="splash-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#f8f4ed]/96 backdrop-blur-2xl transition-all duration-500">
+
   <div id="splash-card" class="max-w-2xl w-full mx-4 p-12 md:p-16 rounded-[44px] bg-white border border-black/5 shadow-2xl text-center space-y-8 transform transition-all duration-500 ease-out scale-100 opacity-100 relative overflow-hidden">
+
     <!-- Easter egg container -->
+
     <div id="easter-egg-container" class="absolute inset-0 flex items-center justify-center z-20 hidden transition-all duration-500 transform scale-75 opacity-0 bg-white/92 backdrop-blur-sm pointer-events-none">
+
       <div id="easter-egg-lottie" class="w-56 h-56"></div>
+
     </div>
+
+
 
     <div class="flex justify-center">
+
       <span class="px-4 py-2 rounded-full bg-seed-light text-seed-dark text-xs font-black tracking-widest uppercase">TODAY'S SESSION</span>
+
     </div>
 
+
+
     <h2 class="font-pixel text-4xl md:text-5xl text-ink-900 leading-snug">
+
       YouTube Finder<br>
+
       <span class="text-seed">AI Voice Agent</span><br>
+
       기술 세미나
+
     </h2>
+
+
 
     <div class="w-20 h-1 bg-seed/25 mx-auto rounded-full"></div>
 
+
+
     <p class="text-base md:text-lg text-ink-500 leading-relaxed max-w-lg mx-auto">
+
       목포 AI 실험실 멤버를 위한 바이브코딩 프로젝트 해부 가이드.<br class="hidden md:block">
+
       xAI Grok Voice와 WebSockets, Web Audio API를 활용한 실시간 음성 에이전트의 작동 원리를 직관적인 시뮬레이션으로 해부합니다.
+
     </p>
 
+
+
     <div class="pt-2">
+
       <button onclick="closeSplash()" class="btn-tactile w-full py-5 px-8 bg-seed hover:bg-seed-dark text-white font-extrabold text-base rounded-2xl shadow-lg shadow-seed/20 hover:scale-[1.02] transform transition-all duration-200">
+
         실습실 입장하기 🚀
+
       </button>
+
     </div>
+
   </div>
+
 </div>
 
 
+
+
+
 <!-- ============================================================ -->
+
 <!-- HEADER (COMP_HEADER★.md 준수)                                -->
+
 <!-- ============================================================ -->
+
 <header class="w-full py-5 px-6 md:px-16 flex items-center justify-between border-b border-black/5 bg-[#f8f4ed]/82 backdrop-blur-md sticky top-0 z-40">
+
   <a href="#" class="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
+
     <img src="./assets/logo.png" alt="목포 AI 실험실 로고" class="h-11 w-11 object-contain rounded-xl"
+
          onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+
     <div id="logo-fallback" class="hidden h-11 w-11 bg-seed text-white items-center justify-center rounded-xl font-black text-lg shadow-sm">M</div>
+
     <span class="font-pixel text-xl md:text-2xl text-ink-900 select-none">목포 AI 실험실</span>
+
   </a>
+
   <nav class="hidden md:flex items-center gap-8">
+
     <a href="#step-0" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">개념 시뮬레이터</a>
+
     <a href="#step-1" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">구조 &amp; 뼈대</a>
+
     <a href="#step-2" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">백엔드 서버</a>
+
     <a href="#step-3" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">Grok Realtime</a>
+
     <a href="#step-4" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">인격 &amp; 도구</a>
+
     <a href="#step-5" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">음성 캡처</a>
+
     <a href="#step-6" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">재생 큐</a>
+
     <a href="#step-7" class="text-sm font-semibold text-ink-500 hover:text-seed transition-colors">라이브 데모</a>
+
   </nav>
+
 </header>
 
 
+
+
+
 <!-- ============================================================ -->
+
 <!-- MAIN                                                          -->
+
 <!-- ============================================================ -->
+
 <main class="max-w-[1440px] w-full mx-auto px-6 md:px-12 py-14 md:py-24 space-y-36">
 
+
+
   <!-- HERO -->
+
   <div class="text-center max-w-5xl mx-auto">
+
     <div class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-ink-100 text-ink-700 font-semibold text-sm mb-8 border border-ink-100">
+
       <span class="relative flex h-3 w-3">
+
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-seed opacity-75"></span>
+
         <span class="relative inline-flex rounded-full h-3 w-3 bg-seed"></span>
+
       </span>
+
       AI Voice Agent 기술 세미나 · 목포 AI 실험실
+
     </div>
+
     <h1 class="font-inter font-black text-5xl md:text-7xl text-ink-900 mb-8 tracking-tight leading-[1.05]">
+
       Grok Realtime Voice로 구축하는<br>
+
       <span class="text-transparent bg-clip-text bg-gradient-to-r from-seed to-amber-500">YouTube Finder 에이전트</span>
+
     </h1>
+
     <p class="text-xl md:text-2xl text-ink-500 leading-relaxed max-w-3xl mx-auto mb-10">
+
       복잡한 음성 스트리밍 통신과 도구 호출(Function Calling) 설계의 작동 방식을 실시간 비주얼 시뮬레이터로 학습하고, 바이브코딩 핵심 실습 단계를 해부합니다.
+
     </p>
+
     <div class="flex justify-center">
+
       <a href="#step-0" class="btn-tactile inline-flex items-center justify-center px-10 py-5 bg-seed hover:bg-seed-dark text-white font-extrabold text-lg rounded-2xl shadow-lg shadow-seed/20 hover:scale-[1.02] transform transition-all duration-200 gap-2 cursor-pointer select-none">
+
         실습 시작하기 <i data-lucide="arrow-down" class="w-5 h-5"></i>
+
       </a>
+
     </div>
+
   </div>
 
 
+
+
+
   <!-- =========================================================== -->
+
   <!-- STEP 0: AI Voice Agent 핵심 기술 이해하기                       -->
+
   <!-- =========================================================== -->
+
   <section id="step-0">
+
     <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+
       <div class="flex items-center gap-5">
+
         <div class="step-badge bg-ink-900 text-white shadow-xl">0</div>
+
         <div>
+
           <div class="flex flex-wrap items-center gap-3">
+
             <h2 class="text-3xl md:text-4xl font-black text-ink-900">AI Voice Agent 핵심 기술 이해하기</h2>
+
             <button onclick="openModal('modal-frontend-history')" class="inline-flex items-center gap-1.5 text-sm font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-3.5 py-1.5 rounded-full transition-all cursor-pointer shadow-sm">
+
               <i data-lucide="book-open" class="w-4 h-4"></i> 아키텍처 대서사시 보기
+
             </button>
+
           </div>
+
           <p class="text-ink-500 mt-1.5 text-lg">실시간 음성 통신과 도구 호출(Function Calling)이 일어나는 브라우저 내부의 핵심 구조를 시각적으로 학습합니다.</p>
+
         </div>
+
       </div>
+
     </div>
 
+
+
     <div class="bg-ink-900 text-white rounded-3xl p-8 md:p-10 mb-8 shadow-xl relative overflow-hidden">
+
       <div class="absolute right-8 top-8 opacity-10">
+
         <i data-lucide="mic" class="w-32 h-32"></i>
+
       </div>
+
       <div class="relative max-w-4xl">
+
         <p class="text-seed font-black tracking-widest text-sm uppercase mb-3">Core Concept</p>
+
         <h3 class="text-2xl md:text-3xl font-black mb-4 leading-tight">음성 에이전트는 단순한 '텍스트 로봇'이 아닙니다.</h3>
+
         <p class="text-white/75 text-lg leading-relaxed">
+
           실시간 음성 처리(Grok Voice)는 엄청난 양의 오디오 조각들이 끊임없이 왕복하는 고속 파이프라인입니다. 
+
           브라우저 마이크를 어떻게 다루고, AI가 스스로 어떻게 도구 주문서(JSON)를 만들며, 쪼개진 오디오를 어떻게 이어붙여서 재생하는지 
+
           그 3대 핵심 작동 메커니즘을 아래의 플레이그라운드에서 직접 조작해 보세요.
+
         </p>
+
       </div>
+
     </div>
+
+
 
     <div class="bg-white rounded-3xl border border-ink-100 overflow-hidden shadow-sm flex flex-col lg:flex-row min-h-[500px]">
+
       <div class="w-full lg:w-[340px] bg-ink-100/40 border-b lg:border-b-0 lg:border-r border-ink-100 p-6 flex flex-col gap-3 shrink-0">
+
         <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn active text-left p-5 rounded-2xl border-2 border-transparent flex items-start gap-4">
+
           <i data-lucide="mic" class="w-6 h-6 text-ink-300 tab-icon mt-0.5 shrink-0"></i>
+
           <div>
+
             <h3 class="text-ink-500 tab-label text-xl font-medium transition-all">실시간 음성 &amp; WebSocket</h3>
+
             <p class="text-sm text-ink-300 mt-1">마이크 캡처 ➔ 다운샘플링 ➔ 실시간 스트림</p>
+
           </div>
+
         </button>
+
         <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn text-left p-5 rounded-2xl border-2 border-transparent flex items-start gap-4 hover:bg-white">
+
           <i data-lucide="braces" class="w-6 h-6 text-ink-300 tab-icon mt-0.5 shrink-0"></i>
+
           <div>
+
             <h3 class="text-ink-500 tab-label text-xl font-medium">Function Calling 주문서</h3>
+
             <p class="text-sm text-ink-300 mt-1">음성을 도구 호출 규격(JSON)으로 조립</p>
+
           </div>
+
         </button>
+
         <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn text-left p-5 rounded-2xl border-2 border-transparent flex items-start gap-4 hover:bg-white">
+
           <i data-lucide="zap" class="w-6 h-6 text-ink-300 tab-icon mt-0.5 shrink-0"></i>
+
           <div>
+
             <h3 class="text-ink-500 tab-label text-xl font-medium">오디오 재생 큐 스케줄러</h3>
+
             <p class="text-sm text-ink-300 mt-1">20ms 단위 청크를 끊김 없이 스케줄링</p>
+
           </div>
+
         </button>
+
       </div>
+
+
 
       <div class="flex-1 p-10 lg:p-14 bg-white flex flex-col justify-between">
+
         <!-- Tab 1 content -->
+
         <div id="tab-content-1" class="tab-content space-y-6">
+
           <h3 class="text-3xl font-black text-ink-900">1. 마이크 오디오 실시간 스트리밍 &amp; WebSocket</h3>
+
           <p class="text-ink-500 leading-relaxed text-lg">
+
             실시간 음성 에이전트는 일반적인 HTTP 요청(편지 교환) 대신 **WebSocket(전화 연결)**을 통해 음성 바이너리 데이터를 양방향으로 실시간 스트리밍합니다. 
+
             브라우저 마이크의 48,000Hz 오디오 데이터를 xAI 규격인 24,000Hz PCM16 데이터로 다운샘플링하고 Base64로 압축하여 1초에 수십 번씩 보냅니다.
+
           </p>
+
+
 
           <div class="relative bg-ink-900 rounded-2xl p-8 overflow-hidden min-h-[220px] flex flex-col justify-between">
+
             <div class="absolute left-16 right-16 top-1/2 -translate-y-1/2 border-t-2 border-dashed border-ink-700"></div>
+
             
+
             <div class="flex justify-between items-center z-10 relative">
+
               <!-- Client Mic Node -->
+
               <div class="flex flex-col items-center gap-2">
+
                 <button id="sim1-mic-btn" onclick="toggleSim1Mic()" class="w-16 h-16 bg-ink-800 rounded-2xl border border-ink-700 hover:bg-ink-700 text-white flex items-center justify-center relative cursor-pointer transition-all">
+
                   <i data-lucide="mic" id="sim1-mic-icon" class="w-8 h-8 transition-transform"></i>
+
                   <span id="sim1-mic-pulse" class="absolute inset-0 rounded-2xl border-2 border-seed animate-ping opacity-0"></span>
+
                 </button>
+
                 <span class="text-xs font-bold text-ink-300" id="sim1-mic-status">마이크 대기 중</span>
+
               </div>
+
+
 
               <!-- Packet -->
+
               <div id="sim1-audio-packet" class="absolute w-12 h-12 bg-seed text-white rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-1000 ease-in-out opacity-0 pointer-events-none z-20" style="left: 10%; top: 15%;">PCM16</div>
 
+
+
               <!-- Server Node -->
+
               <div class="flex flex-col items-center gap-2">
+
                 <div class="w-16 h-16 bg-ink-800 rounded-2xl border border-ink-700 flex items-center justify-center text-white relative">
+
                   <i data-lucide="radio" class="w-8 h-8"></i>
+
                   <span id="sim1-ws-light" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-ink-500"></span>
+
                 </div>
+
                 <span class="text-xs font-bold text-ink-300">xAI Grok Realtime</span>
+
               </div>
+
             </div>
+
+
 
             <!-- Controls / Visualizer preview -->
+
             <div class="z-10 pt-4 border-t border-ink-800/60 mt-4 flex items-center justify-between">
+
               <div class="flex items-center gap-3">
+
                 <canvas id="sim1-canvas" class="w-36 h-8 bg-ink-950 rounded-lg border border-ink-800" width="144" height="32"></canvas>
+
                 <span class="text-[11px] text-ink-400 font-mono" id="sim1-hz-info">Input: 0Hz</span>
+
               </div>
+
               <span class="text-[11px] text-seed font-mono" id="sim1-speed-info">Latency: --ms</span>
+
             </div>
+
           </div>
+
+
 
           <div class="bg-ink-950 border border-ink-800 rounded-xl p-4 font-mono text-xs text-ink-400 min-h-[90px] max-h-[120px] overflow-y-auto space-y-1" id="sim1-log">
+
             <div>// 마이크 아이콘을 눌러 실시간 음성 스트리밍을 체험하세요.</div>
+
           </div>
+
         </div>
+
+
 
         <!-- Tab 2 content -->
+
         <div id="tab-content-2" class="tab-content hidden space-y-6">
+
           <h3 class="text-3xl font-black text-ink-900">2. Function Calling (JSON 규격 도구 호출)</h3>
+
           <p class="text-ink-500 leading-relaxed text-lg">
+
             AI 모델은 직접 웹 서핑을 하거나 메시지를 보낼 수 없습니다. 
+
             하지만 강사님이 만든 API(도구 설명서)를 보여주면, 대화 맥락을 보고 필요한 도구와 필요한 매개변수를 담은 **JSON 형식의 주문서**를 발행해 줍니다. 
+
             이 주문서를 받아 실제 처리를 하는 것은 브라우저와 우리 백엔드 서버입니다.
+
           </p>
 
+
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mt-4">
+
             <!-- Left: Simulator Interaction Panel -->
+
             <div class="bg-warm/30 border border-ink-100 rounded-3xl p-6 flex flex-col justify-between space-y-4">
+
               <div>
+
                 <h4 class="font-bold text-ink-900 text-base mb-2">가상 사용자 음성 입력</h4>
+
                 <p class="text-xs text-ink-500 mb-4">아래 시나리오 중 하나를 선택해 보세요.</p>
+
                 <div class="space-y-2">
+
                   <button onclick="triggerSim2('youtube')" class="w-full text-left p-3.5 bg-white border border-ink-100 hover:border-seed rounded-xl text-sm font-semibold text-ink-800 hover:text-seed flex items-center gap-2 transition-all cursor-pointer">
+
                     🎤 "최신 AI 에이전트 동영상 검색해줘"
+
                   </button>
+
                   <button onclick="triggerSim2('play')" class="w-full text-left p-3.5 bg-white border border-ink-100 hover:border-seed rounded-xl text-sm font-semibold text-ink-800 hover:text-seed flex items-center gap-2 transition-all cursor-pointer">
+
                     🎤 "두 번째 영상 플레이어로 재생해줘"
+
                   </button>
+
                   <button onclick="triggerSim2('telegram')" class="w-full text-left p-3.5 bg-white border border-ink-100 hover:border-seed rounded-xl text-sm font-semibold text-ink-800 hover:text-seed flex items-center gap-2 transition-all cursor-pointer">
+
                     🎤 "이 동영상을 텔레그램으로 보관해"
+
                   </button>
+
                 </div>
+
               </div>
+
               <div class="bg-white border border-ink-100 rounded-xl p-4 text-xs space-y-1.5 text-ink-500">
+
                 <span class="font-bold text-ink-700">도구 실행 흐름:</span>
+
                 <div class="flex items-center gap-1.5 font-mono text-[10px] mt-1 text-ink-400">
+
                   <span>발화</span> ➔ <span id="sim2-flow-step-1">AI 주문</span> ➔ <span id="sim2-flow-step-2">서버 실행</span> ➔ <span id="sim2-flow-step-3">화면 갱신</span>
+
                 </div>
+
               </div>
+
             </div>
+
+
 
             <!-- Right: Real-time Schema Inspector -->
+
             <div class="flex flex-col h-full border border-ink-100 rounded-2xl overflow-hidden bg-ink-900 text-white font-mono text-[11px] min-h-[250px]">
+
               <div class="bg-ink-800 px-4 py-2 border-b border-ink-700 flex items-center justify-between">
+
                 <span class="text-ink-300 text-[10px] font-bold">REALTIME JSON SCHEMA WIDGET</span>
+
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+
               </div>
+
               <!-- Code View -->
+
               <div class="p-4 border-b border-ink-800 bg-[#0e1824]/50 space-y-1 text-ink-400 flex-grow max-h-[160px] overflow-y-auto">
+
                 <pre id="sim2-json-output" class="text-emerald-400 font-bold whitespace-pre-wrap">// 음성 입력을 선택하면 AI가 작성한 JSON 주문서가 여기에 렌더링됩니다.</pre>
+
               </div>
+
               <!-- Console log output -->
+
               <div id="sim2-terminal-log" class="p-4 bg-ink-950 border-t border-ink-800 text-ink-300 text-[10px] h-24 overflow-y-auto space-y-1">
+
                 <div class="text-ink-500">// 대기 중...</div>
+
               </div>
+
             </div>
+
           </div>
+
         </div>
+
+
 
         <!-- Tab 3 content -->
+
         <div id="tab-content-3" class="tab-content hidden space-y-6">
+
           <h3 class="text-3xl font-black text-ink-900">3. 오디오 재생 큐 스케줄링 (Drain Playback Queue)</h3>
+
           <p class="text-ink-500 leading-relaxed text-lg">
+
             실시간 음성은 통째로 오지 않고 20ms~40ms 단위의 짧은 조각(Chunk)들로 쪼개져 연속적으로 들어옵니다. 
+
             브라우저가 단순히 그때그때 소리를 내면 오디오 버퍼 조각 사이에 미세한 공백(Gap)이 생겨 뚝뚝 끊기는 불쾌한 기계음(Clicks &amp; Pops)이 납니다. 
+
             우리는 Web Audio API의 절대 시간축을 예약 스케줄러(`nextPlaybackTime`)로 계산하여 빈틈없이 이어붙입니다.
+
           </p>
+
+
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mt-4">
+
             <!-- Left: Audio buffer animation -->
+
             <div class="bg-warm/30 border border-ink-100 rounded-3xl p-6 flex flex-col justify-between min-h-[220px]">
+
               <div>
+
                 <div class="flex items-center justify-between mb-4">
+
                   <span class="text-sm font-bold text-ink-900">오디오 청크 재생 모드</span>
+
                   <span id="sim3-status" class="px-2.5 py-0.5 rounded-full bg-ink-200 text-ink-600 text-[10px] font-bold">READY</span>
+
                 </div>
+
                 
+
                 <div class="space-y-4">
+
                   <button id="sim3-btn-good" onclick="playSim3(true)" class="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
+
                     <i data-lucide="play" class="w-4 h-4"></i> 빈틈 없는 절대 시간 예약 재생 (권장)
+
                   </button>
+
                   <button id="sim3-btn-bad" onclick="playSim3(false)" class="w-full py-3 px-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
+
                     <i data-lucide="play" class="w-4 h-4"></i> 비동기 즉시 재생 (뚝뚝 끊김)
+
                   </button>
+
                 </div>
+
               </div>
+
+
 
               <div class="mt-4 pt-3 border-t border-ink-100 flex justify-between items-center">
+
                 <span class="text-xs font-bold text-ink-500">지연 상태 모션:</span>
+
                 <div class="flex items-center gap-1.5">
+
                   <span id="sim3-buffer-1" class="w-5 h-5 bg-ink-200 rounded-full transition-all"></span>
+
                   <span id="sim3-buffer-2" class="w-5 h-5 bg-ink-200 rounded-full transition-all"></span>
+
                   <span id="sim3-buffer-3" class="w-5 h-5 bg-ink-200 rounded-full transition-all"></span>
+
                   <span id="sim3-buffer-4" class="w-5 h-5 bg-ink-200 rounded-full transition-all"></span>
+
                   <span id="sim3-buffer-5" class="w-5 h-5 bg-ink-200 rounded-full transition-all"></span>
+
                 </div>
+
               </div>
+
             </div>
+
+
 
             <!-- Right: Time-based visual queue -->
+
             <div class="border border-ink-100 rounded-3xl p-6 bg-white flex flex-col justify-between min-h-[220px]">
+
               <h4 class="font-bold text-ink-900 text-sm mb-3">Web Audio API 절대 스케줄 큐 시각화</h4>
+
               <!-- Time line visualizer -->
+
               <div class="flex-grow flex items-center justify-center relative min-h-[100px] border border-dashed border-ink-100 rounded-xl bg-warm/10 overflow-hidden">
+
                 <div class="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] font-mono text-ink-400 font-bold">Time ➔</div>
+
                 <div id="sim3-timeline-container" class="w-full px-16 flex items-center gap-0.5 justify-start overflow-hidden">
+
                   <div class="text-xs text-ink-300 font-mono">// 재생 버튼을 선택하세요.</div>
+
                 </div>
+
               </div>
+
               <div class="text-[11px] text-ink-400 mt-2 font-mono" id="sim3-log-msg">
+
                 currentTime: 0.00s | nextPlaybackTime: 0.00s
+
               </div>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
   </section><!-- =========================================================== -->
+
   <!-- STEP 1: 무엇을 데이터로 삼을 것인가?                           -->
+
   <!-- =========================================================== -->
+
   <section id="step-1">
+
     <div class="mb-12 flex items-center gap-5">
+
       <div class="step-badge bg-ink-900 text-white shadow-xl">1</div>
+
       <div>
+
         <h2 class="text-3xl md:text-4xl font-black text-ink-900">프로젝트 뼈대 세우기</h2>
+
         <p class="text-ink-500 mt-1.5 text-lg">AI Voice Agent 앱의 로컬 폴더 구조를 확립하고 package.json 의존성을 구성합니다.</p>
+
       </div>
+
     </div>
+
+
 
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
+
       <div class="grid lg:grid-cols-2 gap-8 items-stretch">
-        <div class="space-y-4 flex flex-col justify-between">
-          <div>
-            <h4 class="text-xl font-black text-ink-900 mb-3 flex items-center gap-2">
-              <i data-lucide="folder-tree" class="w-5 h-5 text-seed"></i> 로컬 폴더 아키텍처
-            </h4>
-            <p class="text-ink-500 text-sm leading-relaxed mb-4">
-              React 등의 복잡한 프레임워크를 쓰지 않고 오직 3개의 핵심 파일(HTML/CSS/JS)과 Vercel Serverless 백엔드 디렉터리(`api/`) 구조만으로 전체 음성 에이전트 시스템을 기동합니다.
-            </p>
-            <pre class="bg-ink-900 text-white p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[220px] overflow-y-auto">youtube-finder/
-├── api/
-│   └── index.js          ← 백엔드 Express 서버
-├── public/
-│   ├── index.html         ← UI 마크업 뼈대
-│   ├── index.css          ← 스타일 시트
-│   ├── app.js             ← 클라이언트 로직
-│   ├── config.json        ← 음성인식 감도 설정
-│   ├── instructions.txt   ← AI 페르소나 지침서
-│   └── manifest.json      ← PWA 메타파일
-├── package.json           ← Node.js 패키지 목록
-└── vercel.json            ← Vercel 배포 설정</pre>
-          </div>
-        </div>
 
         <div class="space-y-4 flex flex-col justify-between">
+
           <div>
+
             <h4 class="text-xl font-black text-ink-900 mb-3 flex items-center gap-2">
-              <i data-lucide="file-json" class="w-5 h-5 text-seed"></i> package.json 의존성
+
+              <i data-lucide="folder-tree" class="w-5 h-5 text-seed"></i> 로컬 폴더 아키텍처
+
             </h4>
+
             <p class="text-ink-500 text-sm leading-relaxed mb-4">
-              Grok Realtime Voice WebSocket 핸들링을 위한 `ws` 라이브러리와 로컬 API 라우팅을 위한 `express` 의존성만 깔끔하게 등록해 사용합니다.
+
+              React 등의 복잡한 프레임워크를 쓰지 않고 오직 3개의 핵심 파일(HTML/CSS/JS)과 Vercel Serverless 백엔드 디렉터리(`api/`) 구조만으로 전체 음성 에이전트 시스템을 기동합니다.
+
             </p>
-            <pre id="code-package-json" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed overflow-x-auto">{
-  "name": "youtube-finder",
-  "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "node-fetch": "^3.3.2",
-    "ws": "^8.21.0"
-  }
-}</pre>
+
+            <pre class="bg-ink-900 text-white p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[220px] overflow-y-auto">youtube-finder/
+
+├── api/
+
+│   └── index.js          ← 백엔드 Express 서버
+
+├── public/
+
+│   ├── index.html         ← UI 마크업 뼈대
+
+│   ├── index.css          ← 스타일 시트
+
+│   ├── app.js             ← 클라이언트 로직
+
+│   ├── config.json        ← 음성인식 감도 설정
+
+│   ├── instructions.txt   ← AI 페르소나 지침서
+
+│   └── manifest.json      ← PWA 메타파일
+
+├── package.json           ← Node.js 패키지 목록
+
+└── vercel.json            ← Vercel 배포 설정</pre>
+
           </div>
-          <button onclick="copyCode('code-package-json', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
-            <i data-lucide="copy" class="w-4 h-4"></i> package.json 복사하기
-          </button>
+
         </div>
+
+
+
+        <div class="space-y-4 flex flex-col justify-between">
+
+          <div>
+
+            <h4 class="text-xl font-black text-ink-900 mb-3 flex items-center gap-2">
+
+              <i data-lucide="file-json" class="w-5 h-5 text-seed"></i> package.json 의존성
+
+            </h4>
+
+            <p class="text-ink-500 text-sm leading-relaxed mb-4">
+
+              Grok Realtime Voice WebSocket 핸들링을 위한 `ws` 라이브러리와 로컬 API 라우팅을 위한 `express` 의존성만 깔끔하게 등록해 사용합니다.
+
+            </p>
+
+            <pre id="code-package-json" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed overflow-x-auto">{
+
+  "name": "youtube-finder",
+
+  "version": "1.0.0",
+
+  "type": "module",
+
+  "dependencies": {
+
+    "dotenv": "^16.4.5",
+
+    "express": "^4.19.2",
+
+    "node-fetch": "^3.3.2",
+
+    "ws": "^8.21.0"
+
+  }
+
+}</pre>
+
+          </div>
+
+          <button onclick="copyCode('code-package-json', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+
+            <i data-lucide="copy" class="w-4 h-4"></i> package.json 복사하기
+
+          </button>
+
+        </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- STEP 2: 백엔드 서버 구축 -->
+
   <section id="step-2">
+
     <div class="mb-12 flex items-center gap-5">
+
       <div class="step-badge bg-ink-900 text-white shadow-xl">2</div>
+
       <div>
+
         <h2 class="text-3xl md:text-4xl font-black text-ink-900">백엔드 API 서버 구축</h2>
+
         <p class="text-ink-500 mt-1.5 text-lg">xAI Grok 접속 보안을 위한 임시 토큰(5분짜리) 발행 및 유튜브/텔레그램 Gateway를 설계합니다.</p>
+
       </div>
+
     </div>
 
+
+
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
+
       <div class="space-y-6">
+
         <div class="grid md:grid-cols-3 gap-4">
+
           <div class="bg-ink-50 border border-ink-100 rounded-xl p-5">
+
             <span class="text-xs font-bold text-seed tracking-wide block mb-1">역할 1</span>
+
             <h5 class="font-black text-ink-900 mb-2">5분 만료 세션 토큰</h5>
+
             <p class="text-xs text-ink-500 leading-relaxed">진짜 xAI API Key를 브라우저에 직접 노출하지 않도록 서버가 Grok에서 임시 토큰을 발급받아 클라이언트에 우회 제공합니다.</p>
+
           </div>
+
           <div class="bg-ink-50 border border-ink-100 rounded-xl p-5">
+
             <span class="text-xs font-bold text-seed tracking-wide block mb-1">역할 2</span>
+
             <h5 class="font-black text-ink-900 mb-2">도구 게이트웨이</h5>
+
             <p class="text-xs text-ink-500 leading-relaxed">AI의 판단(Function Call)을 받아 YouTube Data API를 대신 때리고 데이터 배열을 브라우저에 리턴하는 포털 역할을 수행합니다.</p>
+
           </div>
+
           <div class="bg-ink-50 border border-ink-100 rounded-xl p-5">
+
             <span class="text-xs font-bold text-seed tracking-wide block mb-1">역할 3</span>
+
             <h5 class="font-black text-ink-900 mb-2">3단계 계단식 검색</h5>
+
             <p class="text-xs text-ink-500 leading-relaxed">최근 3개월 ➔ 6개월 ➔ 1년으로 검색 필터 기간을 점진적으로 벌리며 최신성과 매칭률이 극대화된 유튜브 영상을 엄선합니다.</p>
+
           </div>
+
         </div>
+
+
 
         <div class="border border-ink-100 rounded-2xl p-6 bg-ink-950 text-white relative">
+
           <span class="absolute right-6 top-6 text-[10px] text-ink-400 font-mono">api/index.js (Session Endpoint)</span>
+
           <pre id="code-backend-express" class="text-emerald-400 font-mono text-xs leading-relaxed max-h-[300px] overflow-y-auto whitespace-pre-wrap">app.post("/api/session", async (req, res) => {
+
   const response = await fetch("https://api.x.ai/v1/realtime/client_secrets", {
+
     method: "POST",
+
     headers: {
+
       "Authorization": `Bearer \${process.env.XAI_API_KEY}`,
+
       "Content-Type": "application/json",
+
     },
+
     body: JSON.stringify({
+
       model: "grok-voice-latest",
+
       expires_after: { seconds: 300 }
+
     })
+
   });
+
   const data = await response.json();
+
   return res.json(data);
+
 });</pre>
+
         </div>
+
         <button onclick="copyCode('code-backend-express', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+
           <i data-lucide="copy" class="w-4 h-4"></i> 백엔드 토큰발급 코드 복사하기
+
         </button>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- STEP 3: Grok Voice 실시간 연결 -->
+
   <section id="step-3">
+
     <div class="mb-12 flex items-center gap-5">
+
       <div class="step-badge bg-ink-900 text-white shadow-xl">3</div>
+
       <div>
+
         <h2 class="text-3xl md:text-4xl font-black text-ink-900">xAI Grok Voice WebSocket 실시간 연결</h2>
+
         <p class="text-ink-500 mt-1.5 text-lg">전화 통화처럼 한 번 연결하여 양방향 오디오를 왕복시키기 위한 웹소켓 레이어를 구현합니다.</p>
+
       </div>
+
     </div>
 
+
+
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
+
       <div class="grid lg:grid-cols-2 gap-8 items-center">
+
         <div class="space-y-4">
+
           <h4 class="text-xl font-black text-ink-900">왜 HTTP 대신 WebSocket인가요?</h4>
+
           <p class="text-ink-500 text-sm leading-relaxed">
+
             질문과 답변이 한 번에 끝나는 일반 API와 다르게, 음성 대화는 0.04초(40ms)마다 오디오 조각이 오고 가야 하므로 **서버 연결을 항상 끊지 않고 유지하는 WebSocket 프로토콜**이 필수적입니다.
+
           </p>
+
           <div class="p-5 bg-warm/40 border border-ink-100 rounded-2xl text-xs space-y-2 text-ink-600 font-sans">
+
             <div><strong>1. 주소 정의</strong>: <code>wss://api.x.ai/v1/realtime</code> 호출</div>
+
             <div><strong>2. 토큰 주입</strong>: 서브프로토콜 헤더에 <code>xai-client-secret.[임시토큰]</code> 탑재</div>
+
             <div><strong>3. 세션 업데이트</strong>: 연결 즉시 AI에게 인격 지침 전송</div>
+
           </div>
+
         </div>
 
+
+
         <div class="space-y-4 flex flex-col justify-between">
+
           <pre id="code-websocket-conn" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[250px] overflow-y-auto whitespace-pre-wrap">const wsUrl = `wss://api.x.ai/v1/realtime?model=grok-voice-latest`;
+
 ws = new WebSocket(wsUrl, [`xai-client-secret.\${clientToken}`]);
 
+
+
 ws.onopen = async () => {
+
   console.log("WebSocket Connected!");
+
   await sendSessionUpdate(); // AI 인격 주입
+
 };
 
+
+
 ws.onmessage = (e) => {
+
   handleRealtimeEvent(JSON.parse(e.data));
+
 };</pre>
+
           <button onclick="copyCode('code-websocket-conn', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+
             <i data-lucide="copy" class="w-4 h-4"></i> WebSocket 연결부 복사하기
+
           </button>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- STEP 4: AI에게 인격과 도구 부여 -->
+
   <section id="step-4">
+
     <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+
       <div class="flex items-center gap-5">
+
         <div class="step-badge bg-ink-900 text-white shadow-xl">4</div>
+
         <div>
+
           <div class="flex flex-wrap items-center gap-3">
+
             <h2 class="text-3xl md:text-4xl font-black text-ink-900">AI 인격(Instructions) &amp; 도구(Tools) 지정</h2>
+
             <button onclick="openModal('design-md-modal')" class="inline-flex items-center gap-1.5 text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-3 py-1.5 rounded-full transition-all cursor-pointer shadow-sm">
+
               <i data-lucide="info" class="w-3.5 h-3.5"></i> 인격&amp;도구 명세 파일이란?
+
             </button>
+
           </div>
+
           <p class="text-ink-500 mt-1.5 text-lg">AI의 말투, 금지 규칙 및 비디오 검색을 실행하기 위한 Function Calling JSON을 명세합니다.</p>
+
         </div>
+
       </div>
+
     </div>
+
+
 
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
+
       <div class="grid lg:grid-cols-2 gap-8 items-stretch">
-        <div class="space-y-4 flex flex-col justify-between">
-          <div>
-            <h4 class="text-lg font-black text-ink-900 mb-2">인격 규칙서 (instructions.txt)</h4>
-            <p class="text-xs text-ink-500 leading-relaxed mb-4">Grok 에이전트가 어떤 성격으로 말하고 대답할지 규정하는 오프-코드 프롬프트입니다.</p>
-            <pre id="code-instructions" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[220px] overflow-y-auto whitespace-pre-wrap">너는 세련되고 빠른 큐레이터이자 아카이빙 비서야.
-[음성 규칙]
-- 흥미로운 영상 소개 시 밝은 호기심을 표현해라
-- 속도를 살짝 늦춰 긴장감 있는 포인트를 만들어라
-- 마크다운이나 특수 문장 기호를 절대 읽거나 내뱉지 마라
-[행동 수칙]
-1. youtube_search_videos 도구를 사용해 실시간 유튜브 검색 실행
-2. 결과를 받으면 1~3번 영상을 전부 간결하게 브리핑</pre>
-          </div>
-          <button onclick="copyCode('code-instructions', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
-            <i data-lucide="copy" class="w-4 h-4"></i> 인격 지침 텍스트 복사
-          </button>
-        </div>
 
         <div class="space-y-4 flex flex-col justify-between">
+
           <div>
-            <h4 class="text-lg font-black text-ink-900 mb-2">도구 선언서 (Tools Array)</h4>
-            <p class="text-xs text-ink-500 leading-relaxed mb-4">AI가 유튜브 검색이 필요하다고 스스로 느낄 때 우리에게 던져줄 API 스키마입니다.</p>
-            <pre id="code-tools" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[220px] overflow-y-auto whitespace-pre-wrap">tools: [
-  {
-    type: "function",
-    name: "youtube_search_videos",
-    description: "유튜브 동영상을 검색합니다",
-    parameters: {
-      type: "object",
-      properties: {
-        query: {
-          type: "string",
-          description: "검색할 동영상 키워드"
-        }
-      },
-      required: ["query"]
-    }
-  }
-]</pre>
+
+            <h4 class="text-lg font-black text-ink-900 mb-2">인격 규칙서 (instructions.txt)</h4>
+
+            <p class="text-xs text-ink-500 leading-relaxed mb-4">Grok 에이전트가 어떤 성격으로 말하고 대답할지 규정하는 오프-코드 프롬프트입니다.</p>
+
+            <pre id="code-instructions" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[220px] overflow-y-auto whitespace-pre-wrap">너는 세련되고 빠른 큐레이터이자 아카이빙 비서야.
+
+[음성 규칙]
+
+- 흥미로운 영상 소개 시 밝은 호기심을 표현해라
+
+- 속도를 살짝 늦춰 긴장감 있는 포인트를 만들어라
+
+- 마크다운이나 특수 문장 기호를 절대 읽거나 내뱉지 마라
+
+[행동 수칙]
+
+1. youtube_search_videos 도구를 사용해 실시간 유튜브 검색 실행
+
+2. 결과를 받으면 1~3번 영상을 전부 간결하게 브리핑</pre>
+
           </div>
-          <button onclick="copyCode('code-tools', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
-            <i data-lucide="copy" class="w-4 h-4"></i> 도구 스키마 JSON 복사
+
+          <button onclick="copyCode('code-instructions', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+
+            <i data-lucide="copy" class="w-4 h-4"></i> 인격 지침 텍스트 복사
+
           </button>
+
         </div>
+
+
+
+        <div class="space-y-4 flex flex-col justify-between">
+
+          <div>
+
+            <h4 class="text-lg font-black text-ink-900 mb-2">도구 선언서 (Tools Array)</h4>
+
+            <p class="text-xs text-ink-500 leading-relaxed mb-4">AI가 유튜브 검색이 필요하다고 스스로 느낄 때 우리에게 던져줄 API 스키마입니다.</p>
+
+            <pre id="code-tools" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[220px] overflow-y-auto whitespace-pre-wrap">tools: [
+
+  {
+
+    type: "function",
+
+    name: "youtube_search_videos",
+
+    description: "유튜브 동영상을 검색합니다",
+
+    parameters: {
+
+      type: "object",
+
+      properties: {
+
+        query: {
+
+          type: "string",
+
+          description: "검색할 동영상 키워드"
+
+        }
+
+      },
+
+      required: ["query"]
+
+    }
+
+  }
+
+]</pre>
+
+          </div>
+
+          <button onclick="copyCode('code-tools', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+
+            <i data-lucide="copy" class="w-4 h-4"></i> 도구 스키마 JSON 복사
+
+          </button>
+
+        </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- STEP 5: 마이크 캡처 -> 오디오 전송 -->
+
   <section id="step-5">
+
     <div class="mb-12 flex items-center gap-5">
+
       <div class="step-badge bg-ink-900 text-white shadow-xl">5</div>
+
       <div>
+
         <h2 class="text-3xl md:text-4xl font-black text-ink-900">마이크 캡처 및 다운샘플링</h2>
+
         <p class="text-ink-500 mt-1.5 text-lg">마이크로 입력된 48kHz 스테레오 오디오 데이터를 xAI 전용 24kHz 모노 PCM16 데이터로 경량화 변환합니다.</p>
+
       </div>
+
     </div>
 
+
+
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
+
       <div class="grid lg:grid-cols-2 gap-8 items-center">
+
         <div class="space-y-4">
+
           <h4 class="text-xl font-black text-ink-900">PCM16 변환과 다운샘플링의 당위성</h4>
+
           <p class="text-ink-500 text-sm leading-relaxed">
+
             브라우저 기본 마이크 녹음은 오디오 압축률이 없고 48,000Hz로 높아 네트워크 패킷 전송 시 통신 딜레이를 유발합니다. 
+
             따라서 데이터 밀도를 절반인 **24,000Hz**로 낮추고 Float32 원시 오디오 배열을 16비트 정수(Int16) 바이너리로 압축해야 실시간 무지연 응답이 보장됩니다.
+
           </p>
+
           <div class="bg-ink-50 p-5 rounded-2xl border border-ink-100 text-xs font-mono text-ink-500 space-y-1">
+
             <div>1. e.inputBuffer.getChannelData(0) 호출</div>
+
             <div>2. 48kHz ➔ 24kHz 프레임 매핑 연산 실행</div>
+
             <div>3. Int16Array 픽셀 정수 매핑 (-32768 ~ 32767)</div>
+
             <div>4. Base64 텍스트 스트링 압축 후 WebSocket 발송</div>
+
           </div>
+
         </div>
 
+
+
         <div class="space-y-4 flex flex-col justify-between">
+
           <pre id="code-audio-mic" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[250px] overflow-y-auto whitespace-pre-wrap">const float32 = e.inputBuffer.getChannelData(0);
+
 const ratio = nativeSampleRate / 24000;
+
 const pcm16 = new Int16Array(downsampledLength);
 
+
+
 for (let i = 0; i < downsampledLength; i++) {
+
   const s = float32[Math.floor(i * ratio)];
+
   pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; // Float32 -> Int16 변환
+
 }
 
+
+
 const base64 = base64ArrayBuffer(pcm16.buffer);
+
 ws.send(JSON.stringify({
+
   type: "input_audio_buffer.append",
+
   audio: base64
+
 }));</pre>
+
           <button onclick="copyCode('code-audio-mic', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+
             <i data-lucide="copy" class="w-4 h-4"></i> 음성 캡처 코드 복사하기
+
           </button>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- STEP 6: AI 음성 응답 수신 & 재생 -->
+
   <section id="step-6">
+
     <div class="mb-12 flex items-center gap-5">
+
       <div class="step-badge bg-ink-900 text-white shadow-xl">6</div>
+
       <div>
+
         <h2 class="text-3xl md:text-4xl font-black text-ink-900">오디오 재생 큐 스케줄러</h2>
+
         <p class="text-ink-500 mt-1.5 text-lg">AI가 실시간으로 보낸 잘게 쪼개진 오디오 조각들을 절대 시간 스케줄러로 묶어 끊김 없이 들려줍니다.</p>
+
       </div>
+
     </div>
 
+
+
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
+
       <div class="grid lg:grid-cols-2 gap-8 items-center">
+
         <div class="space-y-4">
+
           <h4 class="text-xl font-black text-ink-900">왜 예약 스케줄링(Scheduler)을 해야 하나요?</h4>
+
           <p class="text-ink-500 text-sm leading-relaxed">
+
             인터넷 지연(Network Jitter) 때문에 오디오 조각들이 도착하는 간격은 항상 다릅니다. 
+
             단순히 수신될 때마다 즉시 플레이백하면 버퍼 조각 사이에 0.001초의 공백만 생겨도 뚝뚝 끊기는 노이즈가 발생합니다. 
+
             이를 방지하고자 **이전 오디오 조각이 완전히 끝나는 절대 시간(`nextPlaybackTime`)을 연산해 다음 소리 예약 시작 시점을 지정**해야 합니다.
+
           </p>
+
         </div>
 
+
+
         <div class="space-y-4 flex flex-col justify-between">
+
           <pre id="code-audio-playback" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[250px] overflow-y-auto whitespace-pre-wrap">function drainPlaybackQueue() {
+
   const buffer = playbackQueue.shift();
+
   const source = playbackCtx.createBufferSource();
+
   source.buffer = buffer;
 
+
+
   // 예약 시간이 이미 지난 상태라면 20ms 버퍼 여유를 두고 즉시 스케줄링 시작
+
   if (nextPlaybackTime <= playbackCtx.currentTime) {
+
     nextPlaybackTime = playbackCtx.currentTime + 0.02;
+
   }
 
+
+
   source.start(nextPlaybackTime);
+
   nextPlaybackTime += buffer.duration; // 다음 조각 재생 예약 위치 업데이트
+
 }</pre>
+
           <button onclick="copyCode('code-audio-playback', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+
             <i data-lucide="copy" class="w-4 h-4"></i> 재생 큐 스케줄러 복사하기
+
           </button>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
+
+
 
   <!-- STEP 7: 카드 위젯 UI 렌더링 -->
+
   <section id="step-7">
+
     <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+
       <div class="flex items-center gap-5">
+
         <div class="step-badge bg-ink-900 text-white shadow-xl">7</div>
+
         <div>
+
           <div class="flex flex-wrap items-center gap-3">
+
             <h2 class="text-3xl md:text-4xl font-black text-ink-900">YouTube Finder 라이브 가상 시뮬레이터</h2>
+
             <button onclick="openModal('modal-slicer-tech')" class="inline-flex items-center gap-1.5 text-xs font-bold text-seed bg-seed-light hover:bg-seed hover:text-white px-3.5 py-1.5 rounded-full transition-all cursor-pointer shadow-sm">
+
               <i data-lucide="info" class="w-3.5 h-3.5"></i> 실시간 vs HTTP 성능 차이 모달
+
             </button>
+
           </div>
+
           <p class="text-ink-500 mt-1.5 text-lg">Grok Voice 에이전트의 작동 흐름을 브라우저 로컬 시뮬레이션으로 한눈에 파악합니다.</p>
+
         </div>
+
       </div>
+
     </div>
+
+
 
     <!-- Live simulator block -->
+
     <div class="bg-ink-900 text-white rounded-3xl p-8 md:p-10 mb-8 shadow-xl relative overflow-hidden">
+
       <div class="absolute right-8 top-8 opacity-10">
+
         <i data-lucide="radio" class="w-36 h-36"></i>
+
       </div>
+
       <div class="relative max-w-4xl space-y-6">
+
         <p class="text-seed font-black tracking-widest text-sm uppercase">Interactive Live Sandbox</p>
+
         <h3 class="text-2xl md:text-3xl font-black leading-tight">YouTube Finder — Live Voice Agent 플레이그라운드</h3>
+
         <p class="text-white/75 text-base leading-relaxed">
+
           Grok Realtime Voice 에이전트의 작동 흐름을 브라우저 가상 샌드박스에서 시뮬레이션해 봅니다. 
+
           마이크 버튼을 클릭하여 발화를 시작하고, 도구(Function Calling) 호출과 검색 카드 렌더링이 이어지는 파이프라인을 관찰하세요.
+
         </p>
 
+
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+
           <!-- Left: Simulated Voice Control -->
+
           <div class="bg-ink-950/80 rounded-2xl p-6 border border-ink-800 flex flex-col justify-between min-h-[300px]">
+
             <div class="text-center py-6">
+
               <!-- Simulated Pulse Visualizer Ring -->
+
               <div class="relative w-28 h-28 mx-auto mb-4 flex items-center justify-center">
+
                 <span id="demo-wave-pulse-1" class="absolute inset-0 rounded-full border-2 border-seed animate-ping opacity-0"></span>
+
                 <span id="demo-wave-pulse-2" class="absolute inset-4 rounded-full border-2 border-seed-light animate-pulse opacity-0"></span>
+
                 <button id="demo-mic-btn" onclick="toggleDemoAgent()" class="relative z-10 w-20 h-20 bg-seed hover:bg-seed/90 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer transform hover:scale-[1.05] transition-all">
+
                   <i data-lucide="mic" id="demo-mic-icon" class="w-10 h-10"></i>
+
                 </button>
+
               </div>
+
               <h4 id="demo-status" class="font-bold text-lg text-ink-100">대화 시작하기 버튼을 클릭하세요</h4>
+
               <p id="demo-subtitle" class="text-xs text-ink-400 mt-1">Grok Voice 세션을 로컬에서 모사합니다.</p>
+
             </div>
+
+
 
             <!-- Quick Speech suggestions -->
+
             <div class="space-y-2">
+
               <span class="text-xs font-bold text-ink-400 block mb-1">💡 추천 음성 명령 (클릭 시 자동 입력):</span>
+
               <div class="grid grid-cols-1 gap-1.5 text-xs">
+
                 <button onclick="speakDemoText('백종원 최신 요리 영상 보여줘')" class="w-full text-left p-2.5 bg-ink-900 border border-ink-800 hover:border-seed rounded-lg text-ink-300 hover:text-white transition-all cursor-pointer">
+
                   "백종원 최신 요리 영상 보여줘"
+
                 </button>
+
                 <button onclick="speakDemoText('두 번째 요리 재생해')" class="w-full text-left p-2.5 bg-ink-900 border border-ink-800 hover:border-seed rounded-lg text-ink-300 hover:text-white transition-all cursor-pointer">
+
                   "두 번째 요리 재생해"
+
                 </button>
+
               </div>
+
             </div>
+
           </div>
+
+
 
           <!-- Right: Event Log & Live Search Result Cards -->
+
           <div class="flex flex-col bg-ink-950/80 rounded-2xl border border-ink-800 overflow-hidden min-h-[300px]">
+
             <!-- Panel tab headers -->
+
             <div class="bg-ink-900 px-4 py-2.5 border-b border-ink-800 flex items-center justify-between">
+
               <span class="text-[10px] font-bold text-ink-300 font-mono">LIVE CONSOLE &amp; PREVIEW</span>
+
               <span id="demo-indicator" class="w-2.5 h-2.5 rounded-full bg-ink-500"></span>
+
             </div>
+
+
 
             <!-- Console & Cards Container -->
+
             <div class="flex-grow p-4 space-y-4 overflow-y-auto max-h-[350px]">
+
               <!-- Event timeline logs -->
+
               <div id="demo-console" class="font-mono text-[11px] text-ink-400 space-y-1">
+
                 <div>// 세션 대기 중...</div>
+
               </div>
+
+
 
               <!-- Result Cards list -->
+
               <div id="demo-results-container" class="space-y-3 hidden">
+
                 <!-- Rendered results cards will append here -->
+
               </div>
+
             </div>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
   </section>
 
+
+
   <!-- STEP 8: Vercel 배포 -->
+
   <section id="step-8">
+
     <div class="mb-12 flex items-center gap-5">
+
       <div class="step-badge bg-ink-900 text-white shadow-xl">8</div>
+
       <div>
+
         <h2 class="text-3xl md:text-4xl font-black text-ink-900">Vercel 호스팅 &amp; vercel.json 라우팅</h2>
+
         <p class="text-ink-500 mt-1.5 text-lg">작성한 코드를 Git Push 한번에 보안 HTTPS 환경 및 서버리스 API로 배포 배포합니다.</p>
+
       </div>
+
     </div>
+
+
 
     <div class="bg-white rounded-3xl p-8 md:p-12 border border-ink-100 mb-8 shadow-sm">
+
       <div class="grid lg:grid-cols-2 gap-8 items-center">
+
         <div class="space-y-4">
+
           <h4 class="text-xl font-black text-ink-900">Vercel Serverless 라우팅 설정</h4>
+
           <p class="text-ink-500 text-sm leading-relaxed">
+
             프론트엔드 정적 파일과 Express 백엔드 API 서버를 하나의 패키지로 배포하기 위해 Vercel 라우팅 가이드(<code class="bg-ink-100 text-red-500 px-1 py-0.5 rounded font-mono">vercel.json</code>)를 삽입해 줍니다. 
+
             모든 <code>/api/*</code>로 통하는 HTTP 호출을 서버리스 모듈인 <code>api/index.js</code>로 자동 매핑합니다.
+
           </p>
+
         </div>
 
+
+
         <div class="space-y-4 flex flex-col justify-between">
+
           <pre id="code-vercel-json" class="bg-ink-950 text-emerald-400 p-5 rounded-2xl font-mono text-xs leading-relaxed max-h-[250px] overflow-y-auto whitespace-pre-wrap">{
+
   "version": 2,
+
   "rewrites": [
+
     {
+
       "source": "/api/(.*)",
+
       "destination": "/api/index.js"
+
     }
+
   ]
+
 }</pre>
+
           <button onclick="copyCode('code-vercel-json', this)" class="w-full py-4 px-5 bg-ink-100 hover:bg-ink-200 text-ink-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+
             <i data-lucide="copy" class="w-4 h-4"></i> vercel.json 설정 파일 복사
+
           </button>
+
         </div>
+
       </div>
+
     </div>
+
   </section></main>
 
 
+
+
+
 <!-- ============================================================ -->
+
 <!-- FRONTEND HISTORY MODAL                                       -->
+
 <!-- ============================================================ -->
+
 <div id="modal-frontend-history" class="fixed inset-0 z-[90] hidden items-center justify-center p-4">
+
   <div class="absolute inset-0 bg-ink-900/50 backdrop-blur-sm" onclick="closeModal('modal-frontend-history')"></div>
+
   <div class="absolute inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-6xl bg-white sm:rounded-3xl shadow-soft flex flex-col overflow-hidden transform-gpu modal-enter h-[88vh] max-h-[90vh]">
+
     <!-- Modal Header -->
+
     <div class="flex items-center justify-between p-6 border-b border-black/5 bg-white z-10 sticky top-0">
+
       <div class="flex items-center space-x-3">
+
         <span class="w-8 h-8 rounded-lg bg-seed-light text-seed flex items-center justify-center font-bold text-sm">💡</span>
+
         <h3 class="text-2xl font-black text-ink-900">Grok Voice Realtime 에이전트 시스템 아키텍처</h3>
+
       </div>
+
       <button onclick="closeModal('modal-frontend-history')" class="p-2 bg-warm hover:bg-black/5 rounded-full transition-colors cursor-pointer">
+
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+
       </button>
+
     </div>
+
     
+
     <!-- Modal Body -->
+
     <div class="p-6 md:p-10 overflow-y-auto flex-grow bg-[#f8f4ed]/30 space-y-8">
+
       <div class="text-center max-w-2xl mx-auto space-y-3">
+
         <h4 class="text-2xl font-black text-ink-900 leading-tight">클라이언트-서버-인공지능을 잇는 실시간 파이프라인</h4>
+
         <p class="text-ink-600 text-base leading-relaxed">
+
           유튜브 파인더는 브라우저의 오디오 캡처망, Vercel의 프록시 게이트웨이, 그리고 xAI의 실시간 음성 두뇌망이 긴밀하게 얽혀 있는 에이전트입니다.
+
         </p>
+
       </div>
+
+
 
       <!-- Architecture steps layout -->
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
         <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
+
           <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">01</div>
+
           <h5 class="font-black text-ink-900 text-lg">마이크 오디오 프레임 변환</h5>
+
           <p class="text-xs text-ink-500 leading-relaxed">
+
             사용자의 목소리를 브라우저가 직접 마이크 스트림으로 캡처한 후, Float32 배열을 48kHz에서 24kHz로 낮추고 PCM16 16비트 인코딩하여 웹소켓 버퍼에 차례로 밀어 넣습니다.
+
           </p>
+
         </div>
+
         <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
+
           <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">02</div>
+
           <h5 class="font-black text-ink-900 text-lg">WebSocket 양방향 터널</h5>
+
           <p class="text-xs text-ink-500 leading-relaxed">
+
             한 번 열리면 통신이 계속 유지되는 웹소켓(WebSocket) 규격 위에 임시 보안 토큰을 태워 xAI와 가상 연결선을 엽니다. 지연 시간이 약 20ms 수준으로 최소화됩니다.
+
           </p>
+
         </div>
+
         <div class="bg-white border border-ink-100 p-6 rounded-2xl shadow-sm space-y-3">
+
           <div class="w-10 h-10 bg-seed-light text-seed font-black text-sm flex items-center justify-center rounded-xl">03</div>
+
           <h5 class="font-black text-ink-900 text-lg">Function Calling Gateway</h5>
+
           <p class="text-xs text-ink-500 leading-relaxed">
+
             AI가 음성을 듣고 유튜브 검색 주문(JSON)을 쓰면, 브라우저가 이를 납치하여 백엔드 Vercel 게이트웨이를 경유해 YouTube API 결과 카드를 렌더링하고 다시 음성 웰컴 응답을 재생시킵니다.
+
           </p>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </div>
+
+
 
 <div id="modal-slicer-tech" class="fixed inset-0 z-[90] hidden items-center justify-center p-4">
+
   <div class="absolute inset-0 bg-ink-900/50 backdrop-blur-sm" onclick="closeModal('modal-slicer-tech')"></div>
+
   <div class="absolute inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-5xl bg-white sm:rounded-3xl shadow-soft flex flex-col overflow-hidden transform-gpu modal-enter h-[82vh] max-h-[85vh]">
+
     <!-- Modal Header -->
+
     <div class="flex items-center justify-between p-6 border-b border-black/5 bg-white z-10 sticky top-0">
+
       <div class="flex items-center space-x-3">
+
         <span class="w-8 h-8 rounded-lg bg-seed-light text-seed flex items-center justify-center font-bold text-sm">⚡</span>
+
         <h3 class="text-2xl font-black text-ink-900">WebSocket Realtime vs HTTP REST API 성능 비교</h3>
+
       </div>
+
       <button onclick="closeModal('modal-slicer-tech')" class="p-2 bg-warm hover:bg-black/5 rounded-full transition-colors cursor-pointer">
+
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+
       </button>
+
     </div>
+
     
+
     <!-- Modal Body -->
+
     <div class="p-6 md:p-10 overflow-y-auto flex-grow bg-[#f8f4ed]/30 space-y-8">
+
       <div class="text-center max-w-2xl mx-auto space-y-3">
+
         <h4 class="text-2xl font-black text-ink-900 leading-tight">음성 대화에는 왜 일반 API가 부적합할까요?</h4>
+
         <p class="text-ink-600 text-sm leading-relaxed">
+
           일반적인 웹 API 통신과 실시간 스트리밍 소켓의 근본적인 차이를 규격 수준에서 이해합니다.
+
         </p>
+
       </div>
+
+
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
         <div class="bg-white border border-red-100 rounded-2xl p-6 shadow-sm">
+
           <h4 class="font-black text-red-500 text-lg mb-3">HTTP REST API (일반 웹 요청)</h4>
+
           <ul class="text-xs text-ink-500 space-y-3 leading-relaxed">
+
             <li><strong>단방향 전송</strong>: 클라이언트가 편지를 보내야만 서버가 답장을 쓸 수 있음.</li>
+
             <li><strong>세션 생성 오버헤드</strong>: 매 요청 시마다 Handshake를 다시 맺어 레이턴시 대폭 상승.</li>
+
             <li><strong>오디오 전송 불가</strong>: 실시간 스트리밍 재생이 불가능하며 파일 전체 다운로드를 기다려야 함.</li>
+
           </ul>
+
         </div>
+
         <div class="bg-white border border-emerald-100 rounded-2xl p-6 shadow-sm">
+
           <h4 class="font-black text-emerald-500 text-lg mb-3">WebSocket Realtime (양방향 유지)</h4>
+
           <ul class="text-xs text-ink-500 space-y-3 leading-relaxed">
+
             <li><strong>지속적 상호 교환</strong>: 클라이언트와 서버가 항시 연결되어 있어 무지연 양방향 메시지 송신 가능.</li>
+
             <li><strong>20ms 응답성</strong>: 지연 시간이 거의 체감되지 않는 음성 통화 환경 완벽 구현.</li>
+
             <li><strong>디코딩 디바이드</strong>: 잘게 쪼갠 오디오 청크를 받는 즉시 재생 큐에 스케줄링하여 무지연 플레이백.</li>
+
           </ul>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </div>
+
+
 
 <div id="design-md-modal" class="fixed inset-0 z-[80] hidden items-center justify-center p-4">
+
   <div class="absolute inset-0 bg-ink-900/50 backdrop-blur-sm" onclick="closeModal('design-md-modal')"></div>
+
   <div class="absolute inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-4xl bg-white sm:rounded-3xl shadow-soft flex flex-col overflow-hidden transform-gpu modal-enter">
+
     <div class="flex items-center justify-between p-6 border-b border-black/5 bg-white z-10 sticky top-0">
+
       <div class="flex items-center space-x-3">
+
         <span class="w-8 h-8 rounded-lg bg-seed-light text-seed flex items-center justify-center font-bold text-sm">📄</span>
+
         <h3 class="text-2xl font-black text-ink-900">instructions.txt와 config.json의 역할</h3>
+
       </div>
+
       <button onclick="closeModal('design-md-modal')" class="p-2 bg-warm hover:bg-black/5 rounded-full transition-colors cursor-pointer">
+
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+
       </button>
+
     </div>
+
     
+
     <div class="p-6 md:p-10 overflow-y-auto bg-[#f8f4ed]/30 space-y-6">
+
       <div class="grid md:grid-cols-2 gap-6">
+
         <div class="bg-white p-6 rounded-2xl border border-ink-100">
+
           <h4 class="text-ink-900 font-black mb-3 text-lg flex items-center gap-2">
+
             <i data-lucide="file-text" class="w-5 h-5 text-seed"></i> instructions.txt (AI의 인격)
+
           </h4>
+
           <p class="text-sm text-ink-500 mb-4 leading-relaxed">
+
             AI 에이전트의 말투, 대답 문장 길이 제약, 특수 문자 필터링, 그리고 특정 사용자의 음성 지시가 왔을 때 어떤 도구(Tool)를 우선 사용할지 서술한 프롬프트 지침입니다.
+
           </p>
+
         </div>
+
         <div class="bg-white p-6 rounded-2xl border border-ink-100">
+
           <h4 class="text-ink-900 font-black mb-3 text-lg flex items-center gap-2">
+
             <i data-lucide="settings" class="w-5 h-5 text-seed"></i> config.json (하드웨어 제어)
+
           </h4>
+
           <p class="text-sm text-ink-500 mb-4 leading-relaxed">
+
             마이크 음성의 감도(VAD Threshold), 입출력 오디오 비트레이트 값, xAI 서버가 수신할 오디오 퀄리티 등 브라우저와 AI 간의 장치 연결 물리 옵션을 정의하는 설정 파일입니다.
+
           </p>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
+
 </div><!-- ============================================================ -->
+
 <!-- TOAST NOTIFICATION                                           -->
+
 <!-- ============================================================ -->
+
 <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-ink-900 text-white px-7 py-4 rounded-full shadow-2xl font-bold text-base transform translate-y-24 opacity-0 z-[100] flex items-center gap-3">
+
   <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400"></i>
+
   <span>복사되었습니다!</span>
+
 </div>
 
 
+
+
+
 <!-- ============================================================ -->
+
 <!-- LOTTIE BUNNY + DRAWER (COMP_LOTTIE_DRAWER★.md 완전 준수)     -->
+
 <!-- ============================================================ -->
+
+
 
 <!-- Left-Bottom Floating Lottie Bunny Banner -->
+
 <div id="bunny-trigger" class="fixed bottom-6 left-6 z-50 opacity-0 pointer-events-none translate-y-3 transition-all duration-500" role="button" tabindex="0" aria-label="Heat Carrot project dashboard">
+
   <div class="group flex items-center gap-2 pointer-events-none">
+
     <!-- Left Column: Bunny + Under text (Actual trigger target) -->
+
     <div class="flex flex-col items-center cursor-pointer pointer-events-auto">
+
       <div id="bunny-lottie" class="w-20 h-20 md:w-24 md:h-24 transition-transform duration-300 group-hover:scale-105 select-none" style="min-width: 80px; min-height: 80px;"></div>
+
       <div class="mt-1 flex items-center gap-1 text-[10px] md:text-xs font-sans tracking-tight bg-white/95 backdrop-blur-md py-1.5 px-3 rounded-full border border-black/5 shadow-lg">
+
         <span class="bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent font-black drop-shadow-[0_1px_2px_rgba(239,68,68,0.2)]">HEAT</span>
+
         <span class="bg-gradient-to-r from-[#FF7E36] to-[#10B981] bg-clip-text text-transparent font-black">Carrot</span>
+
         <span class="text-ink-900 font-bold">프로젝트</span>
+
       </div>
+
     </div>
+
     <!-- Right Column: Tooltip badge -->
+
     <div class="ml-1 px-3 py-2 rounded-xl bg-white/90 backdrop-blur-md shadow-lg border border-black/5 text-xs font-bold text-seed tracking-tight opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 drawer-transition duration-300 self-center pointer-events-none">
+
       대시보드 열기 🐰
+
     </div>
+
   </div>
+
 </div>
 
+
+
 <!-- Left Sideboard (Drawer) System -->
+
 <div id="drawer-backdrop" class="fixed inset-0 bg-black/10 backdrop-blur-sm z-40 hidden opacity-0 drawer-transition"></div>
+
 <aside id="drawer" class="fixed top-0 left-0 h-full w-[450px] max-w-full bg-white/90 backdrop-blur-md shadow-2xl border-r-4 border-seed z-50 transform -translate-x-full drawer-transition flex flex-col">
+
   <!-- Drawer Header -->
+
   <div class="p-6 border-b border-black/5 flex items-center justify-between bg-warm/40">
+
     <div class="flex items-center space-x-2">
+
       <span class="text-lg font-black text-ink-900 tracking-tight">당근 대시보드</span>
+
       <span class="px-2 py-0.5 rounded-full bg-seed-light text-seed text-[10px] font-black">LIVE</span>
+
     </div>
+
     <button id="drawer-close" class="p-2 rounded-full hover:bg-black/5 text-ink-500 hover:text-ink-900 transition-colors" aria-label="대시보드 닫기">
+
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+
       </svg>
+
     </button>
+
   </div>
+
   <!-- Drawer Body (iframe) -->
+
   <div class="flex-grow w-full relative overflow-hidden bg-warm/10">
+
     <!-- Loading Indicator -->
+
     <div id="iframe-spinner" class="absolute inset-0 flex items-center justify-center bg-white/80 z-10 drawer-transition">
+
       <div class="animate-spin rounded-full h-8 w-8 border-4 border-seed-light border-t-seed"></div>
+
     </div>
+
     <!-- Sandbox Iframe (data-src를 통한 lazy load 처리) -->
+
     <iframe src="" data-src="https://danggeun-dashboard.vercel.app/" class="w-full h-full border-none" id="dashboard-iframe"></iframe>
+
   </div>
+
 </aside>
 
 
+
+
+
 <!-- ============================================================ -->
+
 <!-- JAVASCRIPT                                                    -->
+
 <!-- ============================================================ -->
+
 <script>
+
+  const splashOverlay = document.getElementById('splash-overlay');
   const splashCard = document.getElementById('splash-card');
 
+
+
   function revealBunnyTrigger() {
+
     const trigger = document.getElementById('bunny-trigger');
+
     if (!trigger) return;
+
     trigger.classList.remove('opacity-0','pointer-events-none','translate-y-3');
+
     trigger.classList.add('opacity-100','pointer-events-auto','translate-y-0');
+
   }
+
+
 
   window.closeSplash = function() {
+
     try {
+
       if (splashCard) {
+
         splashCard.classList.remove('scale-100','opacity-100');
+
         splashCard.classList.add('scale-105','opacity-0');
+
       }
+
       setTimeout(() => {
+
         if (splashCard) splashCard.style.display = 'none';
+
         revealBunnyTrigger();
+
       }, 500);
+
     } catch(e) {
+
       console.error(e);
+
     }
+
   };
+
+
 
   // Modals controller
+
   window.openModal = function(id) {
+
     const modal = document.getElementById(id);
+
     if (modal) {
+
       modal.classList.remove('hidden');
+
       modal.classList.add('flex');
+
       document.body.style.overflow = 'hidden';
+
     }
+
   };
+
+
 
   window.closeModal = function(id) {
+
     const modal = document.getElementById(id);
+
     if (modal) {
+
       modal.classList.remove('flex');
+
       modal.classList.add('hidden');
+
       document.body.style.overflow = '';
+
     }
+
   };
+
+
 
   // Tab switcher (Step 0)
+
   window.switchTab = function(num) {
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
+
       btn.classList.remove('active');
+
       btn.classList.add('hover:bg-white');
+
     });
+
     document.querySelectorAll('.tab-content').forEach(content => {
+
       content.classList.add('hidden');
+
     });
+
+
 
     const activeBtn = document.getElementById(`tab-btn-${num}`);
+
     const activeContent = document.getElementById(`tab-content-${num}`);
 
+
+
     if (activeBtn && activeContent) {
+
       activeBtn.classList.add('active');
+
       activeBtn.classList.remove('hover:bg-white');
+
       activeContent.classList.remove('hidden');
+
     }
+
   };
 
+
+
   // -------------------------------------------------------------
+
   // Simulator 1: 실시간 음성 & WebSocket
+
   // -------------------------------------------------------------
+
   let sim1Active = false;
+
   let sim1Canvas = document.getElementById('sim1-canvas');
+
   let sim1Ctx = sim1Canvas ? sim1Canvas.getContext('2d') : null;
+
   let sim1AnimationId = null;
+
   let sim1PacketTimer = null;
 
+
+
   window.toggleSim1Mic = function() {
+
     sim1Active = !sim1Active;
+
     const btn = document.getElementById('sim1-mic-btn');
+
     const icon = document.getElementById('sim1-mic-icon');
+
     const pulse = document.getElementById('sim1-mic-pulse');
+
     const status = document.getElementById('sim1-mic-status');
+
     const wsLight = document.getElementById('sim1-ws-light');
+
     const hzInfo = document.getElementById('sim1-hz-info');
+
     const speedInfo = document.getElementById('sim1-speed-info');
+
     const log = document.getElementById('sim1-log');
+
+
 
     if (sim1Active) {
+
       btn.classList.add('bg-seed', 'border-seed');
+
       btn.classList.remove('bg-ink-800', 'border-ink-700');
+
       pulse.classList.remove('opacity-0');
+
       pulse.classList.add('opacity-100');
+
       status.innerText = "녹음 및 스트리밍 중";
+
       status.classList.add('text-seed');
+
       wsLight.classList.remove('bg-ink-500');
+
       wsLight.classList.add('bg-emerald-500');
+
       hzInfo.innerText = "Input: 24,000Hz PCM";
+
       speedInfo.innerText = "Latency: 22ms";
 
+
+
       log.innerHTML = "<div>[System] WebSocket Session established. ready to stream.</div>";
+
       drawSim1Wave();
+
       startSim1Packets();
+
     } else {
+
       btn.classList.remove('bg-seed', 'border-seed');
+
       btn.classList.add('bg-ink-800', 'border-ink-700');
+
       pulse.classList.add('opacity-0');
+
       pulse.classList.remove('opacity-100');
+
       status.innerText = "마이크 대기 중";
+
       status.classList.remove('text-seed');
+
       wsLight.classList.add('bg-ink-500');
+
       wsLight.classList.remove('bg-emerald-500');
+
       hzInfo.innerText = "Input: 0Hz";
+
       speedInfo.innerText = "Latency: --ms";
 
+
+
       log.innerHTML += "<div>[System] Session disconnected. streaming paused.</div>";
+
       if (sim1AnimationId) cancelAnimationFrame(sim1AnimationId);
+
       if (sim1PacketTimer) clearInterval(sim1PacketTimer);
+
       if (sim1Ctx) sim1Ctx.clearRect(0, 0, sim1Canvas.width, sim1Canvas.height);
+
       
+
       const packet = document.getElementById('sim1-audio-packet');
+
       if (packet) {
+
         packet.classList.add('opacity-0', 'pointer-events-none');
+
         packet.style.left = '10%';
+
       }
+
     }
+
   };
+
+
 
   function drawSim1Wave() {
+
     if (!sim1Active || !sim1Ctx) return;
+
     sim1Ctx.clearRect(0, 0, sim1Canvas.width, sim1Canvas.height);
+
     sim1Ctx.strokeStyle = '#e66825';
+
     sim1Ctx.lineWidth = 2;
+
     sim1Ctx.beginPath();
+
     
+
     const time = Date.now() * 0.01;
+
     for (let i = 0; i < sim1Canvas.width; i++) {
+
       const y = sim1Canvas.height / 2 + Math.sin(i * 0.1 + time) * 10 * Math.sin(i * 0.05);
+
       if (i === 0) sim1Ctx.moveTo(i, y);
+
       else sim1Ctx.lineTo(i, y);
+
     }
+
     sim1Ctx.stroke();
+
     sim1AnimationId = requestAnimationFrame(drawSim1Wave);
+
   }
+
+
 
   function startSim1Packets() {
+
     const packet = document.getElementById('sim1-audio-packet');
+
     const log = document.getElementById('sim1-log');
+
     if (!packet) return;
 
+
+
     sim1PacketTimer = setInterval(() => {
+
       packet.style.left = '10%';
+
       packet.classList.remove('opacity-0');
+
       packet.classList.add('opacity-100');
+
       
+
       setTimeout(() => {
+
         packet.style.left = '80%';
+
       }, 50);
 
+
+
       setTimeout(() => {
+
         packet.classList.remove('opacity-100');
+
         packet.classList.add('opacity-0');
+
         log.innerHTML += `<div>[WS Send] Append PCM16 chunk (\${Math.floor(Math.random() * 500) + 1500} bytes)</div>`;
+
         log.scrollTop = log.scrollHeight;
+
       }, 950);
+
     }, 1200);
+
   }
 
+
+
   // -------------------------------------------------------------
+
   // Simulator 2: Function Calling 주문서
+
   // -------------------------------------------------------------
+
   window.triggerSim2 = function(type) {
+
     const jsonOutput = document.getElementById('sim2-json-output');
+
     const terminalLog = document.getElementById('sim2-terminal-log');
+
     const step1 = document.getElementById('sim2-flow-step-1');
+
     const step2 = document.getElementById('sim2-flow-step-2');
+
     const step3 = document.getElementById('sim2-flow-step-3');
 
+
+
     step1.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
+
     step2.className = "text-ink-400 font-mono";
+
     step3.className = "text-ink-400 font-mono";
 
+
+
     let json = "";
+
     let logs = "";
 
+
+
     if (type === 'youtube') {
+
       json = \`{
+
   "type": "function_call",
+
   "name": "youtube_search_videos",
+
   "arguments": {
+
     "query": "최신 AI 에이전트"
+
   }
+
 }\`;
+
       logs = `<div>[Grok AI] 사용자 음성 수신: "최신 AI 에이전트 동영상 검색해줘"</div>
+
 <div class="text-amber-400">[Grok AI] 매칭 도구 탐색: youtube_search_videos 도구 매핑 완료.</div>
+
 <div class="text-emerald-400">[Grok AI] 주문서(JSON) 발행 전송 완료.</div>`;
 
-      setTimeout(() => {
-        step2.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
-        terminalLog.innerHTML += `<div class="text-blue-400">[Server Gateway] API호출 수신: youtube_search_videos("최신 AI 에이전트")</div>
-<div>[Server Gateway] 유튜브 API 호출 ➔ 결과 3건 파싱 완료</div>`;
-        terminalLog.scrollTop = terminalLog.scrollHeight;
-      }, 1000);
+
 
       setTimeout(() => {
-        step3.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
-        terminalLog.innerHTML += `<div class="text-emerald-400">[Client UI] 유튜브 동영상 카드 3개 동적 렌더링 성공!</div>`;
+
+        step2.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
+
+        terminalLog.innerHTML += `<div class="text-blue-400">[Server Gateway] API호출 수신: youtube_search_videos("최신 AI 에이전트")</div>
+
+<div>[Server Gateway] 유튜브 API 호출 ➔ 결과 3건 파싱 완료</div>`;
+
         terminalLog.scrollTop = terminalLog.scrollHeight;
+
+      }, 1000);
+
+
+
+      setTimeout(() => {
+
+        step3.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
+
+        terminalLog.innerHTML += `<div class="text-emerald-400">[Client UI] 유튜브 동영상 카드 3개 동적 렌더링 성공!</div>`;
+
+        terminalLog.scrollTop = terminalLog.scrollHeight;
+
       }, 2000);
+
+
 
     } else if (type === 'play') {
+
       json = \`{
+
   "type": "function_call",
+
   "name": "play_video",
+
   "arguments": {
+
     "index": 2
+
   }
+
 }\`;
+
       logs = `<div>[Grok AI] 사용자 음성 수신: "두 번째 영상 플레이어로 재생해줘"</div>
+
 <div class="text-amber-400">[Grok AI] 매칭 도구 탐색: play_video 도구 매핑 완료.</div>
+
 <div class="text-emerald-400">[Grok AI] 주문서(JSON) 발행 전송 완료.</div>`;
 
-      setTimeout(() => {
-        step2.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
-        terminalLog.innerHTML += `<div class="text-blue-400">[Server Gateway] 클라이언트 명령 전달: index = 2</div>`;
-        terminalLog.scrollTop = terminalLog.scrollHeight;
-      }, 1000);
+
 
       setTimeout(() => {
-        step3.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
-        terminalLog.innerHTML += `<div class="text-emerald-400">[Client UI] 딥링크 실행 ➔ youtube://play?index=2 기동</div>`;
+
+        step2.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
+
+        terminalLog.innerHTML += `<div class="text-blue-400">[Server Gateway] 클라이언트 명령 전달: index = 2</div>`;
+
         terminalLog.scrollTop = terminalLog.scrollHeight;
+
+      }, 1000);
+
+
+
+      setTimeout(() => {
+
+        step3.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
+
+        terminalLog.innerHTML += `<div class="text-emerald-400">[Client UI] 딥링크 실행 ➔ youtube://play?index=2 기동</div>`;
+
+        terminalLog.scrollTop = terminalLog.scrollHeight;
+
       }, 2000);
+
+
 
     } else if (type === 'telegram') {
+
       json = \`{
+
   "type": "function_call",
+
   "name": "telegram_send",
+
   "arguments": {
+
     "video_title": "AI 에이전트 세미나",
+
     "video_url": "https://youtu.be/..."
+
   }
+
 }\`;
+
       logs = `<div>[Grok AI] 사용자 음성 수신: "이 동영상을 텔레그램으로 보관해"</div>
+
 <div class="text-amber-400">[Grok AI] 매칭 도구 탐색: telegram_send 도구 매핑 완료.</div>
+
 <div class="text-emerald-400">[Grok AI] 주문서(JSON) 발행 전송 완료.</div>`;
 
+
+
       setTimeout(() => {
+
         step2.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
+
         terminalLog.innerHTML += `<div class="text-blue-400">[Server Gateway] Telegram Bot API 연동 ➔ POST /bot/sendMessage</div>`;
+
         terminalLog.scrollTop = terminalLog.scrollHeight;
+
       }, 1000);
 
+
+
       setTimeout(() => {
+
         step3.className = "text-[#e66825] font-black scale-105 transition-all duration-300";
+
         terminalLog.innerHTML += `<div class="text-emerald-400">[Client UI] 아카이빙 성공 알림(Toast) 출력</div>`;
+
         terminalLog.scrollTop = terminalLog.scrollHeight;
+
       }, 2000);
+
     }
 
+
+
     jsonOutput.innerText = json;
+
     terminalLog.innerHTML = logs;
+
   };
 
+
+
   // -------------------------------------------------------------
+
   // Simulator 3: 오디오 재생 큐 스케줄러
+
   // -------------------------------------------------------------
+
   let sim3Active = false;
 
+
+
   window.playSim3 = function(isScheduler) {
+
     if (sim3Active) return;
+
     sim3Active = true;
 
+
+
     const statusBadge = document.getElementById('sim3-status');
+
     const container = document.getElementById('sim3-timeline-container');
+
     const logMsg = document.getElementById('sim3-log-msg');
 
+
+
     statusBadge.innerText = "PLAYING";
+
     statusBadge.className = isScheduler ? "px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-600 text-[10px] font-bold" : "px-2.5 py-0.5 rounded-full bg-red-100 text-red-600 text-[10px] font-bold";
+
     container.innerHTML = "";
 
+
+
     const chunks = [
+
       { id: 1, delay: 0 },
+
       { id: 2, delay: isScheduler ? 200 : 350 },
+
       { id: 3, delay: isScheduler ? 400 : 500 },
+
       { id: 4, delay: isScheduler ? 600 : 850 },
+
       { id: 5, delay: isScheduler ? 800 : 950 }
+
     ];
 
+
+
     chunks.forEach((chunk, i) => {
+
       setTimeout(() => {
+
         for (let b = 1; b <= 5; b++) {
+
           const circle = document.getElementById(`sim3-buffer-\${b}`);
+
           if (circle) circle.className = "w-5 h-5 bg-ink-200 rounded-full transition-all";
+
         }
+
         const currentCircle = document.getElementById(`sim3-buffer-\${chunk.id}`);
+
         if (currentCircle) {
+
           currentCircle.className = isScheduler ? "w-5 h-5 bg-emerald-500 rounded-full scale-110 transition-all shadow-md" : "w-5 h-5 bg-red-500 rounded-full scale-110 transition-all shadow-md";
+
         }
+
+
 
         const block = document.createElement('div');
+
         block.className = isScheduler 
+
           ? "px-2 py-3 bg-emerald-500 text-white rounded font-mono text-[10px] font-bold shrink-0 animate-fade-in" 
+
           : "px-2 py-3 bg-red-500 text-white rounded font-mono text-[10px] font-bold shrink-0 animate-fade-in";
+
         block.innerText = `Chunk\${chunk.id}`;
+
         
+
         if (!isScheduler && i > 0) {
+
           const gapSize = chunk.delay - (chunks[i-1].delay + 200);
+
           if (gapSize > 50) {
+
             const gap = document.createElement('div');
+
             gap.className = "px-1 py-1 border border-dashed border-red-300 bg-red-50 text-red-400 font-mono text-[9px] shrink-0 text-center rounded";
+
             gap.innerText = "Click!";
+
             container.appendChild(gap);
+
           }
+
         }
 
+
+
         container.appendChild(block);
+
         
+
         const curTime = (chunk.delay / 1000).toFixed(2);
+
         const schedTime = isScheduler ? (i * 0.2).toFixed(2) : curTime;
+
         logMsg.innerText = `currentTime: \${curTime}s | nextPlaybackTime: \${schedTime}s`;
 
+
+
       }, chunk.delay);
+
     });
 
+
+
     setTimeout(() => {
+
       statusBadge.innerText = "READY";
+
       statusBadge.className = "px-2.5 py-0.5 rounded-full bg-ink-200 text-ink-600 text-[10px] font-bold";
+
       sim3Active = false;
+
     }, 1500);
+
   };
 
+
+
   // -------------------------------------------------------------
+
   // Live YouTube Finder Sandbox (Step 7/8)
+
   // -------------------------------------------------------------
+
   let demoActive = false;
+
   
+
   window.toggleDemoAgent = function() {
+
     const btn = document.getElementById('demo-mic-btn');
+
     const icon = document.getElementById('demo-mic-icon');
+
     const pulse1 = document.getElementById('demo-wave-pulse-1');
+
     const pulse2 = document.getElementById('demo-wave-pulse-2');
+
     const status = document.getElementById('demo-status');
+
     const indicator = document.getElementById('demo-indicator');
+
     const consoleLog = document.getElementById('demo-console');
+
+
 
     demoActive = !demoActive;
 
+
+
     if (demoActive) {
+
       btn.className = "relative z-10 w-20 h-20 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer transform hover:scale-[1.05] transition-all";
+
       pulse1.classList.remove('opacity-0');
+
       pulse1.classList.add('opacity-100');
+
       pulse2.classList.remove('opacity-0');
+
       pulse2.classList.add('opacity-100');
+
       status.innerText = "실시간 마이크 경청 중...";
+
       indicator.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+
       consoleLog.innerHTML = "<div>[System] WebSocket Realtime session connection successful.</div><div>[Grok Voice] '안녕하세요! 어떤 최신 영상을 아카이빙 해드릴까요?'</div>";
+
     } else {
+
       btn.className = "relative z-10 w-20 h-20 bg-seed hover:bg-seed/90 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer transform hover:scale-[1.05] transition-all";
+
       pulse1.classList.add('opacity-0');
+
       pulse1.classList.remove('opacity-100');
+
       pulse2.classList.add('opacity-0');
+
       pulse2.classList.remove('opacity-100');
+
       status.innerText = "대화 시작하기 버튼을 클릭하세요";
+
       indicator.className = "w-2.5 h-2.5 rounded-full bg-ink-500";
+
       consoleLog.innerHTML += "<div>[System] Session closed.</div>";
+
       document.getElementById('demo-results-container').classList.add('hidden');
+
     }
+
   };
+
+
 
   window.speakDemoText = function(text) {
+
     if (!demoActive) {
+
       window.toggleDemoAgent();
+
     }
+
     const consoleLog = document.getElementById('demo-console');
+
     consoleLog.innerHTML += `<div class="text-white mt-2">👤 User: "\${text}"</div>`;
+
     consoleLog.scrollTop = consoleLog.scrollHeight;
 
+
+
     setTimeout(() => {
+
       consoleLog.innerHTML += `<div class="text-amber-400">[Grok Voice] 음성 분석 결과 ➔ youtube_search_videos({ query: "\${text}" }) 도구 호출 결정</div>`;
+
       consoleLog.scrollTop = consoleLog.scrollHeight;
+
     }, 800);
 
+
+
     setTimeout(() => {
+
       consoleLog.innerHTML += `<div class="text-blue-400">[Gateway Proxy] Express POST /api/mcp-gateway - query: "\${text}"</div>`;
+
       consoleLog.scrollTop = consoleLog.scrollHeight;
+
     }, 1500);
 
+
+
     setTimeout(() => {
+
       consoleLog.innerHTML += `<div class="text-emerald-400">[YouTube API] 데이터 수집 성공 (결과 3건 반환)</div>`;
+
       consoleLog.scrollTop = consoleLog.scrollHeight;
+
       renderDemoCards(text);
+
     }, 2200);
+
   };
+
+
 
   function renderDemoCards(query) {
+
     const container = document.getElementById('demo-results-container');
+
     container.classList.remove('hidden');
+
     container.innerHTML = "";
 
+
+
     const results = [
+
       { id: 1, title: `백종원의 대왕 보쌈 레시피 (\${query} 관련)`, owner: "백종원 PAIK JONG WON", views: "234만회", time: "12:34" },
+
       { id: 2, title: `집에서 초간단 보쌈김치 만드는 비법`, owner: "요리왕비룡", views: "89만회", time: "08:21" },
+
       { id: 3, title: `골목식당 대박 보쌈의 주방 레시피`, owner: "SBS Food", views: "142만회", time: "15:40" }
+
     ];
 
+
+
     results.forEach(res => {
+
       const card = document.createElement('div');
+
       card.className = "bg-ink-900 border border-ink-800 rounded-xl p-4 flex items-center justify-between gap-3 animate-fade-in";
+
       card.innerHTML = `
+
         <div class="flex items-center gap-3 align-middle">
+
           <div class="w-10 h-10 bg-ink-850 rounded-lg flex items-center justify-center font-bold text-xs text-seed shrink-0">TV</div>
+
           <div class="text-left">
+
             <h5 class="text-xs font-bold text-white leading-snug">\${res.title}</h5>
+
             <p class="text-[10px] text-ink-400 mt-1">\${res.owner} · 조회수 \sub\${res.views} · \${res.time}</p>
+
           </div>
+
         </div>
+
         <div class="flex gap-1.5 shrink-0">
+
           <button onclick="playMockVideo('\${res.title}')" class="px-2.5 py-1.5 bg-seed hover:bg-seed-dark text-white rounded text-[10px] font-bold cursor-pointer transition-all">재생</button>
+
           <button onclick="archiveMockVideo('\${res.title}')" class="px-2.5 py-1.5 bg-ink-800 hover:bg-ink-750 text-ink-300 rounded text-[10px] font-bold cursor-pointer transition-all">아카이브</button>
+
         </div>
+
       `;
+
       container.appendChild(card);
+
     });
+
   }
+
+
 
   window.playMockVideo = function(title) {
+
     const consoleLog = document.getElementById('demo-console');
+
     consoleLog.innerHTML += `<div class="text-emerald-400">[Deep Link] youtube://play - "\${title}" 기동 성공!</div>`;
+
     consoleLog.scrollTop = consoleLog.scrollHeight;
+
     
+
     const toast = document.getElementById('toast');
+
     toast.querySelector('span').innerText = `"\${title}" 영상을 기동했습니다! 🎬`;
+
     toast.classList.remove('translate-y-24', 'opacity-0');
+
     toast.classList.add('translate-y-0', 'opacity-100');
+
     setTimeout(() => {
+
       toast.classList.remove('translate-y-0', 'opacity-100');
+
       toast.classList.add('translate-y-24', 'opacity-0');
+
     }, 2500);
+
   };
+
+
 
   window.archiveMockVideo = function(title) {
+
     const consoleLog = document.getElementById('demo-console');
+
     consoleLog.innerHTML += `<div class="text-blue-400">[Telegram Bot] 텔레그램 채널 전송 완료 ➔ "\${title}"</div>`;
+
     consoleLog.scrollTop = consoleLog.scrollHeight;
 
+
+
     const toast = document.getElementById('toast');
+
     toast.querySelector('span').innerText = `텔레그램 아카이빙 성공! 📤`;
+
     toast.classList.remove('translate-y-24', 'opacity-0');
+
     toast.classList.add('translate-y-0', 'opacity-100');
+
     setTimeout(() => {
+
       toast.classList.remove('translate-y-0', 'opacity-100');
+
       toast.classList.add('translate-y-24', 'opacity-0');
+
     }, 2500);
+
   };
 
+
+
   // -------------------------------------------------------------
+
   // Copy Code utility
+
   // -------------------------------------------------------------
+
   window.copyCode = function(id, btn) {
+
     const pre = document.getElementById(id);
+
     if (!pre) return;
+
     navigator.clipboard.writeText(pre.innerText).then(() => {
+
       const originalText = btn.innerHTML;
+
       btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> 복사 완료!`;
+
       btn.classList.add('bg-green-100', 'text-green-800');
+
       
+
       const toast = document.getElementById('toast');
+
       toast.querySelector('span').innerText = "클립보드에 소스코드가 복사되었습니다!";
+
       toast.classList.remove('translate-y-24', 'opacity-0');
+
       toast.classList.add('translate-y-0', 'opacity-100');
 
+
+
       setTimeout(() => {
+
         btn.innerHTML = originalText;
+
         btn.classList.remove('bg-green-100', 'text-green-800');
+
         toast.classList.remove('translate-y-0', 'opacity-100');
+
         toast.classList.add('translate-y-24', 'opacity-0');
+
       }, 2000);
+
     });
+
   };
 
+
+
   // ============================================================
+
 // ============================================================
+
   const bunnyContainer = document.getElementById('bunny-lottie');
+
   let bunnyAnim;
 
+
+
   function mountBunnyLottie(animationData) {
+
     if (!bunnyContainer || typeof lottie === 'undefined' || !animationData) return;
+
     if (bunnyAnim) bunnyAnim.destroy();
+
     bunnyContainer.innerHTML = '';
+
     bunnyAnim = lottie.loadAnimation({
+
       container: bunnyContainer,
+
       renderer: 'svg',
+
       loop: true,
+
       autoplay: true,
+
       animationData
+
     });
+
   }
+
+
 
   function mountFallbackBunny() {
+
     const fallback = { v:'5.5.2', fr:30, ip:0, op:60, w:200, h:200, nm:'Fallback', layers:[{ty:4,nm:'C',sr:1,ks:{o:{a:0,k:100},r:{a:0,k:0},p:{a:0,k:[100,100,0]},a:{a:0,k:[0,0,0]},s:{a:1,k:[{i:{x:[.83,.83,.83],y:[.83,.83,.83]},o:{x:[.17,.17,.17],y:[.17,.17,.17]},t:0,s:[80,80,100]},{i:{x:[.83,.83,.83],y:[.83,.83,.83]},o:{x:[.17,.17,.17],y:[.17,.17,.17]},t:30,s:[95,95,100]},{t:60,s:[80,80,100]}]}},shapes:[{ty:'gr',it:[{ty:'el',s:{a:0,k:[120,120]},p:{a:0,k:[0,0]}},{ty:'fl',c:{a:0,k:[1,.49,.21,1]}}]}]}] };
+
     mountBunnyLottie(fallback);
+
   }
+
+
 
   if (typeof bunnyLottieJson !== 'undefined') {
+
     mountBunnyLottie(bunnyLottieJson);
+
   } else {
+
     fetch('./assets/bunny.json')
+
       .then(response => {
+
         if (!response.ok) throw new Error('Bunny JSON load failed');
+
         return response.json();
+
       })
+
       .then(mountBunnyLottie)
+
       .catch(err => {
+
         console.warn('bunny.json fetch failed, using fallback:', err);
+
         mountFallbackBunny();
+
       });
+
   }
+
+
 
   const trigger = document.getElementById('bunny-trigger');
+
   const drawer = document.getElementById('drawer');
+
   const backdrop = document.getElementById('drawer-backdrop');
+
   const closeBtn = document.getElementById('drawer-close');
+
   const iframe = document.getElementById('dashboard-iframe');
+
   const spinner = document.getElementById('iframe-spinner');
 
+
+
   if (trigger && drawer && backdrop && closeBtn) {
+
     function openDrawer() {
+
       backdrop.classList.remove('hidden');
+
       void backdrop.offsetWidth;
+
       backdrop.classList.remove('opacity-0');
+
       backdrop.classList.add('opacity-100');
+
       drawer.classList.remove('-translate-x-full');
+
       document.body.style.overflow = 'hidden';
+
       if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.getAttribute('src') === '')) {
+
         if (spinner) spinner.classList.remove('opacity-0','hidden');
+
         iframe.src = iframe.getAttribute('data-src');
+
       }
+
     }
+
+
 
     function closeDrawer() {
+
       backdrop.classList.remove('opacity-100');
+
       backdrop.classList.add('opacity-0');
+
       drawer.classList.add('-translate-x-full');
+
       document.body.style.overflow = '';
+
       setTimeout(() => {
+
         if (drawer.classList.contains('-translate-x-full')) backdrop.classList.add('hidden');
+
       }, 500);
+
     }
+
+
 
     trigger.addEventListener('click', openDrawer);
+
     trigger.addEventListener('keydown', (e) => {
+
       if (e.key === 'Enter' || e.key === ' ') {
+
         e.preventDefault();
+
         openDrawer();
+
       }
+
     });
+
     closeBtn.addEventListener('click', closeDrawer);
+
     backdrop.addEventListener('click', closeDrawer);
+
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+
   }
+
+
 
   if (iframe && spinner) {
+
     iframe.addEventListener('load', () => {
+
       spinner.classList.add('opacity-0');
+
       setTimeout(() => spinner.classList.add('hidden'), 300);
+
     });
+
   }
 
+
+
   // ============================================================
+
   // OPEN GRAPH GENERATOR (Step 6)
+
   // ============================================================
+
   window.updateOgPreview = function() {
+
     const titleEl = document.getElementById('og-input-title');
+
     const descEl = document.getElementById('og-input-desc');
+
     const imageEl = document.getElementById('og-input-image');
+
     if (!titleEl || !descEl || !imageEl) return;
+
+
 
     const titleVal = titleEl.value;
+
     const descVal = descEl.value;
+
     const imageVal = imageEl.value.trim();
 
+
+
     // Character counts
+
     document.getElementById('og-title-char-count').textContent = titleVal.length;
+
     document.getElementById('og-desc-char-count').textContent = descVal.length;
 
+
+
     // Update preview titles
+
     const displayTitle = titleVal || '감각적인 랜딩페이지';
+
     document.getElementById('og-preview-hero-title').textContent = displayTitle;
+
     document.getElementById('og-preview-card-title').textContent = displayTitle;
 
+
+
     // Update preview desc
+
     const displayDesc = descVal || '명함 한 장만으로 완성하는 나만의 프리미엄 브랜드 페이지. 단 30분 만에 실전 웹 기술과 디자인을 마스터하세요!';
+
     document.getElementById('og-preview-card-desc').textContent = displayDesc;
 
+
+
     // Update preview image
+
     const imgArea = document.getElementById('og-preview-img-area');
+
     const fallbackText = document.getElementById('og-preview-fallback-text');
+
     if (imgArea && fallbackText) {
+
       if (imageVal && (imageVal.startsWith('http://') || imageVal.startsWith('https://') || imageVal.startsWith('./') || imageVal.startsWith('/'))) {
+
         imgArea.style.backgroundImage = `url('${imageVal}')`;
+
         fallbackText.style.opacity = '0'; // Hide text when image is shown
+
       } else {
+
         imgArea.style.backgroundImage = 'none';
+
         fallbackText.style.opacity = '1'; // Show fallback text on gradient background
+
       }
+
     }
+
+
 
     // Update head preview code block
+
     const codeBlock = document.getElementById('og-code-block');
+
     if (codeBlock) {
+
       const displayUrl = 'https://내서비스주소.netlify.app';
+
       codeBlock.innerHTML = `&lt;!-- HTML 파일 &lt;head&gt; 내부 적절한 곳에 삽입 --&gt;
+
 &lt;meta property="og:title" content="${displayTitle}"&gt;
+
 &lt;meta property="og:description" content="${displayDesc}"&gt;
+
 &lt;meta property="og:image" content="${imageVal || 'https://내주소/og-image.png'}"&gt;
+
 &lt;meta property="og:url" content="${displayUrl}"&gt;
+
 &lt;meta property="og:type" content="website"&gt;`;
+
     }
+
   };
 
+
+
   window.copyCustomOgPrompt = function() {
+
     const titleEl = document.getElementById('og-input-title');
+
     const descEl = document.getElementById('og-input-desc');
+
     const imageEl = document.getElementById('og-input-image');
+
     if (!titleEl || !descEl || !imageEl) return;
 
+
+
     const title = titleEl.value.trim() || '감각적인 랜딩페이지';
+
     const desc = descEl.value.trim() || '명함 한 장만으로 완성하는 나만의 프리미엄 브랜드 페이지. 단 30분 만에 실전 웹 기술과 디자인을 마스터하세요!';
+
     const image = imageEl.value.trim() || 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1200&h=630&fit=crop&q=80';
 
+
+
     const promptText = `이 웹페이지를 카카오톡이나 SNS에 공유했을 때 제목, 설명, 대표 이미지가 예쁜 미리보기 카드로 나오게 하고 싶어.
+
 HTML <head> 영역에 들어갈 필수 오픈 그래프(Open Graph) 메타 태그 코드를 작성해 줘.
 
+
+
 [내가 설정한 오픈그래프 정보]
+
 - 제목 (og:title): ${title}
+
 - 설명 (og:description): ${desc}
+
 - 대표 이미지 (og:image): ${image}
+
 - 페이지 URL (og:url): (배포된 내 서비스 주소에 맞게 설정해줘)
+
 - 페이지 타입 (og:type): website
+
+
 
 위 정보를 바탕으로 HTML <head> 태그 안에 바로 들어갈 완성도 높은 메타 태그 코드를 작성하고, 각 태그에 대한 짤막한 주석을 달아줘.`;
 
+
+
     copyToClipboard(promptText, document.getElementById('btn-copy-og-prompt'), true);
+
   };
+
+
 
   const testImages = [
+
     'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=630&fit=crop&q=80', // 분석 대시보드
+
     'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=1200&h=630&fit=crop&q=80', // 포트폴리오 랜딩
+
     'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=1200&h=630&fit=crop&q=80', // UI 기획 & 구조
+
     'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop&q=80', // 기업 지표 차트
+
     'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=1200&h=630&fit=crop&q=80', // 앱 인터페이스 목업
+
     'https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=1200&h=630&fit=crop&q=80', // 크리에이티브 브랜딩
+
     'https://images.unsplash.com/photo-1542744094-3a31f103e35f?w=1200&h=630&fit=crop&q=80', // 비즈니스 솔루션 랜딩
+
     'https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=630&fit=crop&q=80', // 협업 대시보드
+
     'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=630&fit=crop&q=80', // 코딩 개발자 환경
+
     'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&h=630&fit=crop&q=80'  // 핀테크 모바일 페이지
+
   ];
 
+
+
   window.renderTestImages = function() {
+
     const container = document.getElementById('test-image-container');
+
     if (!container) return;
+
     container.innerHTML = testImages.map((url, idx) => {
+
       const shortLabel = `데모_${String(idx+1).padStart(2, '0')}`;
+
       return `<button onclick="selectTestImage('${url}')" class="btn-tactile text-[11px] font-bold border border-ink-100/70 bg-white hover:bg-seed-light hover:border-seed/40 px-2.5 py-1.5 rounded-lg cursor-pointer select-none transition-all">${shortLabel}</button>`;
+
     }).join('');
+
   };
+
+
 
   window.selectTestImage = function(url) {
+
     const input = document.getElementById('og-input-image');
+
     if (input) {
+
       input.value = url;
+
       window.updateOgPreview();
+
       
+
       const toast = document.getElementById('toast');
+
       if (toast) {
+
         toast.querySelector('span').innerText = '테스트 이미지가 입력되었습니다! 🖼️';
+
         toast.classList.remove('translate-y-24','opacity-0');
+
         setTimeout(() => { toast.classList.add('translate-y-24','opacity-0'); }, 2000);
+
       }
+
     }
+
   };
+
+
 
   window.selectRandomTestImage = function() {
+
     const randomUrl = testImages[Math.floor(Math.random() * testImages.length)];
+
     window.selectTestImage(randomUrl);
+
   };
 
+
+
   // Initialize preview and test images on page load
+
   setTimeout(() => {
+
     if (document.getElementById('og-input-title')) {
+
       updateOgPreview();
+
     }
+
     if (typeof renderTestImages === 'function') {
+
       renderTestImages();
+
     }
+
   }, 100);
+
 </script>
 
+
+
 </body>
+
 </html>
+
+
 
