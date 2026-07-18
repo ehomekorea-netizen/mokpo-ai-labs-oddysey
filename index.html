@@ -177,6 +177,15 @@
       border: 1px solid rgba(25, 31, 40, 0.15) !important;
     }
 
+    /* 흰 바탕의 부모 카드 안에서 내부 요약 카드들이 선명히 보이도록 강제 채색 */
+    .step-card [class*="bg-warm/30"],
+    .step-card [class*="bg-warm/40"],
+    .step-card [class*="bg-warm/20"],
+    .step-card [class*="bg-warm/10"] {
+      background-color: #f2e9d8 !important; /* 대비가 확실한 짙은 황토/모래색 */
+      border-color: #dfd2b9 !important;     /* 뚜렷한 구분 경계선 */
+    }
+
     /* Force ONLY tactile links and specific CTA buttons to center text & elements */
     .btn-tactile, a.btn-tactile {
       display: inline-flex !important;
