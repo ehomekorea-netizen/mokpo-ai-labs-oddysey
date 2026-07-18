@@ -162,6 +162,15 @@
       }
     }
 
+    /* Clean Step Card Wrapper Styles (Guarantees visible soft shadow & orange border) */
+    .step-card {
+      background-color: #ffffff !important;
+      border: 2px solid rgba(255, 126, 54, 0.6) !important;
+      border-radius: 32px !important;
+      box-shadow: 0 25px 50px -12px rgba(25, 31, 40, 0.09) !important;
+      transition: box-shadow 0.3s ease;
+    }
+
     /* Force ONLY tactile links and specific CTA buttons to center text & elements */
     .btn-tactile, a.btn-tactile {
       display: inline-flex !important;
@@ -316,7 +325,7 @@
   <!-- =========================================================== -->
   <!-- STEP 0: AI 음성 에이전트, 어떻게 작동하는 걸까?                       -->
   <!-- =========================================================== -->
-  <section id="step-0" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 relative overflow-hidden">
+  <section id="step-0" class="step-card space-y-12 p-8 md:p-12 relative overflow-hidden">
     <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
       <div class="flex items-center gap-5">
         <div class="step-badge bg-ink-900 text-white shadow-xl">0</div>
@@ -606,7 +615,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 1: 기획 및 브레인스토밍                                   -->
   <!-- =========================================================== -->
-  <section id="step-1" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-1" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">1</div>
       <div>
@@ -650,7 +659,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 2: 퍼소나 대본 설계                                       -->
   <!-- =========================================================== -->
-  <section id="step-2" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-2" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">2</div>
       <div>
@@ -697,7 +706,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 3: 실시간 음성 패러다임의 혁명                            -->
   <!-- =========================================================== -->
-  <section id="step-3" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-3" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">3</div>
       <div>
@@ -742,7 +751,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 4: 식당 운영 비유로 이해하는 기술 스택                       -->
   <!-- =========================================================== -->
-  <section id="step-4" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-4" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">4</div>
       <div>
@@ -791,7 +800,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 5: CORS 차단 해결 & 보안 게이트웨이                           -->
   <!-- =========================================================== -->
-  <section id="step-5" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-5" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">5</div>
       <div>
@@ -855,7 +864,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 6: 오디오 다운샘플링 & 비트 압축                           -->
   <!-- =========================================================== -->
-  <section id="step-6" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-6" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">6</div>
       <div>
@@ -930,7 +939,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 7: AI에게 손과 발을 달아주는 Function Calling             -->
   <!-- =========================================================== -->
-  <section id="step-7" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-7" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">7</div>
       <div>
@@ -991,7 +1000,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 8: 재생 큐 & 디버그                                      -->
   <!-- =========================================================== -->
-  <section id="step-8" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-8" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">8</div>
       <div>
@@ -1079,7 +1088,7 @@
   <!-- =========================================================== -->
   <!-- PHASE 9: 글로벌 원클릭 릴리즈 & 정산                             -->
   <!-- =========================================================== -->
-  <section id="step-9" class="space-y-12 border-2 border-seed/60 rounded-[32px] p-8 md:p-12 bg-white shadow-xl shadow-ink-900/5 mt-12 md:mt-16 relative overflow-hidden">
+  <section id="step-9" class="step-card space-y-12 p-8 md:p-12 mt-12 md:mt-16 relative overflow-hidden">
     <div class="mb-12 flex items-center gap-5">
       <div class="step-badge bg-ink-900 text-white shadow-xl text-2xl w-14 h-14 flex items-center justify-center rounded-2xl">9</div>
       <div>
