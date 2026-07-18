@@ -170,18 +170,21 @@
       text-align: center !important;
     }
 
-    /* Prevent SVG icons inside buttons from stretching and pushing text */
-    button svg, .btn-tactile svg, a.btn-tactile svg {
+    /* Prevent SVG icons and i tags inside buttons from stretching and pushing text */
+    button svg, .btn-tactile svg, a.btn-tactile svg,
+    button i, .btn-tactile i, a.btn-tactile i {
       width: 1.25rem !important;
       height: 1.25rem !important;
       flex-shrink: 0 !important;
       display: inline-block !important;
     }
-    button svg.w-4, .btn-tactile svg.w-4, a.btn-tactile svg.w-4 {
+    button svg.w-4, .btn-tactile svg.w-4, a.btn-tactile svg.w-4,
+    button i.w-4, .btn-tactile i.w-4, a.btn-tactile i.w-4 {
       width: 1rem !important;
       height: 1rem !important;
     }
-    button svg.w-6, .btn-tactile svg.w-6, a.btn-tactile svg.w-6 {
+    button svg.w-6, .btn-tactile svg.w-6, a.btn-tactile svg.w-6,
+    button i.w-6, .btn-tactile i.w-6, a.btn-tactile i.w-6 {
       width: 1.5rem !important;
       height: 1.5rem !important;
     }
