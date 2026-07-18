@@ -7,3 +7,6 @@
   cd C:\Users\IN\Desktop\mokpo-ai-curriculum
   git branch
   ```
+
+## 교안 빌더 스킬 자동 연동 규칙 (Curriculum Builder Integration)
+- 사용자가 이 프로젝트 내에서 교안 사이트(index.html 등)의 생성, 설계 변경 또는 스타일 수정을 지시할 경우, 에이전트는 반드시 `.agents/skills/web-curriculum-builder/SKILL.md`에 정의된 디자인 표준(Warm 미색 배경, Ink 블랙 텍스트) 및 대화형 컨셉 플레이그라운드 설계 가이드를 사전에 검토하고 이를 100% 반영하여 작업해야 합니다.
