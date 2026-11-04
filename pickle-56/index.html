@@ -1,522 +1,542 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="h-full antialiased">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>말 한마디로 넘기는 AI 개인 비서 실전 대리 56가지 총정리 | 목포 AI 실험실</title>
-<meta name="description" content="피클(Pickle) 둘러보기에 등록된 56가지 일상 대리 업무 전수 분석 및 실제 사용자 위임 랭킹 — 당근 SEED 디자인 테마 적용 리포트">
-<meta name="author" content="오디세이 (목포 AI 실험실)">
-<meta name="theme-color" content="#f7f8f9">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='%23ff6600'/%3E%3C/svg%3E">
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>피클(Pickle) 실전 대리 56가지 대시보드 | 목포 AI 실험실 오디세이</title>
+<meta name="description" content="말 한마디로 넘기는 AI 개인 비서 실전 56가지 업무 대시보드 — 당근 테마 쫀득한 3D UI"/>
+<meta name="author" content="오디세이 (목포 AI 실험실)"/>
+<meta name="theme-color" content="#0A0A0A"/>
+<link rel="icon" href="../assets/pickle-56/mokpo_ai_logo.jpg" type="image/jpeg"/>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#FF6B35',
+          light: '#FF8C38',
+          dark: '#E85E00',
+          glow: 'rgba(255, 107, 53, 0.35)',
+        },
+        dark: {
+          bg: '#0A0A0A',
+          card: '#121214',
+          cardAlt: '#18181C',
+          border: 'rgba(255, 255, 255, 0.08)',
+          borderGlow: 'rgba(255, 107, 53, 0.3)',
+        }
+      },
+      fontFamily: {
+        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+      },
+      boxShadow: {
+        '3d-card': '0 20px 50px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08)',
+        '3d-glow': '0 0 25px rgba(255, 107, 53, 0.4), inset 0 1px 0 rgba(255,255,255,0.2)',
+        'dock': '0 12px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.12)',
+      }
+    }
+  }
+};
+</script>
 <style>
-/* ============================================================
-   당근 시드 디자인(Seed Design) 토큰 기반 라이트 테마
-   https://seed-design.io · https://github.com/daangn/seed-design
-   ============================================================ */
-:root {
-  --seed-color-palette-gray-00: #ffffff;
-  --seed-color-palette-gray-100: #f7f8f9;
-  --seed-color-palette-gray-200: #f1f3f5;
-  --seed-color-palette-gray-300: #eeeff1;
-  --seed-color-palette-gray-400: #e2e5e8;
-  --seed-color-palette-gray-700: #868b94;
-  --seed-color-palette-gray-800: #4d5159;
-  --seed-color-palette-gray-900: #2a3038;
-  --seed-color-palette-gray-1000: #1a1c20;
-  --seed-color-palette-carrot-100: #fff2ec;
-  --seed-color-palette-carrot-200: #ffe5d8;
-  --seed-color-palette-carrot-300: #ffd5c0;
-  --seed-color-palette-carrot-600: #ff6600;
-  --seed-color-palette-carrot-700: #e85e00;
-
-  --bg: var(--seed-color-palette-gray-100);
-  --surface: var(--seed-color-palette-gray-00);
-  --surface-alt: var(--seed-color-palette-gray-200);
-  --ink: var(--seed-color-palette-gray-1000);
-  --ink-2: var(--seed-color-palette-gray-900);
-  --body: var(--seed-color-palette-gray-800);
-  --muted: var(--seed-color-palette-gray-700);
-  --line: var(--seed-color-palette-gray-300);
-  --carrot: var(--seed-color-palette-carrot-600);
-  --carrot-dark: var(--seed-color-palette-carrot-700);
-  --carrot-weak: var(--seed-color-palette-carrot-100);
-  --carrot-border: var(--seed-color-palette-carrot-300);
-
-  --radius-s: 10px;
-  --radius-m: 16px;
-  --radius-l: 24px;
-  --radius-pill: 9999px;
-
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-card: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.03);
-  --shadow-hover: 0 6px 20px rgba(255,102,0,0.1), 0 12px 32px rgba(0,0,0,0.06);
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+/* 쫀득한 스크롤 및 모션 */
+* { -webkit-tap-highlight-color: transparent; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.tap-spring {
+  transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease;
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  background-color: var(--bg);
-  color: var(--ink);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
+.tap-spring:active {
+  transform: scale(0.96);
 }
-
-/* ── 상단 네비게이션 바 ── */
-#topbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(255, 255, 255, 0.92);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+.tab-content {
+  animation: tabFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-.topbar-inner {
-  max-width: 1080px; margin: 0 auto; padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between;
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.brand {
-  display: flex; align-items: center; gap: 8px;
-  text-decoration: none; color: var(--ink); font-weight: 800; font-size: 15px;
-}
-.brand-mark {
-  width: 22px; height: 22px; border-radius: 7px;
-  background: var(--carrot); flex-shrink: 0;
-}
-.view-toggle {
-  display: flex; background: var(--surface-alt); padding: 3px;
-  border-radius: var(--radius-pill); border: 1px solid var(--line);
-}
-.toggle-btn {
-  padding: 6px 14px; border-radius: var(--radius-pill); border: none;
-  background: transparent; color: var(--muted); font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all 0.2s var(--ease);
-}
-.toggle-btn.active {
-  background: var(--surface); color: var(--carrot); box-shadow: var(--shadow-sm); font-weight: 700;
-}
-
-/* ── 메인 컨테이너 ── */
-.main-wrap {
-  max-width: 1080px; margin: 0 auto; padding: 90px 20px 60px;
-}
-
-/* ── 헤더 타이틀 영역 ── */
-.doc-header {
-  text-align: center; margin-bottom: 36px; padding: 20px 10px;
-}
-.eyebrow-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 14px; border-radius: var(--radius-pill);
-  background: var(--carrot-weak); border: 1px solid var(--carrot-border);
-  color: var(--carrot); font-size: 13px; font-weight: 700; margin-bottom: 14px;
-}
-.doc-title {
-  font-size: clamp(26px, 4.4vw, 40px); font-weight: 800;
-  letter-spacing: -0.03em; line-height: 1.25; margin-bottom: 14px;
-}
-.doc-title span.highlight {
-  color: var(--carrot);
-}
-.doc-desc {
-  font-size: clamp(15px, 2vw, 17px); color: var(--muted);
-  max-width: 640px; margin: 0 auto 16px;
-}
-.author-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 13px; color: var(--body); font-weight: 600;
-}
-.author-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--carrot); }
-
-/* ── 모드 1: 카드 슬라이드 뷰어 (Carousel) ── */
-#slideView {
-  display: flex; flex-direction: column; align-items: center; gap: 20px;
-}
-.carousel-box {
-  width: 100%; max-width: 580px; position: relative;
-}
-.slide-card-wrapper {
-  width: 100%; border-radius: var(--radius-l);
-  background: var(--surface); border: 1px solid var(--line);
-  box-shadow: var(--shadow-card); overflow: hidden;
-  position: relative; aspect-ratio: 4 / 5;
-  display: flex; flex-direction: column;
-}
-.slide-img {
-  width: 100%; height: 100%; object-fit: contain; display: block;
-  background: var(--bg);
-}
-
-/* 슬라이드 컨트롤 */
-.carousel-controls {
-  display: flex; align-items: center; justify-content: space-between;
-  width: 100%; max-width: 580px; margin-top: 10px;
-}
-.nav-arrow-btn {
-  width: 44px; height: 44px; border-radius: var(--radius-pill);
-  border: 1px solid var(--line); background: var(--surface);
-  color: var(--ink); font-size: 18px; font-weight: 800; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s var(--ease); box-shadow: var(--shadow-sm);
-}
-.nav-arrow-btn:hover {
-  background: var(--carrot-weak); color: var(--carrot); border-color: var(--carrot-border);
-}
-.nav-arrow-btn:disabled {
-  opacity: 0.35; cursor: not-allowed; border-color: var(--line); background: var(--surface); color: var(--muted);
-}
-.slide-counter {
-  font-size: 14px; font-weight: 700; color: var(--body);
-  background: var(--surface); padding: 8px 16px; border-radius: var(--radius-pill);
-  border: 1px solid var(--line);
-}
-.slide-counter span.cur { color: var(--carrot); font-size: 16px; }
-
-/* 썸네일 점 인디케이터 */
-.dots-indicator {
-  display: flex; gap: 6px; justify-content: center; margin-top: 10px;
-}
-.dot-btn {
-  width: 8px; height: 8px; border-radius: 4px; border: none;
-  background: var(--line); cursor: pointer; transition: all 0.25s var(--ease);
-}
-.dot-btn.active {
-  width: 24px; background: var(--carrot);
-}
-
-/* ── 모드 2: 그리드 전체 보기 ── */
-#gridView {
-  display: none; width: 100%;
-}
-.card-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px; margin-top: 10px;
-}
-.grid-item-card {
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius-m); overflow: hidden;
-  box-shadow: var(--shadow-card); transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
-  display: flex; flex-direction: column;
-}
-.grid-item-card:hover {
-  transform: translateY(-4px); box-shadow: var(--shadow-hover);
-}
-.grid-img {
-  width: 100%; aspect-ratio: 4 / 5; object-fit: contain; background: var(--bg);
-  border-bottom: 1px solid var(--line);
-}
-.grid-card-footer {
-  padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
-}
-.grid-card-num {
-  font-size: 13px; font-weight: 700; color: var(--carrot);
-}
-.grid-dl-link {
-  font-size: 12.5px; font-weight: 600; color: var(--body);
-  text-decoration: none; padding: 4px 10px; border-radius: var(--radius-pill);
-  background: var(--surface-alt); transition: background 0.2s;
-}
-.grid-dl-link:hover {
-  background: var(--carrot-weak); color: var(--carrot);
-}
-
-/* ── 하단 요약 및 실전 가이드 섹션 ── */
-.summary-section {
-  margin-top: 60px; padding: 36px 28px;
-  background: var(--surface); border-radius: var(--radius-l);
-  border: 1px solid var(--line); box-shadow: var(--shadow-card);
-}
-.summary-title {
-  font-size: 22px; font-weight: 800; margin-bottom: 20px;
-  color: var(--ink); display: flex; align-items: center; gap: 8px;
-}
-.summary-title .badge {
-  background: var(--carrot-weak); color: var(--carrot);
-  font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 6px;
-}
-.takeaways-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px; margin-bottom: 24px;
-}
-.takeaway-card {
-  padding: 20px; border-radius: var(--radius-m);
-  background: var(--bg); border: 1px solid var(--line);
-}
-.takeaway-num {
-  font-size: 13px; font-weight: 800; color: var(--carrot); margin-bottom: 6px;
-}
-.takeaway-heading {
-  font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--ink);
-}
-.takeaway-desc {
-  font-size: 13.5px; color: var(--body); line-height: 1.6;
-}
-
-.action-cta-box {
-  background: #fff9f5; border: 1.5px solid var(--carrot-border);
-  padding: 24px; border-radius: var(--radius-m); text-align: center;
-}
-.action-cta-box h4 {
-  font-size: 18px; font-weight: 800; color: var(--carrot-dark); margin-bottom: 8px;
-}
-.action-cta-box p {
-  font-size: 14.5px; color: var(--ink-2); max-width: 600px; margin: 0 auto;
-}
-
-/* ── 하단 푸터 ── */
-footer {
-  margin-top: 50px; padding: 24px 0; border-top: 1px solid var(--line);
-  text-align: center; font-size: 13px; color: var(--muted);
-}
-footer a { color: var(--ink); text-decoration: none; font-weight: 600; }
-footer a:hover { text-decoration: underline; color: var(--carrot); }
 </style>
 </head>
-<body>
+<body class="h-full bg-[#050505] text-white font-sans overflow-x-hidden selection:bg-primary/30 selection:text-primary-light">
 
-<!-- 상단 내비게이션 바 -->
-<div id="topbar">
-  <div class="topbar-inner">
-    <a href="../" class="brand">
-      <div class="brand-mark"></div>
-      <span>목포 AI 실험실</span>
-    </a>
-    <div class="view-toggle">
-      <button class="toggle-btn active" id="btnSlideView" onclick="switchView('slide')">슬라이드 모드</button>
-      <button class="toggle-btn" id="btnGridView" onclick="switchView('grid')">전체 카드 모드</button>
-    </div>
+<div class="min-h-screen bg-[#050505] flex justify-center items-start md:items-center py-0 md:py-6">
+  <!-- 쫀득한 3D 스마트 프레임 -->
+  <div class="w-full max-w-[480px] md:max-w-[768px] lg:max-w-[960px] h-[100dvh] md:h-[92dvh] md:max-h-[960px] md:rounded-[36px] bg-[#0A0A0A] md:shadow-[0_24px_70px_rgba(0,0,0,0.85)] border-0 md:border-[8px] border-[#1C1C1E] relative flex flex-col overflow-hidden">
+
+    <!-- 상단 헤더 바 -->
+    <header class="px-5 pt-3.5 pb-2.5 bg-gradient-to-b from-[#141416] to-[#0A0A0A] border-b border-white/5 relative z-20 flex-shrink-0">
+      <div class="flex justify-between items-center w-full">
+        <div class="flex items-center gap-3 min-w-0">
+          <img src="../assets/pickle-56/mokpo_ai_logo.jpg" alt="목포AI실험실" class="w-10 h-10 rounded-xl object-cover border border-white/10 shadow-md flex-shrink-0"/>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 bg-clip-text text-transparent font-black text-sm tracking-tight drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]">HEAT</span>
+              <span class="text-primary-light font-black text-sm tracking-tight">Pickle</span>
+              <span class="text-white/90 font-bold text-sm">56 대시보드</span>
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">실전</span>
+            </div>
+            <p class="text-[11px] text-white/50 font-medium truncate mt-0.5">목포AI실험실 오디세이 · 당근 3D 테마</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="../assets/pickle-56/pickle_56_card_01.png" download class="tap-spring px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-white/80 flex items-center gap-1">
+            <span>📥</span><span>카드</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 메인 스크롤 콘텐츠 영역 -->
+    <main class="flex-1 relative overflow-hidden flex flex-col">
+      <div id="mainScrollArea" class="flex-1 overflow-y-auto no-scrollbar px-4 pb-28 pt-3 space-y-3">
+
+        <!-- 3D 히어로 캐릭터 카드 (피클이 당근을 쥐고 있는 비주얼) -->
+        <div class="bg-gradient-to-b from-[#141418] to-[#0D0D10] border border-white/10 rounded-[28px] p-4 shadow-3d-card relative overflow-hidden isolate">
+          <!-- Ambient Glow Effect -->
+          <div class="absolute -right-10 -top-10 w-48 h-48 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div class="flex flex-col sm:flex-row items-center gap-4">
+            <!-- 3D 피클 캐릭터 -->
+            <div class="relative w-36 h-44 sm:w-44 sm:h-52 flex-shrink-0 rounded-2xl overflow-hidden border border-white/10 bg-[#0E0E12] shadow-inner flex items-center justify-center">
+              <img src="../assets/pickle-56/pickle_holding_carrot.png" alt="당근을 쥔 피클" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"/>
+              <div class="absolute bottom-2 left-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-[10px] text-center font-bold text-primary-light border border-white/10">
+                🥕 피콜로 × 당근
+              </div>
+            </div>
+
+            <!-- 히어로 타이틀 & 핵심 스탯 -->
+            <div class="flex-1 min-w-0 text-center sm:text-left">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/25 text-primary text-[11px] font-extrabold mb-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                피클 둘러보기 전수 해부
+              </span>
+              <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug">
+                말 한마디로 넘기는<br class="hidden sm:inline"/>
+                AI 비서 실전 대리 <span class="text-primary-light">56가지</span>
+              </h1>
+              <p class="text-xs text-white/60 mt-1 font-medium leading-relaxed">
+                "이런 잡무까지 대신해 준다고?" 유저들이 실제로 넘긴 56가지 업무 전수 분석 및 실전 활용법
+              </p>
+
+              <!-- 3대 핵심 요약 뱃지 -->
+              <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-white/10">
+                <div class="bg-white/5 rounded-xl p-2 text-center border border-white/5">
+                  <span class="block text-[10px] text-white/40 font-semibold">전수 업무</span>
+                  <span class="text-sm font-black text-primary-light">56선</span>
+                </div>
+                <div class="bg-white/5 rounded-xl p-2 text-center border border-white/5">
+                  <span class="block text-[10px] text-white/40 font-semibold">1위 위임</span>
+                  <span class="text-sm font-black text-white">1,404명</span>
+                </div>
+                <div class="bg-white/5 rounded-xl p-2 text-center border border-white/5">
+                  <span class="block text-[10px] text-white/40 font-semibold">핵심 분류</span>
+                  <span class="text-sm font-black text-amber-400">6대 분야</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 탭 컨텐츠 영역 -->
+        <div id="tabContainer">
+          <!-- 탭 1: 랭킹 TOP 10 -->
+          <div id="tab-ranking" class="tab-content space-y-2.5">
+            <div class="flex justify-between items-center px-1">
+              <h2 class="text-sm font-black text-white/90 flex items-center gap-1.5">
+                <span>🏆 유저들이 가장 먼저 넘긴 업무 TOP 10</span>
+              </h2>
+              <span class="text-[11px] text-white/40 font-medium">실제 위임자 수 기준</span>
+            </div>
+
+            <div class="bg-[#121214] border border-white/10 rounded-[24px] p-3.5 shadow-lg space-y-2">
+              <div id="rankingList" class="space-y-2">
+                <!-- JS 렌더링 -->
+              </div>
+            </div>
+
+            <!-- 오디세이 랭킹 분석 박스 -->
+            <div class="bg-gradient-to-r from-primary/10 via-[#1A1412] to-transparent border border-primary/25 rounded-2xl p-3.5">
+              <span class="text-xs font-bold text-primary flex items-center gap-1 mb-1">
+                <span>💡</span><span>오디세이 랭킹 분석</span>
+              </span>
+              <p class="text-xs text-white/80 leading-relaxed font-medium">
+                1위(사이트 탈퇴 1,404명)와 2위(구독 해지 1,168명)의 공통점은 '하기 싫어서 몇 년째 묵혀둔 개인정보와 새는 돈 청소'입니다. AI 비서에게 가장 먼저 맡겨야 할 일은 거창한 코딩이 아니라 이런 <strong>심리적 부채 청소</strong>입니다.
+              </p>
+            </div>
+          </div>
+
+          <!-- 탭 2: 카테고리별 56선 (동적 렌더링) -->
+          <div id="tab-category" class="tab-content hidden space-y-2.5">
+            <div class="flex justify-between items-center px-1">
+              <h2 id="catHeaderTitle" class="text-sm font-black text-white/90"></h2>
+              <span id="catHeaderCount" class="text-xs font-bold text-primary"></span>
+            </div>
+            <div id="categoryCardsContainer" class="space-y-2">
+              <!-- JS 렌더링 -->
+            </div>
+            <div id="catTipBox" class="bg-[#141416] border border-white/10 rounded-2xl p-3.5 text-xs text-white/80"></div>
+          </div>
+
+          <!-- 탭 3: 카드뉴스 9장 슬라이더 뷰 -->
+          <div id="tab-cardnews" class="tab-content hidden space-y-3">
+            <div class="flex justify-between items-center px-1">
+              <h2 class="text-sm font-black text-white/90">📱 9장 카드뉴스 슬라이드 뷰어</h2>
+              <span id="slideIndicator" class="text-xs font-bold text-primary">1 / 9</span>
+            </div>
+
+            <!-- 카드 슬라이드 컨테이너 (4:5 비율) -->
+            <div class="w-full max-w-[420px] mx-auto rounded-[24px] overflow-hidden border border-white/10 shadow-3d-card aspect-[4/5] bg-black relative">
+              <img id="carouselImg" src="../assets/pickle-56/pickle_56_card_01.png" alt="카드뉴스" class="w-full h-full object-contain"/>
+              
+              <!-- 좌우 내비게이션 터치 영역 / 화살표 -->
+              <button onclick="prevCard()" class="tap-spring absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/15 text-white flex items-center justify-center font-bold backdrop-blur-md">
+                ←
+              </button>
+              <button onclick="nextCard()" class="tap-spring absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/15 text-white flex items-center justify-center font-bold backdrop-blur-md">
+                →
+              </button>
+            </div>
+
+            <!-- 다운로드 버튼 -->
+            <div class="flex justify-center gap-2">
+              <a id="cardDownloadBtn" href="../assets/pickle-56/pickle_56_card_01.png" download class="tap-spring px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold shadow-3d-glow flex items-center gap-1.5">
+                <span>📥</span><span>현재 카드 고화질 다운로드</span>
+              </a>
+            </div>
+
+            <!-- 9장 썸네일 그리드 -->
+            <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 pt-2">
+              <!-- JS 썸네일 렌더링 -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- 하단 독(Dock) 네비게이션 바 - 쫀득한 3D UI -->
+    <nav class="absolute bottom-3 left-3 right-3 h-16 bg-[#121215]/95 backdrop-blur-lg border border-white/10 rounded-2xl flex justify-around items-center px-1.5 z-30 shadow-dock">
+      <button onclick="switchTab('ranking')" id="dock-ranking" class="dock-btn flex flex-col items-center justify-center flex-1 h-full py-1 relative tap-spring cursor-pointer text-primary">
+        <span class="text-lg">🏆</span>
+        <span class="text-[10.5px] font-bold mt-0.5">TOP 10</span>
+        <div class="dock-bar absolute bottom-1 w-4 h-[2.5px] bg-primary rounded-full"></div>
+      </button>
+
+      <button onclick="switchCategory('calls')" id="dock-calls" class="dock-btn flex flex-col items-center justify-center flex-1 h-full py-1 relative tap-spring cursor-pointer text-white/40">
+        <span class="text-lg">📞</span>
+        <span class="text-[10.5px] font-bold mt-0.5">통화 (16)</span>
+        <div class="dock-bar hidden absolute bottom-1 w-4 h-[2.5px] bg-primary rounded-full"></div>
+      </button>
+
+      <button onclick="switchCategory('money')" id="dock-money" class="dock-btn flex flex-col items-center justify-center flex-1 h-full py-1 relative tap-spring cursor-pointer text-white/40">
+        <span class="text-lg">💰</span>
+        <span class="text-[10.5px] font-bold mt-0.5">지출 (9)</span>
+        <div class="dock-bar hidden absolute bottom-1 w-4 h-[2.5px] bg-primary rounded-full"></div>
+      </button>
+
+      <button onclick="switchCategory('admin')" id="dock-admin" class="dock-btn flex flex-col items-center justify-center flex-1 h-full py-1 relative tap-spring cursor-pointer text-white/40">
+        <span class="text-lg">📄</span>
+        <span class="text-[10.5px] font-bold mt-0.5">행정 (9)</span>
+        <div class="dock-bar hidden absolute bottom-1 w-4 h-[2.5px] bg-primary rounded-full"></div>
+      </button>
+
+      <button onclick="switchCategory('booking')" id="dock-booking" class="dock-btn flex flex-col items-center justify-center flex-1 h-full py-1 relative tap-spring cursor-pointer text-white/40">
+        <span class="text-lg">🎟️</span>
+        <span class="text-[10.5px] font-bold mt-0.5">예약 (9)</span>
+        <div class="dock-bar hidden absolute bottom-1 w-4 h-[2.5px] bg-primary rounded-full"></div>
+      </button>
+
+      <button onclick="switchCategory('schedule')" id="dock-schedule" class="dock-btn flex flex-col items-center justify-center flex-1 h-full py-1 relative tap-spring cursor-pointer text-white/40">
+        <span class="text-lg">⏰</span>
+        <span class="text-[10.5px] font-bold mt-0.5">일정 (9)</span>
+        <div class="dock-bar hidden absolute bottom-1 w-4 h-[2.5px] bg-primary rounded-full"></div>
+      </button>
+
+      <button onclick="switchCategory('a2a')" id="dock-a2a" class="dock-btn flex flex-col items-center justify-center flex-1 h-full py-1 relative tap-spring cursor-pointer text-white/40">
+        <span class="text-lg">🤝</span>
+        <span class="text-[10.5px] font-bold mt-0.5">A2A (4)</span>
+        <div class="dock-bar hidden absolute bottom-1 w-4 h-[2.5px] bg-primary rounded-full"></div>
+      </button>
+
+      <button onclick="switchTab('cardnews')" id="dock-cardnews" class="dock-btn flex flex-col items-center justify-center flex-1 h-full py-1 relative tap-spring cursor-pointer text-white/40">
+        <span class="text-lg">📱</span>
+        <span class="text-[10.5px] font-bold mt-0.5">카드 9장</span>
+        <div class="dock-bar hidden absolute bottom-1 w-4 h-[2.5px] bg-primary rounded-full"></div>
+      </button>
+    </nav>
+
   </div>
 </div>
-
-<div class="main-wrap">
-  <!-- 헤더 타이틀 -->
-  <div class="doc-header">
-    <div class="eyebrow-pill">피클(Pickle) 둘러보기 전수 조사 분석 리포트</div>
-    <h1 class="doc-title">
-      말 한마디로 넘기는<br>
-      AI 개인 비서 실전 대리 <span class="highlight">56가지</span> 총정리
-    </h1>
-    <p class="doc-desc">
-      "이런 사소한 것까지 대신해 준다고?" 유저들이 실제로 비서에게 넘겨버린 일상 잡무 데이터 전수 해부
-    </p>
-    <div class="author-tag">
-      <div class="dot"></div>
-      <span>작성자: 오디세이 (목포 AI 실험실)</span>
-      <span>·</span>
-      <span>당근 SEED 디자인 테마 적용</span>
-    </div>
-  </div>
-
-  <!-- 모드 1: 슬라이드 뷰어 -->
-  <div id="slideView">
-    <div class="carousel-box">
-      <div class="slide-card-wrapper" id="carouselWrapper">
-        <img id="currentSlideImg" class="slide-img" src="../assets/pickle-56/pickle_56_card_01.png" alt="카드뉴스 1페이지">
-      </div>
-    </div>
-
-    <!-- 컨트롤 바 -->
-    <div class="carousel-controls">
-      <button class="nav-arrow-btn" id="prevBtn" onclick="prevSlide()" aria-label="이전 카드">←</button>
-      <div class="slide-counter">
-        <span class="cur" id="slideIndexText">1</span> / 9
-      </div>
-      <button class="nav-arrow-btn" id="nextBtn" onclick="nextSlide()" aria-label="다음 카드">→</button>
-    </div>
-
-    <!-- 점 인디케이터 -->
-    <div class="dots-indicator" id="dotsContainer"></div>
-
-    <div style="margin-top: 12px; display: flex; gap: 10px;">
-      <a id="currentDownloadLink" href="../assets/pickle-56/pickle_56_card_01.png" download="pickle_56_card_01.png" class="grid-dl-link" style="padding: 8px 16px; font-size: 13px; background: var(--carrot-weak); color: var(--carrot); font-weight: 700;">
-        📥 현재 카드 고화질 이미지 다운로드
-      </a>
-    </div>
-  </div>
-
-  <!-- 모드 2: 그리드 전체 보기 -->
-  <div id="gridView">
-    <div class="card-grid" id="gridContainer"></div>
-  </div>
-
-  <!-- 하단 인사이트 및 총평 -->
-  <div class="summary-section">
-    <div class="summary-title">
-      <span>오디세이의 실전 활용 가이드</span>
-      <span class="badge">KEY TAKEAWAYS</span>
-    </div>
-    <div class="takeaways-grid">
-      <div class="takeaway-card">
-        <div class="takeaway-num">01. 묵혀둔 짐 덜기</div>
-        <div class="takeaway-heading">가장 인기 있는 일은 '탈퇴 & 해지'</div>
-        <div class="takeaway-desc">
-          휴면 웹사이트 일괄 탈퇴(1,404명), 유료 구독 해지(1,168명)처럼 내 손으로 하기 귀찮아서 몇 년째 방치했던 '심리적 부채'부터 비서에게 넘기세요.
-        </div>
-      </div>
-      <div class="takeaway-card">
-        <div class="takeaway-num">02. 전화 스트레스 해방</div>
-        <div class="takeaway-heading">가장 체감 효용이 큰 '음성 통화 16선'</div>
-        <div class="takeaway-desc">
-          080 스팸 차단, 고객센터 대기, 매장 재고 확인, 식당 예약 등 콜포비아를 겪는 현대인에게 음성 통화 대행은 시간을 가장 크게 벌어줍니다.
-        </div>
-      </div>
-      <div class="takeaway-card">
-        <div class="takeaway-num">03. 안전 통제선 유지</div>
-        <div class="takeaway-heading">판단과 결제는 내가, 실행은 비서가</div>
-        <div class="takeaway-desc">
-          카드 결제 비밀번호나 생체인증은 절대 비서에게 주지 마세요. 비서가 준비를 끝내면 마지막 승인 버튼만 내가 누르는 안전선을 지켜야 합니다.
-        </div>
-      </div>
-    </div>
-
-    <div class="action-cta-box">
-      <h4>여러분은 오늘 어떤 잡무부터 비서에게 넘기시겠습니까?</h4>
-      <p>
-        "사소한 일상 잡무를 하나씩 에이전트에게 덜어낼수록, 나의 뇌 용량과 집중력은 진짜 가치 있는 일에 온전히 쓰입니다."
-      </p>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <p>© 2026 목포 AI 실험실 · 오디세이. 지역 AI 에이전트 연구 및 교육 교안 시리즈.</p>
-  <p style="margin-top: 6px; font-size: 12px;">출처 표기: 목포AI실험실 오디세이 · 디자인: 당근 SEED 디자인 토큰 기반 라이트 테마</p>
-</footer>
 
 <script>
-const TOTAL_SLIDES = 9;
-let currentSlide = 1;
-
-const cardTitles = [
-  "커버: 56가지 총정리 리포트",
-  "랭킹: 가장 많이 넘긴 일 TOP 10",
-  "카테고리 1: 음성 통화 대행 16선",
-  "카테고리 2: 소비·지출 방어 9선",
-  "카테고리 3: 행정·서류 처리 9선",
-  "카테고리 4: 예약·여가 티켓 9선",
-  "카테고리 5: 일정·알림 관리 9선",
-  "카테고리 6: 차세대 멀티에이전트 A2A 4선",
-  "마무리: 실전 활용 3대 원칙"
+// 데이터 세팅
+const TOP10_DATA = [
+  { rank: 1, title: "휴면·미사용 웹사이트 일괄 탈퇴", count: 1404, max: 1404, tag: "개인정보 삭제" },
+  { rank: 2, title: "깜빡 잊고 방치한 유료 구독 즉시 해지", count: 1168, max: 1404, tag: "지출 방어" },
+  { rank: 3, title: "미작성 구매 후기 쓰고 포인트 적립", count: 868, max: 1404, tag: "포인트 회수" },
+  { rank: 4, title: "스팸·광고 문자 080 수신거부 자동 등록", count: 693, max: 1404, tag: "스팸 차단" },
+  { rank: 5, title: "쌓여서 터지기 직전인 광고 메일함 대청소", count: 522, max: 1404, tag: "메일함 정리" },
+  { rank: 6, title: "소멸 예정 멤버십 포인트·마일리지 회수", count: 481, max: 1404, tag: "혜택 챙김" },
+  { rank: 7, title: "피클 비서가 친구에게 음성 전화로 소개", count: 373, max: 1404, tag: "음성 통화" },
+  { rank: 8, title: "배송 완료된 쇼핑몰 주문 일괄 구매확정", count: 311, max: 1404, tag: "적립금 수령" },
+  { rank: 9, title: "아침 기상 모닝콜 및 맞춤 브리핑 전화", count: 265, max: 1404, tag: "모닝콜" },
+  { rank: 10, title: "유튜브 쇼츠 자동 생성 및 예약 업로드", count: 212, max: 1404, tag: "콘텐츠 자동화" },
 ];
 
+const CATEGORIES_DATA = {
+  calls: {
+    title: "📞 음성 통화 대행 (16가지)",
+    count: "16가지",
+    tip: "💡 <strong>실전 화법 팁:</strong> 업소 대상 통화 시 '광고 아니고요, 오진실 손님 예약 전화입니다'처럼 용건부터 먼저 밝혀 스팸으로 오해받아 끊기는 문제를 원천 차단합니다.",
+    items: [
+      { name: "080 스팸/광고 수신거부 자동 등록", count: "693명", desc: "문자 속 080 무료 수신거부 번호로 대신 전화 걸어 ARS 처리" },
+      { name: "친구에게 피클 비서 소개 및 통화", count: "373명", desc: "친구에게 AI 비서 신원 밝히고 안부 및 기능 소개" },
+      { name: "아침 기상 모닝콜 및 일정 브리핑", count: "265명", desc: "정해진 시각에 음성 전화로 기상 확인 및 오늘 날씨/일정 전달" },
+      { name: "가족·부부 저녁 메뉴 확인 통화", count: "90명", desc: "집에 있는 가족에게 저녁 식사 메뉴 확인 및 전달" },
+      { name: "부모님 안부 확인 및 건강 체크 통화", count: "46명", desc: "혼자 계신 부모님께 안부 여쭙고 특이사항 확인" },
+      { name: "병원 진료 예약 및 시간 변경 전화", count: "37명", desc: "진료 가능 시간대 확인 및 예약 확정 대행" },
+      { name: "감사·사랑의 말 대신 전달 통화", count: "33명", desc: "직접 말하기 쑥스러운 감사 인사 정중히 전달" },
+      { name: "매장 상품 재고 유무 및 당일 입고 확인", count: "15명", desc: "방문 전 원하는 물품 재고 있는지 매장 통화 확인" },
+      { name: "상담원 연결될 때까지 고객센터 대기", count: "13명", desc: "지루한 대기음 버티다 상담원 연결 시 전화 토스" },
+      { name: "상대방 시간 여유 및 미팅 가능 확인", count: "12명", desc: "통화 가능한 상황인지 사전 확인 후 통화 연결" },
+      { name: "방문 전 주차 공간·반려견 동반 확인", count: "11명", desc: "매장 주차장 만차 여부 및 반려동물 출입 규정 확인" },
+      { name: "거래처 및 팀원 일정 확인 순차 통화", count: "실전", desc: "프로젝트 멤버들에게 일정 변경 사항 순서대로 전달" },
+      { name: "다수 인원 대상 차례로 공지 전달", count: "실전", desc: "모임 회원들에게 동일 공지사항 순차 발신" },
+      { name: ""지금 출발했어 / 조금 늦어" 상황 안내", count: "실전", desc: "운전 중 약속 상대에게 지연 상황 음성 통화로 전달" },
+      { name: "식당 테이블·룸 예약 전화", count: "실전", desc: "인원수, 날짜, 시간 맞춰 식당 직접 전화 예약" },
+      { name: "분실물 보관 여부 매장 확인 전화", count: "실전", desc: "방문했던 매장에 두고 온 소지품 있는지 확인" },
+    ]
+  },
+  money: {
+    title: "💰 소비 & 금융 방어 (9가지)",
+    count: "9가지",
+    tip: "🔒 <strong>보안 안전 통제선:</strong> 카드 결제 비밀번호와 CVC는 절대 AI 비서에게 알려주지 않습니다. 비서가 장바구니 담기와 옵션 세팅까지 끝내면, 마지막 결제 승인은 내가 직접 누릅니다.",
+    items: [
+      { name: "방치된 유료 멤버십·OTT 구독 즉시 해지", count: "1,168명", desc: "나도 모르게 매달 빠져나가던 자동결제 서비스 일괄 해지" },
+      { name: "미작성 구매 후기 일괄 작성해 포인트 회수", count: "868명", desc: "밀려있던 쇼핑몰 후기를 한 번에 털어 현금성 적립금 챙김" },
+      { name: "소멸 직전 마일리지·포인트 사라지기 전 챙김", count: "481명", desc: "유효기간 만료 임박 포인트 알림 및 전환/사용" },
+      { name: "배송 완료된 주문 일괄 구매확정", count: "311명", desc: "구매확정 지연으로 못 받던 추가 적립금 즉시 수령" },
+      { name: "쿠팡·네이버 최저가 비교 탐색 후 주문 세팅", count: "103명", desc: "가격 비교 후 최적 상품 장바구니에 담기 (결제는 직접)" },
+      { name: "원하는 조건·스펙 맞는 상품 찾아 장바구니 담기", count: "36명", desc: "평점, 배송일, 가격 필터링 후 장바구니 세팅" },
+      { name: "거절당했던 환불 건 규정 재검토 후 재요청", count: "35명", desc: "소비자 약관 분석 후 타당한 근거로 환불 재접수" },
+      { name: "배달 앱에서 평소 자주 먹던 메뉴 그대로 주문", count: "32명", desc: "즐겨찾는 매장과 메뉴 옵션 그대로 원클릭 주문" },
+      { name: "생수·휴지 등 주기적 생필품 원클릭 재주문", count: "실전", desc: "재고 소진 시점에 지난 주문 내역 바탕으로 즉시 보충" },
+    ]
+  },
+  admin: {
+    title: "📄 행정 & 서류 처리 (9가지)",
+    count: "9가지",
+    tip: "💡 <strong>간편인증 1회로 끝:</strong> 정부24나 홈택스 등 공공 사이트는 스마트폰 카카오/네이버 간편인증 한 번이면 필요한 서류를 PDF로 받아둘 수 있습니다.",
+    items: [
+      { name: "개인정보 지우는 미사용 웹사이트 일괄 탈퇴", count: "1,404명", desc: "e프라이버시 클린서비스 연동으로 불필요한 가입처 일괄 정리" },
+      { name: "수신함 점령한 프로모션·광고 메일 대청소", count: "522명", desc: "쌓여있던 스팸 및 뉴스레터 분류 후 일괄 수신거부/삭제" },
+      { name: "용량 초과 직전 메일함 & 클라우드 드라이브 정리", count: "209명", desc: "중복 파일과 대용량 첨부파일 정리로 용량 확보" },
+      { name: "주민등록등·초본 및 가족관계증명서 발급", count: "38명", desc: "정부24 간편인증 1회로 필요한 서류 즉시 PDF 발급" },
+      { name: "다운로드 기한 임박한 메일 첨부파일 미리 백업", count: "30명", desc: "기한 만료 전 중요 업무 파일 자동 드라이브 저장" },
+      { name: "국민비서·홈택스 공공기관 민원 대신 접수", count: "19명", desc: "공공 알림 확인 후 복잡한 신청서 작성 및 대리 접수" },
+      { name: "예의 바르고 정중한 비즈니스 메일 답장 작성", count: "17명", desc: "상황에 딱 맞는 정갈한 공손체 업무 메일 초안 작성" },
+      { name: "지출증빙용 현금영수증 및 세금계산서 발급", count: "14명", desc: "사업자/개인 지출증빙 누락 없이 챙기기" },
+      { name: "해외 사이트 영어·외국어 고객센터 문의 대행", count: "11명", desc: "해외 직구 및 계정 문제 현지어로 깔끔하게 문의" },
+    ]
+  },
+  booking: {
+    title: "🎟️ 예약 & 여가 티켓 (9가지)",
+    count: "9가지",
+    tip: "⚡ <strong>24시간 상시 감시:</strong> 사람은 계속 스마트폰을 쳐다보며 새로고침할 수 없지만, AI 비서는 백그라운드에서 취소표가 풀리는 찰나를 낚아채 예약합니다.",
+    items: [
+      { name: "핫플 식당 온라인 원격 예약 (캐치테이블 · 네이버)", count: "93명", desc: "오픈 시간에 맞춰 광클 예약 및 빈자리 알림 대기" },
+      { name: "단골 헤어샵 방문 주기 맞춰 같은 디자이너 재예약", count: "74명", desc: "지난 방문 주기 계산해 최적 타이밍에 빈 시간 선점" },
+      { name: "매진된 KTX·SRT 열차 취소표 실시간 포착", count: "73명", desc: "취소표 나올 때까지 끈질기게 새로고침하여 좌석 확보" },
+      { name: "SNS 인스타·유튜브 가볼 만한 핫플 네이버 지도 저장", count: "51명", desc: "릴스 속 맛집/카페 좌표를 내 지도에 일괄 저장" },
+      { name: "항공권 모바일 체크인 열리자마자 좋은 좌석 선점", count: "45명", desc: "체크인 오픈 시점에 맞춰 앞자리/창가석 선점" },
+      { name: "KTX 기차표 예매 (좌석 지정 완료, 결제만 직접)", count: "37명", desc: "일정에 맞춰 좌석 잡고 결제 직전 단계까지 준비" },
+      { name: "영화관 명당 자리(중앙 컴포트석) 골라서 예매", count: "25명", desc: "원하는 상영관 명당 좌석 오픈 알림 및 예매" },
+      { name: "주말 로또·복권 추첨 직후 당첨 번호 자동 확인", count: "24명", desc: "추첨 방송 직후 내 번호와 대조해 당첨 결과 보고" },
+      { name: "여행지 숙소 빈 방 유무 모니터링 및 실시간 예약", count: "실전", desc: "풀 부킹된 인기 숙소 취소분 발생 시 즉시 예약" },
+    ]
+  },
+  schedule: {
+    title: "⏰ 일정 & 스마트 알림 (9가지)",
+    count: "9가지",
+    tip: "💡 <strong>음력 생신 자동 환산:</strong> 매년 달력 보고 일일이 음력 날짜 찾느라 고생할 필요 없이, 비서가 연도별 양력 날짜를 정확히 계산해 구글 캘린더에 반복 등록합니다.",
+    items: [
+      { name: "부모님 음력 생신, 해마다 양력 자동 환산 등록", count: "154명", desc: "매년 바뀌는 음력 날짜를 양력으로 자동 계산해 캘린더 등록" },
+      { name: "버스·지하철 졸아도 안심: 하차역/동네 도착 전 알림", count: "68명", desc: "GPS 위치 감지해 환승역이나 도착지 1정거장 전 알림" },
+      { name: "여러 곳에 흩어져 꼬여버린 캘린더 중복 일정 정리", count: "61명", desc: "구글·애플 등 겹치거나 충돌하는 일정 교통정리" },
+      { name: "해외 직구 & 국내 택배 통관부터 배송 완료까지 추적", count: "60명", desc: "운송장 번호 실시간 추적 및 이동 단계별 알림" },
+      { name: "단톡방 캡처 이미지·문자 속 일정 캘린더 자동 입력", count: "49명", desc: "스크린샷 속 모임 일시와 장소를 캘린더로 직행" },
+      { name: "예매 확인 메일 받자마자 캘린더에 일시·장소 자동 기입", count: "19명", desc: "항공/공연/호텔 예약 메일 분석해 자동 일정 생성" },
+      { name: "수강신청·특가·지원 사업 공고 상태 변경 시 알림", count: "13명", desc: "관심 웹페이지 정기 모니터링 후 변경점 발견 즉시 통보" },
+      { name: "구글 설문지 새 응답 인입 시 실시간 핵심 요약", count: "실전", desc: "설문 참가자 답변 쌓일 때마다 핵심 브리핑" },
+      { name: "정해둔 중요한 시각에 푸시 알림 & 필요시 음성 전화", count: "실전", desc: "단순 텍스트 알림을 넘어 음성 통화로 확실히 리마인드" },
+    ]
+  },
+  a2a: {
+    title: "🤝 차세대 멀티에이전트 A2A (4가지)",
+    count: "4가지",
+    tip: "🤖 <strong>A2A(Agent-to-Agent)란?</strong> 사람이 중간에서 메신저를 주고받지 않아도, 사용자가 설정한 개인 보안 규칙(CLONE.md) 안에서 각자의 AI 비서가 상호 안전하게 통신하여 일정과 용건을 대신 조율해 주는 차세대 협업 모델입니다.",
+    items: [
+      { name: "친구의 AI 비서에게 대신 물어보고 결과 확인", count: "35명", desc: "선물 보낸 사람 확인, 주말 시간 여유 등 직접 묻기 애매한 용건을 비서끼리 먼저 조회" },
+      { name: "친구 비서와 서로의 캘린더 대조해 약속 일정 조율", count: "17명", desc: ""언제 시간 돼?" 핑퐁 대화 없이 양쪽 비서가 빈 시간대를 맞춰 약속 확정" },
+      { name: "영상 소스로 유튜브 쇼츠 자동 제작 & 예약 업로드", count: "212명", desc: "긴 영상이나 텍스트 소스를 바탕으로 스크립트 작성, 자막 생성, 예약 업로드까지 원스톱" },
+      { name: "개발자 깃허브(GitHub) PR 코드 리뷰 및 자동 배포", count: "실전", desc: "코드 변경점 점검 후 충돌 검증, 브랜치 병합 및 실서버 배포 파이프라인 가동" },
+    ]
+  }
+};
+
+let currentCardIndex = 1;
+
 function init() {
-  // 인디케이터 생성
-  const dotsBox = document.getElementById('dotsContainer');
-  for (let i = 1; i <= TOTAL_SLIDES; i++) {
-    const dot = document.createElement('button');
-    dot.className = `dot-btn ${i === 1 ? 'active' : ''}`;
-    dot.onclick = () => goToSlide(i);
-    dotsBox.appendChild(dot);
-  }
-
-  // 그리드 생성
-  const gridBox = document.getElementById('gridContainer');
-  for (let i = 1; i <= TOTAL_SLIDES; i++) {
-    const pad = String(i).padStart(2, '0');
-    const filename = `pickle_56_card_${pad}.png`;
-    const cardEl = document.createElement('div');
-    cardEl.className = 'grid-item-card';
-    cardEl.innerHTML = `
-      <img class="grid-img" src="../assets/pickle-56/${filename}" alt="카드 ${i}페이지" loading="lazy">
-      <div class="grid-card-footer">
-        <div>
-          <span class="grid-card-num">${i} / 9</span>
-          <span style="font-size: 13px; font-weight: 600; margin-left: 8px; color: var(--ink);">${cardTitles[i-1]}</span>
-        </div>
-        <a href="../assets/pickle-56/${filename}" download="${filename}" class="grid-dl-link">다운로드</a>
-      </div>
-    `;
-    gridBox.appendChild(cardEl);
-  }
-
-  updateSlide();
-  setupTouchSwipe();
+  renderRanking();
+  renderThumbnails();
 }
 
-function updateSlide() {
-  const pad = String(currentSlide).padStart(2, '0');
+function renderRanking() {
+  const container = document.getElementById('rankingList');
+  container.innerHTML = TOP10_DATA.map(item => {
+    const isTop3 = item.rank <= 3;
+    const rankClass = isTop3 ? 'bg-primary text-white shadow-sm' : 'bg-white/10 text-white/50';
+    const percent = ((item.count / item.max) * 100).toFixed(0);
+
+    return `
+      <div class="bg-[#17171B] border border-white/5 rounded-2xl p-3 hover:border-white/15 transition-all">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-6 h-6 rounded-lg ${rankClass} text-xs font-black flex items-center justify-center flex-shrink-0">${item.rank}</span>
+            <span class="text-xs font-bold text-white/95 truncate">${item.title}</span>
+          </div>
+          <span class="text-xs font-black ${isTop3 ? 'text-primary-light' : 'text-white/70'} flex-shrink-0 ml-2">${item.count.toLocaleString()}명</span>
+        </div>
+        <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden p-0.5">
+          <div class="h-full bg-gradient-to-r ${isTop3 ? 'from-primary-light to-primary shadow-[0_0_8px_rgba(255,107,53,0.6)]' : 'from-white/20 to-white/40'} rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function switchTab(tabId) {
+  // Update dock buttons
+  document.querySelectorAll('.dock-btn').forEach(btn => {
+    btn.classList.remove('text-primary');
+    btn.classList.add('text-white/40');
+    btn.querySelector('.dock-bar')?.classList.add('hidden');
+  });
+
+  const activeBtn = document.getElementById(`dock-${tabId}`);
+  if (activeBtn) {
+    activeBtn.classList.remove('text-white/40');
+    activeBtn.classList.add('text-primary');
+    activeBtn.querySelector('.dock-bar')?.classList.remove('hidden');
+  }
+
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+  if (tabId === 'ranking') {
+    document.getElementById('tab-ranking').classList.remove('hidden');
+  } else if (tabId === 'cardnews') {
+    document.getElementById('tab-cardnews').classList.remove('hidden');
+  }
+
+  // Scroll to top of area
+  document.getElementById('mainScrollArea').scrollTop = 0;
+}
+
+function switchCategory(catKey) {
+  const cat = CATEGORIES_DATA[catKey];
+  if (!cat) return;
+
+  // Update dock
+  document.querySelectorAll('.dock-btn').forEach(btn => {
+    btn.classList.remove('text-primary');
+    btn.classList.add('text-white/40');
+    btn.querySelector('.dock-bar')?.classList.add('hidden');
+  });
+  const activeBtn = document.getElementById(`dock-${catKey}`);
+  if (activeBtn) {
+    activeBtn.classList.remove('text-white/40');
+    activeBtn.classList.add('text-primary');
+    activeBtn.querySelector('.dock-bar')?.classList.remove('hidden');
+  }
+
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+  const catTab = document.getElementById('tab-category');
+  catTab.classList.remove('hidden');
+
+  document.getElementById('catHeaderTitle').innerHTML = cat.title;
+  document.getElementById('catHeaderCount').innerHTML = cat.count;
+  document.getElementById('catTipBox').innerHTML = cat.tip;
+
+  const container = document.getElementById('categoryCardsContainer');
+  container.innerHTML = cat.items.map((item, idx) => `
+    <div class="bg-[#151518] border border-white/5 hover:border-white/15 rounded-2xl p-3.5 transition-all">
+      <div class="flex items-center justify-between mb-1">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-primary"></span>
+          <span class="text-xs font-bold text-white">${item.name}</span>
+        </div>
+        <span class="text-[11px] font-black text-primary-light">${item.count}</span>
+      </div>
+      <p class="text-[11px] text-white/50 pl-4 leading-relaxed">${item.desc}</p>
+    </div>
+  `).join('');
+
+  document.getElementById('mainScrollArea').scrollTop = 0;
+}
+
+function updateCarousel() {
+  const pad = String(currentCardIndex).padStart(2, '0');
   const filename = `pickle_56_card_${pad}.png`;
   const imgPath = `../assets/pickle-56/${filename}`;
 
-  document.getElementById('currentSlideImg').src = imgPath;
-  document.getElementById('slideIndexText').textContent = currentSlide;
-  document.getElementById('currentDownloadLink').href = imgPath;
-  document.getElementById('currentDownloadLink').download = filename;
+  document.getElementById('carouselImg').src = imgPath;
+  document.getElementById('slideIndicator').textContent = `${currentCardIndex} / 9`;
+  document.getElementById('cardDownloadBtn').href = imgPath;
+  document.getElementById('cardDownloadBtn').download = filename;
 
-  document.getElementById('prevBtn').disabled = currentSlide === 1;
-  document.getElementById('nextBtn').disabled = currentSlide === TOTAL_SLIDES;
-
-  const dots = document.querySelectorAll('.dot-btn');
-  dots.forEach((dot, idx) => {
-    dot.classList.toggle('active', idx + 1 === currentSlide);
+  // Update thumbnails border
+  document.querySelectorAll('.thumb-btn').forEach((btn, idx) => {
+    if (idx + 1 === currentCardIndex) {
+      btn.classList.add('border-primary', 'shadow-3d-glow');
+    } else {
+      btn.classList.remove('border-primary', 'shadow-3d-glow');
+    }
   });
 }
 
-function prevSlide() {
-  if (currentSlide > 1) {
-    currentSlide--;
-    updateSlide();
+function prevCard() {
+  if (currentCardIndex > 1) {
+    currentCardIndex--;
+    updateCarousel();
   }
 }
 
-function nextSlide() {
-  if (currentSlide < TOTAL_SLIDES) {
-    currentSlide++;
-    updateSlide();
+function nextCard() {
+  if (currentCardIndex < 9) {
+    currentCardIndex++;
+    updateCarousel();
   }
 }
 
-function goToSlide(n) {
-  currentSlide = n;
-  updateSlide();
-}
-
-// 키보드 좌우 화살표 지원
-window.addEventListener('keydown', (e) => {
-  if (document.getElementById('slideView').style.display !== 'none') {
-    if (e.key === 'ArrowLeft') prevSlide();
-    if (e.key === 'ArrowRight') nextSlide();
-  }
-});
-
-// 터치 스와이프 지원
-function setupTouchSwipe() {
-  const box = document.getElementById('carouselWrapper');
-  let startX = 0;
-  let endX = 0;
-
-  box.addEventListener('touchstart', (e) => {
-    startX = e.changedTouches[0].screenX;
-  }, { passive: true });
-
-  box.addEventListener('touchend', (e) => {
-    endX = e.changedTouches[0].screenX;
-    const diff = endX - startX;
-    if (Math.abs(diff) > 40) {
-      if (diff < 0) nextSlide();
-      else prevSlide();
-    }
-  }, { passive: true });
-}
-
-function switchView(mode) {
-  const slideView = document.getElementById('slideView');
-  const gridView = document.getElementById('gridView');
-  const btnSlide = document.getElementById('btnSlideView');
-  const btnGrid = document.getElementById('btnGridView');
-
-  if (mode === 'slide') {
-    slideView.style.display = 'flex';
-    gridView.style.display = 'none';
-    btnSlide.classList.add('active');
-    btnGrid.classList.remove('active');
-  } else {
-    slideView.style.display = 'none';
-    gridView.style.display = 'block';
-    btnSlide.classList.remove('active');
-    btnGrid.classList.add('active');
-  }
+function renderThumbnails() {
+  const container = document.querySelector('#tab-cardnews .grid');
+  container.innerHTML = Array.from({ length: 9 }, (_, i) => {
+    const num = i + 1;
+    const pad = String(num).padStart(2, '0');
+    return `
+      <button onclick="currentCardIndex = ${num}; updateCarousel();" class="thumb-btn tap-spring rounded-xl overflow-hidden border border-white/10 aspect-[4/5] bg-black relative">
+        <img src="../assets/pickle-56/pickle_56_card_${pad}.png" class="w-full h-full object-cover" alt="카드 ${num}"/>
+        <span class="absolute bottom-1 right-1 px-1.5 py-0.5 rounded bg-black/70 text-[9px] font-bold text-white">${num}</span>
+      </button>
+    `;
+  }).join('');
+  updateCarousel();
 }
 
 init();
