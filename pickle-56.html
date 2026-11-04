@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>말 한마디로 넘기는 AI 개인 비서 실전 대리 56가지 총정리 | 목포 AI 실험실</title>
+<meta name="description" content="피클(Pickle) 둘러보기에 등록된 56가지 일상 대리 업무 전수 분석 및 실제 사용자 위임 랭킹 — 당근 SEED 디자인 테마 적용 리포트">
+<meta name="author" content="오디세이 (목포 AI 실험실)">
+<meta name="theme-color" content="#f7f8f9">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='42' fill='%23ff6600'/%3E%3C/svg%3E">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ============================================================
+   당근 시드 디자인(Seed Design) 토큰 기반 라이트 테마
+   https://seed-design.io · https://github.com/daangn/seed-design
+   ============================================================ */
+:root {
+  --seed-color-palette-gray-00: #ffffff;
+  --seed-color-palette-gray-100: #f7f8f9;
+  --seed-color-palette-gray-200: #f1f3f5;
+  --seed-color-palette-gray-300: #eeeff1;
+  --seed-color-palette-gray-400: #e2e5e8;
+  --seed-color-palette-gray-700: #868b94;
+  --seed-color-palette-gray-800: #4d5159;
+  --seed-color-palette-gray-900: #2a3038;
+  --seed-color-palette-gray-1000: #1a1c20;
+  --seed-color-palette-carrot-100: #fff2ec;
+  --seed-color-palette-carrot-200: #ffe5d8;
+  --seed-color-palette-carrot-300: #ffd5c0;
+  --seed-color-palette-carrot-600: #ff6600;
+  --seed-color-palette-carrot-700: #e85e00;
+
+  --bg: var(--seed-color-palette-gray-100);
+  --surface: var(--seed-color-palette-gray-00);
+  --surface-alt: var(--seed-color-palette-gray-200);
+  --ink: var(--seed-color-palette-gray-1000);
+  --ink-2: var(--seed-color-palette-gray-900);
+  --body: var(--seed-color-palette-gray-800);
+  --muted: var(--seed-color-palette-gray-700);
+  --line: var(--seed-color-palette-gray-300);
+  --carrot: var(--seed-color-palette-carrot-600);
+  --carrot-dark: var(--seed-color-palette-carrot-700);
+  --carrot-weak: var(--seed-color-palette-carrot-100);
+  --carrot-border: var(--seed-color-palette-carrot-300);
+
+  --radius-s: 10px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --radius-pill: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-card: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.03);
+  --shadow-hover: 0 6px 20px rgba(255,102,0,0.1), 0 12px 32px rgba(0,0,0,0.06);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 상단 네비게이션 바 ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.topbar-inner {
+  max-width: 1080px; margin: 0 auto; padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand {
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--ink); font-weight: 800; font-size: 15px;
+}
+.brand-mark {
+  width: 22px; height: 22px; border-radius: 7px;
+  background: var(--carrot); flex-shrink: 0;
+}
+.view-toggle {
+  display: flex; background: var(--surface-alt); padding: 3px;
+  border-radius: var(--radius-pill); border: 1px solid var(--line);
+}
+.toggle-btn {
+  padding: 6px 14px; border-radius: var(--radius-pill); border: none;
+  background: transparent; color: var(--muted); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s var(--ease);
+}
+.toggle-btn.active {
+  background: var(--surface); color: var(--carrot); box-shadow: var(--shadow-sm); font-weight: 700;
+}
+
+/* ── 메인 컨테이너 ── */
+.main-wrap {
+  max-width: 1080px; margin: 0 auto; padding: 90px 20px 60px;
+}
+
+/* ── 헤더 타이틀 영역 ── */
+.doc-header {
+  text-align: center; margin-bottom: 36px; padding: 20px 10px;
+}
+.eyebrow-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  background: var(--carrot-weak); border: 1px solid var(--carrot-border);
+  color: var(--carrot); font-size: 13px; font-weight: 700; margin-bottom: 14px;
+}
+.doc-title {
+  font-size: clamp(26px, 4.4vw, 40px); font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.25; margin-bottom: 14px;
+}
+.doc-title span.highlight {
+  color: var(--carrot);
+}
+.doc-desc {
+  font-size: clamp(15px, 2vw, 17px); color: var(--muted);
+  max-width: 640px; margin: 0 auto 16px;
+}
+.author-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--body); font-weight: 600;
+}
+.author-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--carrot); }
+
+/* ── 모드 1: 카드 슬라이드 뷰어 (Carousel) ── */
+#slideView {
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+.carousel-box {
+  width: 100%; max-width: 580px; position: relative;
+}
+.slide-card-wrapper {
+  width: 100%; border-radius: var(--radius-l);
+  background: var(--surface); border: 1px solid var(--line);
+  box-shadow: var(--shadow-card); overflow: hidden;
+  position: relative; aspect-ratio: 4 / 5;
+  display: flex; flex-direction: column;
+}
+.slide-img {
+  width: 100%; height: 100%; object-fit: contain; display: block;
+  background: var(--bg);
+}
+
+/* 슬라이드 컨트롤 */
+.carousel-controls {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; max-width: 580px; margin-top: 10px;
+}
+.nav-arrow-btn {
+  width: 44px; height: 44px; border-radius: var(--radius-pill);
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--ink); font-size: 18px; font-weight: 800; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s var(--ease); box-shadow: var(--shadow-sm);
+}
+.nav-arrow-btn:hover {
+  background: var(--carrot-weak); color: var(--carrot); border-color: var(--carrot-border);
+}
+.nav-arrow-btn:disabled {
+  opacity: 0.35; cursor: not-allowed; border-color: var(--line); background: var(--surface); color: var(--muted);
+}
+.slide-counter {
+  font-size: 14px; font-weight: 700; color: var(--body);
+  background: var(--surface); padding: 8px 16px; border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+}
+.slide-counter span.cur { color: var(--carrot); font-size: 16px; }
+
+/* 썸네일 점 인디케이터 */
+.dots-indicator {
+  display: flex; gap: 6px; justify-content: center; margin-top: 10px;
+}
+.dot-btn {
+  width: 8px; height: 8px; border-radius: 4px; border: none;
+  background: var(--line); cursor: pointer; transition: all 0.25s var(--ease);
+}
+.dot-btn.active {
+  width: 24px; background: var(--carrot);
+}
+
+/* ── 모드 2: 그리드 전체 보기 ── */
+#gridView {
+  display: none; width: 100%;
+}
+.card-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px; margin-top: 10px;
+}
+.grid-item-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-m); overflow: hidden;
+  box-shadow: var(--shadow-card); transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  display: flex; flex-direction: column;
+}
+.grid-item-card:hover {
+  transform: translateY(-4px); box-shadow: var(--shadow-hover);
+}
+.grid-img {
+  width: 100%; aspect-ratio: 4 / 5; object-fit: contain; background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.grid-card-footer {
+  padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+}
+.grid-card-num {
+  font-size: 13px; font-weight: 700; color: var(--carrot);
+}
+.grid-dl-link {
+  font-size: 12.5px; font-weight: 600; color: var(--body);
+  text-decoration: none; padding: 4px 10px; border-radius: var(--radius-pill);
+  background: var(--surface-alt); transition: background 0.2s;
+}
+.grid-dl-link:hover {
+  background: var(--carrot-weak); color: var(--carrot);
+}
+
+/* ── 하단 요약 및 실전 가이드 섹션 ── */
+.summary-section {
+  margin-top: 60px; padding: 36px 28px;
+  background: var(--surface); border-radius: var(--radius-l);
+  border: 1px solid var(--line); box-shadow: var(--shadow-card);
+}
+.summary-title {
+  font-size: 22px; font-weight: 800; margin-bottom: 20px;
+  color: var(--ink); display: flex; align-items: center; gap: 8px;
+}
+.summary-title .badge {
+  background: var(--carrot-weak); color: var(--carrot);
+  font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 6px;
+}
+.takeaways-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px; margin-bottom: 24px;
+}
+.takeaway-card {
+  padding: 20px; border-radius: var(--radius-m);
+  background: var(--bg); border: 1px solid var(--line);
+}
+.takeaway-num {
+  font-size: 13px; font-weight: 800; color: var(--carrot); margin-bottom: 6px;
+}
+.takeaway-heading {
+  font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--ink);
+}
+.takeaway-desc {
+  font-size: 13.5px; color: var(--body); line-height: 1.6;
+}
+
+.action-cta-box {
+  background: #fff9f5; border: 1.5px solid var(--carrot-border);
+  padding: 24px; border-radius: var(--radius-m); text-align: center;
+}
+.action-cta-box h4 {
+  font-size: 18px; font-weight: 800; color: var(--carrot-dark); margin-bottom: 8px;
+}
+.action-cta-box p {
+  font-size: 14.5px; color: var(--ink-2); max-width: 600px; margin: 0 auto;
+}
+
+/* ── 하단 푸터 ── */
+footer {
+  margin-top: 50px; padding: 24px 0; border-top: 1px solid var(--line);
+  text-align: center; font-size: 13px; color: var(--muted);
+}
+footer a { color: var(--ink); text-decoration: none; font-weight: 600; }
+footer a:hover { text-decoration: underline; color: var(--carrot); }
+</style>
+</head>
+<body>
+
+<!-- 상단 내비게이션 바 -->
+<div id="topbar">
+  <div class="topbar-inner">
+    <a href="../" class="brand">
+      <div class="brand-mark"></div>
+      <span>목포 AI 실험실</span>
+    </a>
+    <div class="view-toggle">
+      <button class="toggle-btn active" id="btnSlideView" onclick="switchView('slide')">슬라이드 모드</button>
+      <button class="toggle-btn" id="btnGridView" onclick="switchView('grid')">전체 카드 모드</button>
+    </div>
+  </div>
+</div>
+
+<div class="main-wrap">
+  <!-- 헤더 타이틀 -->
+  <div class="doc-header">
+    <div class="eyebrow-pill">피클(Pickle) 둘러보기 전수 조사 분석 리포트</div>
+    <h1 class="doc-title">
+      말 한마디로 넘기는<br>
+      AI 개인 비서 실전 대리 <span class="highlight">56가지</span> 총정리
+    </h1>
+    <p class="doc-desc">
+      "이런 사소한 것까지 대신해 준다고?" 유저들이 실제로 비서에게 넘겨버린 일상 잡무 데이터 전수 해부
+    </p>
+    <div class="author-tag">
+      <div class="dot"></div>
+      <span>작성자: 오디세이 (목포 AI 실험실)</span>
+      <span>·</span>
+      <span>당근 SEED 디자인 테마 적용</span>
+    </div>
+  </div>
+
+  <!-- 모드 1: 슬라이드 뷰어 -->
+  <div id="slideView">
+    <div class="carousel-box">
+      <div class="slide-card-wrapper" id="carouselWrapper">
+        <img id="currentSlideImg" class="slide-img" src="../assets/pickle-56/pickle_56_card_01.png" alt="카드뉴스 1페이지">
+      </div>
+    </div>
+
+    <!-- 컨트롤 바 -->
+    <div class="carousel-controls">
+      <button class="nav-arrow-btn" id="prevBtn" onclick="prevSlide()" aria-label="이전 카드">←</button>
+      <div class="slide-counter">
+        <span class="cur" id="slideIndexText">1</span> / 9
+      </div>
+      <button class="nav-arrow-btn" id="nextBtn" onclick="nextSlide()" aria-label="다음 카드">→</button>
+    </div>
+
+    <!-- 점 인디케이터 -->
+    <div class="dots-indicator" id="dotsContainer"></div>
+
+    <div style="margin-top: 12px; display: flex; gap: 10px;">
+      <a id="currentDownloadLink" href="../assets/pickle-56/pickle_56_card_01.png" download="pickle_56_card_01.png" class="grid-dl-link" style="padding: 8px 16px; font-size: 13px; background: var(--carrot-weak); color: var(--carrot); font-weight: 700;">
+        📥 현재 카드 고화질 이미지 다운로드
+      </a>
+    </div>
+  </div>
+
+  <!-- 모드 2: 그리드 전체 보기 -->
+  <div id="gridView">
+    <div class="card-grid" id="gridContainer"></div>
+  </div>
+
+  <!-- 하단 인사이트 및 총평 -->
+  <div class="summary-section">
+    <div class="summary-title">
+      <span>오디세이의 실전 활용 가이드</span>
+      <span class="badge">KEY TAKEAWAYS</span>
+    </div>
+    <div class="takeaways-grid">
+      <div class="takeaway-card">
+        <div class="takeaway-num">01. 묵혀둔 짐 덜기</div>
+        <div class="takeaway-heading">가장 인기 있는 일은 '탈퇴 & 해지'</div>
+        <div class="takeaway-desc">
+          휴면 웹사이트 일괄 탈퇴(1,404명), 유료 구독 해지(1,168명)처럼 내 손으로 하기 귀찮아서 몇 년째 방치했던 '심리적 부채'부터 비서에게 넘기세요.
+        </div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">02. 전화 스트레스 해방</div>
+        <div class="takeaway-heading">가장 체감 효용이 큰 '음성 통화 16선'</div>
+        <div class="takeaway-desc">
+          080 스팸 차단, 고객센터 대기, 매장 재고 확인, 식당 예약 등 콜포비아를 겪는 현대인에게 음성 통화 대행은 시간을 가장 크게 벌어줍니다.
+        </div>
+      </div>
+      <div class="takeaway-card">
+        <div class="takeaway-num">03. 안전 통제선 유지</div>
+        <div class="takeaway-heading">판단과 결제는 내가, 실행은 비서가</div>
+        <div class="takeaway-desc">
+          카드 결제 비밀번호나 생체인증은 절대 비서에게 주지 마세요. 비서가 준비를 끝내면 마지막 승인 버튼만 내가 누르는 안전선을 지켜야 합니다.
+        </div>
+      </div>
+    </div>
+
+    <div class="action-cta-box">
+      <h4>여러분은 오늘 어떤 잡무부터 비서에게 넘기시겠습니까?</h4>
+      <p>
+        "사소한 일상 잡무를 하나씩 에이전트에게 덜어낼수록, 나의 뇌 용량과 집중력은 진짜 가치 있는 일에 온전히 쓰입니다."
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 목포 AI 실험실 · 오디세이. 지역 AI 에이전트 연구 및 교육 교안 시리즈.</p>
+  <p style="margin-top: 6px; font-size: 12px;">출처 표기: 목포AI실험실 오디세이 · 디자인: 당근 SEED 디자인 토큰 기반 라이트 테마</p>
+</footer>
+
+<script>
+const TOTAL_SLIDES = 9;
+let currentSlide = 1;
+
+const cardTitles = [
+  "커버: 56가지 총정리 리포트",
+  "랭킹: 가장 많이 넘긴 일 TOP 10",
+  "카테고리 1: 음성 통화 대행 16선",
+  "카테고리 2: 소비·지출 방어 9선",
+  "카테고리 3: 행정·서류 처리 9선",
+  "카테고리 4: 예약·여가 티켓 9선",
+  "카테고리 5: 일정·알림 관리 9선",
+  "카테고리 6: 차세대 멀티에이전트 A2A 4선",
+  "마무리: 실전 활용 3대 원칙"
+];
+
+function init() {
+  // 인디케이터 생성
+  const dotsBox = document.getElementById('dotsContainer');
+  for (let i = 1; i <= TOTAL_SLIDES; i++) {
+    const dot = document.createElement('button');
+    dot.className = `dot-btn ${i === 1 ? 'active' : ''}`;
+    dot.onclick = () => goToSlide(i);
+    dotsBox.appendChild(dot);
+  }
+
+  // 그리드 생성
+  const gridBox = document.getElementById('gridContainer');
+  for (let i = 1; i <= TOTAL_SLIDES; i++) {
+    const pad = String(i).padStart(2, '0');
+    const filename = `pickle_56_card_${pad}.png`;
+    const cardEl = document.createElement('div');
+    cardEl.className = 'grid-item-card';
+    cardEl.innerHTML = `
+      <img class="grid-img" src="../assets/pickle-56/${filename}" alt="카드 ${i}페이지" loading="lazy">
+      <div class="grid-card-footer">
+        <div>
+          <span class="grid-card-num">${i} / 9</span>
+          <span style="font-size: 13px; font-weight: 600; margin-left: 8px; color: var(--ink);">${cardTitles[i-1]}</span>
+        </div>
+        <a href="../assets/pickle-56/${filename}" download="${filename}" class="grid-dl-link">다운로드</a>
+      </div>
+    `;
+    gridBox.appendChild(cardEl);
+  }
+
+  updateSlide();
+  setupTouchSwipe();
+}
+
+function updateSlide() {
+  const pad = String(currentSlide).padStart(2, '0');
+  const filename = `pickle_56_card_${pad}.png`;
+  const imgPath = `../assets/pickle-56/${filename}`;
+
+  document.getElementById('currentSlideImg').src = imgPath;
+  document.getElementById('slideIndexText').textContent = currentSlide;
+  document.getElementById('currentDownloadLink').href = imgPath;
+  document.getElementById('currentDownloadLink').download = filename;
+
+  document.getElementById('prevBtn').disabled = currentSlide === 1;
+  document.getElementById('nextBtn').disabled = currentSlide === TOTAL_SLIDES;
+
+  const dots = document.querySelectorAll('.dot-btn');
+  dots.forEach((dot, idx) => {
+    dot.classList.toggle('active', idx + 1 === currentSlide);
+  });
+}
+
+function prevSlide() {
+  if (currentSlide > 1) {
+    currentSlide--;
+    updateSlide();
+  }
+}
+
+function nextSlide() {
+  if (currentSlide < TOTAL_SLIDES) {
+    currentSlide++;
+    updateSlide();
+  }
+}
+
+function goToSlide(n) {
+  currentSlide = n;
+  updateSlide();
+}
+
+// 키보드 좌우 화살표 지원
+window.addEventListener('keydown', (e) => {
+  if (document.getElementById('slideView').style.display !== 'none') {
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+  }
+});
+
+// 터치 스와이프 지원
+function setupTouchSwipe() {
+  const box = document.getElementById('carouselWrapper');
+  let startX = 0;
+  let endX = 0;
+
+  box.addEventListener('touchstart', (e) => {
+    startX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  box.addEventListener('touchend', (e) => {
+    endX = e.changedTouches[0].screenX;
+    const diff = endX - startX;
+    if (Math.abs(diff) > 40) {
+      if (diff < 0) nextSlide();
+      else prevSlide();
+    }
+  }, { passive: true });
+}
+
+function switchView(mode) {
+  const slideView = document.getElementById('slideView');
+  const gridView = document.getElementById('gridView');
+  const btnSlide = document.getElementById('btnSlideView');
+  const btnGrid = document.getElementById('btnGridView');
+
+  if (mode === 'slide') {
+    slideView.style.display = 'flex';
+    gridView.style.display = 'none';
+    btnSlide.classList.add('active');
+    btnGrid.classList.remove('active');
+  } else {
+    slideView.style.display = 'none';
+    gridView.style.display = 'block';
+    btnSlide.classList.remove('active');
+    btnGrid.classList.add('active');
+  }
+}
+
+init();
+</script>
+</body>
+</html>
