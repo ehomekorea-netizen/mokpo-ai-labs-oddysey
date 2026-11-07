@@ -3,2046 +3,2069 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenAI GPT Image 2.6 실전 이미지 프롬프팅 마스터 | 목포AI실험실 오디세이</title>
+<title>OpenAI GPT Image 2.6 실전 이미지 프롬프팅 교안 | Slidev Presentation</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
 <style>
+/* 페이퍼로지 & 키노트 팔레트 */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
 :root {
-  --primary: #FF6F0F; /* 당근/실험실 오렌지 */
-  --primary-dark: #E85A00;
-  --primary-light: #FFF4EC;
-  --accent-blue: #0A84FF;
-  --accent-purple: #5E5CE6;
-  --accent-green: #30D158;
-  --text-main: #111827;
-  --text-sub: #374151;
-  --text-muted: #6B7280;
-  --bg-page: #0B0E14;
-  --bg-slide: #FFFFFF;
-  --border-light: #E5E7EB;
-  --border-card: #E2E8F0;
-  --radius-lg: 16px;
-  --radius-md: 10px;
+  --k-paper: #000000;
+  --k-mist: #141414;
+  --k-card: #181818;
+  --k-card-line: rgba(255, 255, 255, 0.14);
+  --k-ink: #ffffff;
+  --k-muted: rgba(255, 255, 255, 0.65);
+  --k-line: rgba(255, 255, 255, 0.18);
+  --k-night: #0a0a0a;
+  --k-blue: #4a80f0;
+  --k-blue-2: #7ea3ff;
+  --jj-blue: #2f6fde;
+  --jj-yellow: #ffd21f;
+  --font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-  background-color: var(--bg-page);
-  color: var(--text-main);
+html, body {
+  background: var(--k-paper);
+  color: var(--k-ink);
+  font-family: var(--font-family);
   height: 100vh;
-  display: flex;
-  flex-direction: column;
+  width: 100vw;
   overflow: hidden;
   user-select: none;
+  -webkit-font-smoothing: antialiased;
 }
-#topNav {
-  background: rgba(17, 24, 39, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 10px 24px;
+
+/* Presentation Container */
+#stage {
+  width: 100vw;
+  height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #000;
+}
+
+.slide {
+  display: none;
+  width: 100%;
+  max-width: 1280px;
+  height: 100%;
+  max-height: 720px;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  padding: 40px 60px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.slide.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.slide-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Navigation Bar */
+#navBar {
+  height: 60px;
+  background: rgba(14, 14, 14, 0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 100;
-  color: #F9FAFB;
+  padding: 0 24px;
+  z-index: 1000;
 }
-.brand-title {
-  font-size: 14px;
-  font-weight: 700;
+
+.nav-left {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #FFFFFF;
+  gap: 16px;
 }
-.brand-badge {
-  background: var(--primary);
+.nav-badge {
+  background: var(--jj-blue);
   color: #fff;
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-.chapter-nav {
-  display: flex;
-  gap: 6px;
-}
-.chap-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #D1D5DB;
   font-size: 11px;
-  padding: 5px 11px;
-  border-radius: 20px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+}
+.nav-session {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--k-muted);
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-btn {
+  background: #222;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+.nav-btn:hover {
+  background: var(--jj-blue);
+  border-color: var(--jj-blue);
+}
+.slide-counter {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  min-width: 65px;
+  text-align: center;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-tool-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--k-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
+}
+.nav-tool-btn:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+/* JJCOVER LAYOUT */
+.jc-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.jc-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--jj-yellow);
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+}
+.jc-title {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #fff;
+  margin-bottom: 20px;
+  word-break: keep-all;
+}
+.jc-sub {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--k-muted);
+  margin-bottom: 36px;
+  line-height: 1.5;
+}
+.jc-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  max-width: fit-content;
+}
+.jc-box span { color: var(--k-muted); }
+.jc-box b { color: var(--k-blue-2); font-weight: 700; }
+.jc-bars {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  height: 4px;
+}
+.jc-bars i.y { flex: 2; background: var(--jj-yellow); }
+.jc-bars i.bl { flex: 3; background: var(--jj-blue); }
+.jc-bars i.w { flex: 5; background: #fff; }
+
+/* COVER LAYOUT */
+.cv-wrap {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+.cv-pic img {
+  width: 380px;
+  height: 380px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.cv-txt { flex: 1; }
+.cv-title {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.3;
+  margin: 16px 0 16px;
+  word-break: keep-all;
+}
+.cv-sub {
+  font-size: 20px;
+  color: var(--k-muted);
+  line-height: 1.5;
+}
+
+/* PROFILE LAYOUT */
+.pf-wrap {
+  background: var(--k-card);
+  border: 1px solid var(--k-card-line);
+  padding: 36px 44px;
+  border-radius: 20px;
+}
+.pf-head {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.pf-photo img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--jj-yellow);
+}
+.pf-role {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--jj-yellow);
+  margin-bottom: 6px;
+}
+.pf-name {
+  font-size: 32px;
+  font-weight: 800;
+}
+.pf-intro {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--k-muted);
+  margin-bottom: 24px;
+}
+.pf-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.pf-stat {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px;
+  border-radius: 12px;
+  text-align: center;
+}
+.pf-stat b {
+  display: block;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--k-blue-2);
+}
+.pf-stat span {
+  font-size: 12px;
+  color: var(--k-muted);
+}
+.pf-career {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  font-size: 14px;
+  color: #ddd;
+}
+.pf-career li {
+  position: relative;
+  padding-left: 18px;
+}
+.pf-career li::before {
+  content: "•";
+  color: var(--jj-blue);
+  position: absolute;
+  left: 0;
+  font-weight: 800;
+}
+
+/* CHAPTER LAYOUT */
+.ch-wrap {
+  text-align: center;
+  position: relative;
+}
+.ch-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(74, 128, 240, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ch-label {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--jj-yellow);
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+  display: block;
+}
+.ch-name {
+  font-size: 46px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* WORD LAYOUT */
+.word-wrap {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.word-big {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.35;
+  margin-bottom: 24px;
+  word-break: keep-all;
+}
+.word-sub {
+  font-size: 22px;
+  color: var(--k-muted);
+  line-height: 1.6;
+}
+
+/* POST LAYOUT */
+.post-wrap {
+  max-width: 820px;
+  margin: 0 auto;
+}
+.post-card {
+  background: var(--k-card);
+  border: 1px solid var(--k-card-line);
+  border-radius: 20px;
+  padding: 36px 44px;
+}
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.post-badge {
+  background: #222;
+  color: var(--jj-yellow);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+.post-author {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--k-blue-2);
+}
+.post-text {
+  font-size: 19px;
+  line-height: 1.7;
+  color: #fff;
+  margin-bottom: 24px;
+  word-break: keep-all;
+}
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 16px;
+}
+.post-link {
+  color: var(--k-blue-2);
+  text-decoration: none;
+  font-size: 14px;
   font-weight: 600;
 }
-.chap-btn:hover, .chap-btn.active {
-  background: var(--primary);
-  color: #FFFFFF;
-  border-color: var(--primary);
+.post-link:hover { text-decoration: underline; }
+.post-caption {
+  font-size: 13px;
+  color: var(--k-muted);
 }
-.nav-controls {
+
+/* CHAIN LAYOUT */
+.chain-wrap { width: 100%; }
+.chain-heading {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 36px;
+  text-align: center;
+}
+.chain-row {
   display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 16px;
+}
+.chain-card {
+  flex: 1;
+  background: var(--k-card);
+  border: 1px solid var(--k-card-line);
+  padding: 24px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.chain-big {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--jj-yellow);
+  margin-bottom: 10px;
+}
+.chain-text {
+  font-size: 14px;
+  color: var(--k-muted);
+  line-height: 1.5;
+}
+.chain-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--k-muted);
+  font-size: 22px;
+}
+
+/* VERSUS LAYOUT */
+.vs-wrap { width: 100%; }
+.vs-header { text-align: center; margin-bottom: 30px; }
+.vs-heading { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+.vs-sub { font-size: 16px; color: var(--k-muted); }
+.vs-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.vs-table-head {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.vs-col-title {
+  font-size: 15px;
+  font-weight: 800;
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+.vs-title-left { background: #261616; color: #ff7676; }
+.vs-title-right { background: #162438; color: var(--k-blue-2); }
+.vs-row {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
   align-items: center;
   gap: 10px;
 }
-.btn-nav {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.vs-col {
+  background: var(--k-card);
+  border: 1px solid var(--k-card-line);
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.vs-arrow { text-align: center; color: var(--k-muted); font-size: 18px; }
+.vs-right { border-color: rgba(74, 128, 240, 0.4); }
+
+/* STEPS LAYOUT */
+.steps-wrap { width: 100%; }
+.steps-header { text-align: center; margin-bottom: 32px; }
+.steps-heading { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+.steps-sub { font-size: 16px; color: var(--k-muted); }
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.step-card {
+  background: var(--k-card);
+  border: 1px solid var(--k-card-line);
+  padding: 30px 24px;
+  border-radius: 16px;
+  position: relative;
+}
+.step-num {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--jj-yellow);
+  background: #222;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  display: inline-block;
+}
+.step-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.step-hint {
   font-size: 14px;
+  color: var(--k-muted);
+  line-height: 1.6;
+}
+
+/* PROMPT LAYOUT */
+.prompt-wrap { width: 100%; max-width: 960px; margin: 0 auto; }
+.prompt-heading { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
+.prompt-before { font-size: 16px; color: var(--k-muted); margin-bottom: 20px; }
+.prompt-card {
+  background: var(--k-card);
+  border: 1px solid var(--k-card-line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.prompt-card-header {
+  background: #111;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.prompt-label { font-size: 13px; font-weight: 700; color: var(--jj-yellow); }
+.btn-copy {
+  background: var(--jj-blue);
+  color: #fff;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
   transition: all 0.2s;
 }
-.btn-nav:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
-}
-.counter-text {
-  font-size: 13px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: #E5E7EB;
-  min-width: 55px;
-  text-align: center;
-}
-.progress-bar-container {
-  width: 100%;
-  height: 3px;
-  background: rgba(255,255,255,0.1);
-}
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), #FF9248);
-  width: 0%;
-  transition: width 0.25s ease;
-}
-
-#app {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 16px 24px;
-  overflow: hidden;
-}
-.slide-container {
-  width: 100%;
-  max-width: 1240px;
-  aspect-ratio: 16 / 9;
-  max-height: 85vh;
-  background: var(--bg-slide);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.slide {
-  display: none;
-  flex: 1;
-  padding: 40px 52px 30px;
-  flex-direction: column;
-  justify-content: space-between;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.22s ease, transform 0.22s ease;
-}
-.slide.active {
-  display: flex;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Headers */
-.slide-header {
-  margin-bottom: 20px;
-}
-.badge-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-.badge-session {
-  background: var(--primary-light);
-  color: var(--primary);
-  border: 1px solid rgba(255, 111, 15, 0.25);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 6px;
-  letter-spacing: 0.3px;
-}
-.badge-tag {
-  background: #F3F4F6;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 6px;
-}
-.slide-title {
-  font-size: 26px;
-  font-weight: 800;
-  color: var(--text-main);
-  line-height: 1.25;
-  letter-spacing: -0.4px;
-}
-.slide-subtitle {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  font-weight: 500;
-}
-
-/* Body Layouts */
-.slide-body {
-  flex: 1;
-  display: flex;
-  min-height: 0;
-  gap: 28px;
-}
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; width: 100%; }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; }
-.col { display: flex; flex-direction: column; min-height: 0; }
-
-/* Footers */
-.slide-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 14px;
-  border-top: 1px solid var(--border-light);
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.footer-author {
-  font-weight: 700;
-  color: var(--text-sub);
-}
-
-/* Cards & UI Components */
-.card-box {
-  background: #F8FAFC;
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-md);
-  padding: 16px 20px;
-}
-.card-box.highlight {
-  background: #FFF9F5;
-  border-color: rgba(255, 111, 15, 0.35);
-}
-.card-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-main);
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.card-desc {
-  font-size: 13px;
-  color: var(--text-sub);
-  line-height: 1.55;
-}
-
-/* Prompt Box */
-.prompt-box {
-  background: #1E293B;
-  color: #F1F5F9;
-  border-radius: var(--radius-md);
-  padding: 14px 18px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
-  line-height: 1.5;
-  position: relative;
-  overflow-y: auto;
-  max-height: 220px;
+.btn-copy:hover { background: #225cc2; }
+.prompt-code {
+  padding: 24px;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #eceff4;
   white-space: pre-wrap;
   word-break: break-all;
-  border: 1px solid #334155;
 }
-.copy-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: #E2E8F0;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.copy-btn:hover {
-  background: var(--primary);
-  color: #FFFFFF;
-}
+.prompt-blank { color: var(--jj-yellow); font-weight: 700; text-decoration: underline; }
 
-/* Media Box */
-.img-frame {
-  width: 100%;
-  height: 100%;
-  min-height: 200px;
-  background: #F1F5F9;
-  border-radius: var(--radius-md);
+/* SPLIT LAYOUT */
+.split-wrap { width: 100%; }
+.split-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.split-heading { font-size: 30px; font-weight: 800; }
+.k-tag-badge {
+  background: #222;
+  color: var(--k-muted);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+.split-grid {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+}
+.split-item {
+  flex: 1;
+  background: var(--k-card);
+  border: 1px solid var(--k-card-line);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.split-img-box {
+  flex: 1;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--border-card);
+  margin-bottom: 16px;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  min-height: 240px;
 }
-.img-frame img {
+.split-img-box img {
+  width: 100%;
+  height: 100%;
+  max-height: 340px;
+  object-fit: contain;
+}
+.split-item-title { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: var(--jj-yellow); }
+.split-item-sub { font-size: 14px; color: var(--k-muted); line-height: 1.5; }
+
+/* ATTACH LAYOUT */
+.attach-wrap { width: 100%; }
+.attach-header { text-align: center; margin-bottom: 24px; }
+.attach-heading { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
+.attach-sub { font-size: 15px; color: var(--k-muted); }
+.attach-row {
+  display: flex;
+  gap: 20px;
+}
+.attach-card {
+  flex: 1;
+  background: var(--k-card);
+  border: 1px solid var(--k-card-line);
+  border-radius: 16px;
+  padding: 16px;
+}
+.attach-thumb {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  background: #000;
+}
+.attach-thumb img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-.img-label {
+.attach-mark {
   position: absolute;
-  bottom: 8px;
-  left: 8px;
-  background: rgba(0, 0, 0, 0.75);
-  color: #FFFFFF;
+  border: 3px solid #ff3b30;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(255, 59, 48, 0.6);
+}
+.attach-chip {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
   font-size: 11px;
-  font-weight: 700;
   padding: 3px 8px;
   border-radius: 4px;
-  backdrop-filter: blur(4px);
 }
-
-/* Thread Quote Box */
-.thread-quote {
-  background: #F8FAFC;
-  border-left: 4px solid var(--primary);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  padding: 14px 18px;
-  margin-top: 10px;
-}
-.thread-author {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
+.attach-cmd {
   font-size: 13px;
-  color: var(--text-main);
-  margin-bottom: 6px;
-}
-.thread-handle {
-  font-size: 12px;
-  color: var(--primary);
-  font-weight: 600;
-}
-.thread-body {
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--text-sub);
+  color: #ddd;
+  line-height: 1.5;
 }
 
-/* Tables */
-.spec-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  margin-top: 6px;
+/* Overview Grid Modal */
+#overviewModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 2000;
+  padding: 40px;
+  overflow-y: auto;
 }
-.spec-table th, .spec-table td {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border-light);
-  text-align: left;
-}
-.spec-table th {
-  background: #F8FAFC;
-  color: var(--text-muted);
-  font-weight: 700;
-  font-size: 12px;
-}
-.spec-table td {
-  color: var(--text-sub);
-}
-.spec-table tr:last-child td {
-  border-bottom: none;
-}
-
-/* Cover layout */
-.cover-layout {
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 50px 70px;
-  background: radial-gradient(circle at 50% 30%, #FFF7ED 0%, #FFFFFF 70%);
-}
-.cover-title {
-  font-size: 38px;
-  font-weight: 900;
-  color: #111827;
-  line-height: 1.25;
-  letter-spacing: -1px;
-  margin-bottom: 14px;
-}
-.cover-title span {
-  color: var(--primary);
-}
-.cover-sub {
-  font-size: 18px;
-  color: #4B5563;
-  margin-bottom: 30px;
-  font-weight: 500;
-}
-.cover-pill-box {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 36px;
-}
-.cover-pill {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #374151;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-}
-.instructor-tag {
-  font-size: 14px;
-  font-weight: 700;
-  color: #1F2937;
-  padding: 6px 16px;
-  border-radius: 8px;
-  background: rgba(255, 111, 15, 0.1);
-  display: inline-block;
-}
-
-/* Profile layout */
-.profile-box {
-  display: flex;
-  gap: 28px;
-  align-items: center;
-}
-.profile-stats {
+#overviewModal.show { display: block; }
+.overview-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
-.stat-item {
-  background: #F8FAFC;
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: 1px solid #EDF2F7;
+.overview-card {
+  background: #181818;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
-.stat-num { font-size: 18px; font-weight: 800; color: var(--primary); }
-.stat-label { font-size: 11px; color: var(--text-muted); }
+.overview-card:hover {
+  border-color: var(--jj-blue);
+  transform: translateY(-2px);
+}
+.overview-card.current {
+  border-color: var(--jj-yellow);
+}
+.ov-num { font-size: 11px; font-weight: 800; color: var(--jj-yellow); }
+.ov-title { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.4; }
+.ov-session { font-size: 10px; color: var(--k-muted); }
 
-/* Steps list */
-.step-item {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  margin-bottom: 12px;
+/* Responsive for mobile */
+@media (max-width: 768px) {
+  .slide { padding: 20px 24px; }
+  .jc-title { font-size: 28px; }
+  .jc-sub { font-size: 15px; }
+  .word-big { font-size: 28px; }
+  .ch-name { font-size: 28px; }
+  .split-grid { flex-direction: column; }
+  .chain-row { flex-direction: column; }
+  .attach-row { flex-direction: column; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .pf-stats { grid-template-columns: 1fr 1fr; }
+  .pf-career { grid-template-columns: 1fr; }
 }
-.step-num {
-  background: var(--primary);
-  color: #fff;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 800;
-  flex-shrink: 0;
-}
-.step-text h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-.step-text p { font-size: 12px; color: var(--text-muted); line-height: 1.45; }
 </style>
 </head>
 <body>
 
-<div id="topNav">
-  <div class="brand-title">
-    <span class="brand-badge">GPT-IMAGE 2.6</span>
-    <span>실전 이미지 프롬프팅 마스터</span>
-  </div>
-  <div class="chapter-nav">
-    <button class="chap-btn active" onclick="jumpToChapter(1)">1차시: 기초·모델</button>
-    <button class="chap-btn" onclick="jumpToChapter(7)">2차시: 8대원칙</button>
-    <button class="chap-btn" onclick="jumpToChapter(12)">3차시: 파라미터</button>
-    <button class="chap-btn" onclick="jumpToChapter(18)">4차시: 부분편집</button>
-    <button class="chap-btn" onclick="jumpToChapter(28)">5차시: 실전사례</button>
-  </div>
-  <div class="nav-controls">
-    <button class="btn-nav" onclick="prevSlide()" title="이전 (←)">◀</button>
-    <span class="counter-text" id="slideCounter">1 / 35</span>
-    <button class="btn-nav" onclick="nextSlide()" title="다음 (→)">▶</button>
-    <button class="btn-nav" onclick="toggleFullScreen()" title="전체화면 (F)">⛶</button>
-  </div>
-</div>
-<div class="progress-bar-container">
-  <div class="progress-bar" id="progressBar"></div>
-</div>
+<div id="stage">
+<div class="slide slide-jjcover" data-slide="1" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
 
-<div id="app">
-  <div class="slide-container" id="slideContainer">
-    <!-- SLIDES CONTENT INJECTED HERE -->
-    
-<div class="slide cover-layout active">
-  <div class="badge-row" style="justify-content: center;">
-    <span class="badge-session">공식 가이드 & 실무 분석</span>
-    <span class="badge-tag">OpenAI GPT Image 2.6</span>
-    <span class="badge-tag">2026 최신 개정판</span>
-  </div>
-  <h1 class="cover-title">OpenAI GPT Image 2.6<br><span>실전 이미지 프롬프팅 마스터</span></h1>
-  <p class="cover-sub">개념부터 8대 핵심 원칙, 외과수술식 마크업 부분 편집, 실제 유저 Best Practice까지</p>
-  <div class="cover-pill-box">
-    <div class="cover-pill">⚡ Flare vs Sunburst 듀얼 엔진</div>
-    <div class="cover-pill">🎯 8대 프롬프트 명세 원칙</div>
-    <div class="cover-pill">🖍️ Markup Overlay 정밀 마스킹</div>
-    <div class="cover-pill">📐 네이티브 SVG & 루핑 GIF</div>
-    <div class="cover-pill">💬 스레드 실전 유저 사례</div>
-  </div>
-  <div>
-    <span class="instructor-tag">강의 · 진행 : 오진실 강사 | 목포AI실험실 오디세이</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">강사 소개</span>
-      <span class="badge-tag">Profile</span>
-    </div>
-    <h2 class="slide-title">강사 소개 : 오진실 (오디세이)</h2>
-    <p class="slide-subtitle">비전공자와 현업 실무자를 위한 생성형 AI · 바이브코딩 · 에이전틱 AI 전문 강사</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box highlight">
-        <h3 class="card-title">👨‍🏫 약력 및 활동 영역</h3>
-        <p class="card-desc" style="margin-bottom: 12px;">
-          • <strong>목포AI실험실</strong> 운영 및 커뮤니티 '오디세이' 활동<br>
-          • 지역 대학, 기업, 공공기관 AI·바이브코딩 전문 출강 (전주대, 전남보건고, 순천제일대 등)<br>
-          • 당근 커뮤니티 AI 정기 워크숍 및 1:1 맞춤형 AI 바이브코딩 리딩<br>
-          • 데이원컴퍼니 AX 부트캠프 프로젝트 PM & 에이전트 아키텍처 설계
-        </p>
-        <div class="profile-stats">
-          <div class="stat-item"><div class="stat-num">72+ 회</div><div class="stat-label">최근 1년 대학·기업 출강</div></div>
-          <div class="stat-item"><div class="stat-num">250+ 차시</div><div class="stat-label">누적 실습 강의 진행</div></div>
-          <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">현장 실습형 교안 자체 제작</div></div>
-          <div class="stat-item"><div class="stat-num">56+ 가지</div><div class="stat-label">피클 에이전트 실전 업무 검증</div></div>
-        </div>
-      </div>
-      <div class="col card-box">
-        <h3 class="card-title">💡 오늘 강의의 핵심 지향점</h3>
-        <p class="card-desc" style="line-height: 1.65;">
-          <strong>"이미지 생성은 '운'이 아니라 '스펙 명세(Spec)'입니다."</strong><br><br>
-          GPT Image 2.6은 대충 키워드를 던져서 마음에 들 때까지 뽑기를 하던 구세대의 도구가 아닙니다. 정확한 좌표, 명확한 제약 조건 분리, 마크업 오버레이를 통해 원하는 픽셀을 외과수술하듯 집어내는 <strong>명세 기반 생산 도구</strong>입니다.<br><br>
-          오늘 교안은 OpenAI 공식 개발자 가이드의 8대 원칙과 실제 스레드 현업 유저들의 치열한 노하우를 결합하여 바로 내일부터 업무에 써먹을 수 있는 형태로 전수합니다.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session Overview · Slide 02</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">1차시 · 패러다임과 모델 선택</span>
-      <span class="badge-tag">Session 01</span>
-    </div>
-    <h2 class="slide-title">1차시 : 이미지는 '그리는' 것이 아니라 '명세'하는 것이다</h2>
-    <p class="slide-subtitle">DALL-E 3에서 GPT Image 2.6으로의 질적 도약과 생성 패러다임의 변화</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-3">
-      <div class="col card-box">
-        <h3 class="card-title">1️⃣ 1세대 (키워드 나열)</h3>
-        <p class="card-desc">
-          "masterpiece, best quality, 8k, photorealistic..."<br><br>
-          단순 단어들을 콤마로 나열하고, 모델이 확률적으로 좋은 그림을 뽑아주기를 기도하던 '복권 뽑기' 단계.
-        </p>
-      </div>
-      <div class="col card-box">
-        <h3 class="card-title">2️⃣ 2세대 (문장형 묘사)</h3>
-        <p class="card-desc">
-          "푸른 바다 위에서 일몰을 바라보고 있는 강아지..."<br><br>
-          자연어 문장을 이해하기 시작했으나, 텍스트 철자 깨짐, 손가락 왜곡, 기존 이미지 부분 수정의 어려움이 상존.
-        </p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">3️⃣ 3세대 : GPT Image 2.6</h3>
-        <p class="card-desc">
-          <strong>스펙 명세서(Spec) & 부분 편집</strong><br><br>
-          • 렌즈 규격, 조명 각도, 물리적 질감 명세<br>
-          • 네이티브 SVG 벡터 & 루핑 GIF 출력<br>
-          • 빨간 펜 마크업으로 원하는 영역만 핀포인트 수정<br>
-          • 레이아웃을 1픽셀도 건드리지 않는 텍스트 번역
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 01 · Slide 03</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">1차시 · 패러다임과 모델 선택</span>
-      <span class="badge-tag">Model Architecture</span>
-    </div>
-    <h2 class="slide-title">GPT Image 2.6 듀얼 모델 체계 : Flare vs Sunburst</h2>
-    <p class="slide-subtitle">작업의 성격에 따라 비용과 속도를 최적화하는 2가지 전용 엔진</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">⚡ gpt-image-2.6-flare (초고속 프로토타이핑)</h3>
-        <p class="card-desc" style="margin-bottom: 12px;">
-          아이디어 구체화, 러프 스케치 탐색, 빠른 시안 공유에 최적화된 고속 경량 모델
-        </p>
-        <table class="spec-table">
-          <tr><th>생성 속도</th><td><strong>평균 5~8초 내외</strong> (Sunburst 대비 2배 이상 빠름)</td></tr>
-          <tr><th>비용</th><td>경제적인 크레딧 소모 (약 50% 절감)</td></tr>
-          <tr><th>최적 용도</th><td>구도 잡기, 색감 탐색, 빠른 A/B 테스트, 일상 피드</td></tr>
-          <tr><th>특징</th><td>디테일한 텍스트 렌더링보다는 전체적인 씬(Scene) 구성에 강점</td></tr>
-        </table>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">☀️ gpt-image-2.6-sunburst (최고 정밀도 프로덕션)</h3>
-        <p class="card-desc" style="margin-bottom: 12px;">
-          복잡한 인포그래픽, 정확한 영문 타이포그래피, 실사 광고, 최종 납품용 플래그십
-        </p>
-        <table class="spec-table">
-          <tr><th>생성 속도</th><td>약 15~25초 내외 (심층 추론 및 디테일 렌더링)</td></tr>
-          <tr><th>비용</th><td>표준 프로덕션 비용</td></tr>
-          <tr><th>최적 용도</th><td>브랜드 로고(SVG), 제품 목업, IR 피치덱, 부분 편집</td></tr>
-          <tr><th>특징</th><td>레이아웃 보존, 복잡한 지시문 이해, 마크업 오버레이 완벽 대응</td></tr>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 01 · Slide 04</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">1차시 · 패러다임과 모델 선택</span>
-      <span class="badge-tag">User Best Practice</span>
-    </div>
-    <h2 class="slide-title">실무자들의 워크플로우 : 2-Tier 파이프라인</h2>
-    <p class="slide-subtitle">스레드 AI 인플루언서들이 공통으로 입을 모으는 'Flare → Sunburst' 비용 절감 공식</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="thread-quote">
-          <div class="thread-author">
-            <span>금버스 AI</span>
-            <span class="thread-handle">@geumverse_ai</span>
+        <div class="jc-wrap">
+          <img class="jc-chars" src="assets/openai-images/photorealism-gpt-image-2-6-sunburst.webp" alt="" />
+          <div class="jc-body">
+            <p class="jc-label">OpenAI 공식 가이드 기반 · 실전 이미지 프롬프팅 특강</p>
+            <h1 class="jc-title">이미지는 그리는 것이 아니라 명세(Spec)하는 것이다</h1>
+            <p class="jc-sub">Flare vs Sunburst 듀얼 엔진과 2.6 생성 패러다임의 도약</p>
+            <div class="jc-box"><span>다루는 모델 &amp; 도구</span><b>gpt-image-2.6-flare · gpt-image-2.6-sunburst · Markup Overlay</b></div>
           </div>
-          <p class="thread-body">
-            "2.6 업데이트의 핵심은 속도와 일관성입니다. Flare로 6초 만에 4~5개 구도를 먼저 뽑아 클라이언트나 팀원에게 컨펌을 받고, 채택된 베스트 샷의 시드와 프롬프트를 Sunburst로 넘겨 최종 렌더링하세요. 작업 시간과 토큰 비용이 60% 이상 줄어듭니다."
-          </p>
+          <div class="jc-bars"><i class="y"></i><i class="bl"></i><i class="w"></i></div>
         </div>
-        <div class="thread-quote" style="border-left-color: #0A84FF; margin-top: 14px;">
-          <div class="thread-author">
-            <span>최오픈 AI 연구소</span>
-            <span class="thread-handle">@choi.openai</span>
           </div>
-          <p class="thread-body">
-            "무작정 무거운 모델로 처음부터 디테일을 쑤셔 넣지 마세요. 1단계 구도 확정(Flare) → 2단계 Sunburst 전환 → 3단계 마크업 부분 편집. 이 3단계를 타는 것이 2.6 공식의 정석입니다."
-          </p>
+</div>
+
+<div class="slide slide-profile" data-slide="2" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="pf-wrap">
+          <div class="pf-head">
+            <div class="pf-photo"><img src="assets/openai-images/instructor-photo.jpg" alt="오진실" onerror="this.src='assets/openai-images/instructor-photo.jpg'" /></div>
+            <div>
+              <p class="pf-role">생성형 AI · 바이브코딩 전문강사</p>
+              <h2 class="pf-name">오진실</h2>
+            </div>
+          </div>
+          <p class="pf-intro">공공기관과 복지 현장, 대학, 청년, 학생에게 생성형 AI와 바이브코딩, 에이전트 실무를 가르칩니다. 대충 뽑는 운이 아니라, 엔지니어링 관점에서 검증된 결과물을 만드는 수업을 합니다.</p>
+          <div class="pf-stats"><div class="pf-stat"><b>72회</b><span>최근 1년 출강</span></div><div class="pf-stat"><b>250+</b><span>누적 실습 차시</span></div><div class="pf-stat"><b>30+곳</b><span>출강 교육장</span></div><div class="pf-stat"><b>56+개</b><span>피클 에이전트 실전 대리</span></div></div>
+          <ul class="pf-career"><li>전주대학교 HUSS 바이브코딩 경진대회 사전 특강 강사 (2026.11)</li><li>목포AI실험실 모임장 · 커뮤니티 오디세이 운영</li><li>전라남도 사회복지협의회 퍼블릭 AI 전문강사</li><li>디지털새싹 초·중·고 AI·코딩 캠프 강사·슈퍼바이저</li></ul>
         </div>
-      </div>
-      <div class="col card-box">
-        <h3 class="card-title">🛠️ 실무 3단계 파이프라인 다이어그램</h3>
-        <div class="step-item" style="margin-top: 10px;">
-          <div class="step-num">1</div>
-          <div class="step-text">
-            <h4>Flare로 빠른 콘셉트 검증 (6초 탐색)</h4>
-            <p>프롬프트의 핵심 요소(인물, 배경, 구도)만 적고 3~4개 버전을 1분 안에 확보</p>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="3" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 1</span>
+            <h2 class="ch-name">패러다임의 도약</h2>
           </div>
         </div>
-        <div class="step-item">
-          <div class="step-num">2</div>
-          <div class="step-text">
-            <h4>Sunburst로 디테일 승격 (고화질 빌드)</h4>
-            <p>선택된 구도에 렌즈 스펙, 질감, 조명, 텍스트 타이포그래피 파라미터를 추가</p>
+          </div>
+</div>
+
+<div class="slide slide-word" data-slide="4" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="word-wrap">
+          <h1 class="word-big">이미지 생성은 &#x27;운&#x27;이 아니라 &#x27;스펙 명세&#x27;다</h1>
+          <p class="word-sub">대충 키워드를 던져서 잘 나오길 기도하는 시대는 끝났다</p>
+          
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-post" data-slide="5" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="post-wrap">
+          <div class="post-card">
+            <div class="post-header">
+              <span class="post-badge">Threads Best Practice</span>
+              <span class="post-author">@choi.openai</span>
+            </div>
+            <div class="post-body">
+              <p class="post-text">GPT Image 2.6의 본질은 그림을 그리는 화가가 아니라, 도면을 읽는 건축 감리사에 가깝습니다.<br>&#x27;분위기 있는&#x27;, &#x27;멋진&#x27; 같은 감정어를 버리고 렌즈, 광원, 질감, 텍스트를 물리적으로 명세할 때<br>비로소 상상했던 픽셀이 그대로 꽂힙니다.<br></p>
+            </div>
+            <div class="post-footer">
+              <a href="https://www.threads.com/@choi.openai/post/Dfb-KXPDlFV" target="_blank" rel="noopener" class="post-link">스레드 원문 보기 ↗</a>
+              <span class="post-caption">감정어를 버리고 물리 스펙으로 말하라</span>
+            </div>
           </div>
         </div>
-        <div class="step-item">
-          <div class="step-num">3</div>
-          <div class="step-text">
-            <h4>마크업 오버레이로 외과수술 마무리</h4>
-            <p>전체 이미지를 다시 뽑지 않고 어색한 손가락이나 텍스트 오타만 빨간 원으로 마스킹 수정</p>
+          </div>
+</div>
+
+<div class="slide slide-chain" data-slide="6" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="chain-wrap">
+          <h2 class="chain-heading">이미지 생성 모델 3세대의 진화</h2>
+          <div class="chain-row">
+            
+            <div class="chain-card">
+              <div class="chain-big">1세대 (키워드 복권)</div>
+              <div class="chain-text">masterpiece, 8k, detailed... 콤마로 단어를 나열하며 잘 나오길 기도</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">2세대 (문장형 묘사)</div>
+              <div class="chain-text">자연어를 이해했으나 철자 깨짐, 손가락 왜곡, 기존 이미지 수정 불가</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">3세대: GPT Image 2.6</div>
+              <div class="chain-text">렌즈·질감 명세, 네이티브 SVG/GIF, 마크업 빨간 원 부분 편집</div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="7" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 2</span>
+            <h2 class="ch-name">Flare vs Sunburst 듀얼 엔진</h2>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 01 · Slide 05</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">1차시 · 패러다임과 모델 선택</span>
-      <span class="badge-tag">Migration Checklist</span>
-    </div>
-    <h2 class="slide-title">기존 워크플로우를 2.6으로 전환하는 6대 마이그레이션 규칙</h2>
-    <p class="slide-subtitle">구버전 DALL-E / Midjourney 프롬프트의 낡은 습관을 즉시 버려야 하는 이유</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">❌ 지금 당장 버려야 할 구시대 습관</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          • <strong>수식어 도배 금지:</strong> "hyper-detailed", "8k unreal engine", "masterpiece" 등은 2.6에서 노이즈로 작용함.<br>
-          • <strong>부정 프롬프트(Negative Prompt) 남발 금지:</strong> "no extra fingers", "no ugly faces" 대신 무엇이 존재해야 하는지를 명세할 것.<br>
-          • <strong>전체 재시도 반복:</strong> 맘에 안 드는 부분이 생겼다고 '다시 생성' 버튼을 누르는 것은 크레딧과 시간 낭비.
-        </p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">✅ 2.6 표준으로 정착시켜야 할 3대 루틴</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          • <strong>명사 중심의 물리적 명세:</strong> 빛의 종류(림라이트, 골든아워), 카메라 세팅(35mm, f/1.8), 표면 소재(리넨, 브러시드 알루미늄) 명시.<br>
-          • <strong>따옴표 기반 엄격한 텍스트 렌더링:</strong> 간판이나 로고에 들어갈 문구는 반드시 "Exact Text" 형태로 격리.<br>
-          • <strong>마크업 오버레이 편집:</strong> 수정이 필요한 부분만 레퍼런스 이미지 위에 투명 오버레이를 올려 요청할 것.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 01 · Slide 06</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">2차시 · 핵심 설계 원칙 8가지</span>
-      <span class="badge-tag">Session 02</span>
-    </div>
-    <h2 class="slide-title">2차시 : 프롬프트는 '느낌'이 아니라 '스펙 명세서(Spec)'다</h2>
-    <p class="slide-subtitle">OpenAI가 공식 권장하는 8대 이미지 프롬프팅 펀더멘털</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">📋 왜 '스펙 명세서'인가?</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          공사 현장에서 감리사에게 "예쁘고 웅장하게 지어주세요"라고 말하면 부실공사가 납니다. 건축 도면에는 기둥의 두께, 콘크리트 배합 비율, 창호의 규격이 숫자로 들어갑니다.<br><br>
-          GPT Image 2.6 프롬프트도 마찬가지입니다. 모델에게 상상력을 맡기지 말고, <strong>결과물의 종류, 배치, 카메라 거리, 재질감, 텍스트</strong>를 엔지니어링 관점에서 지시해야 합니다.
-        </p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">🎯 8대 공식 원칙 로드맵</h3>
-        <div style="font-size: 13px; line-height: 1.7; color: var(--text-sub);">
-          <strong>1. 결과물 정의</strong> (포스터, UI 목업, 실사 사진 등)<br>
-          <strong>2. 구조화된 포맷</strong> (Markdown 및 불릿 리스트 사용)<br>
-          <strong>3. 시각적 디테일</strong> (빛, 재질, 색상 명세)<br>
-          <strong>4. 인물과 동작 구체화</strong> (표정, 시선, 손의 위치)<br>
-          <strong>5. 정확한 텍스트 따옴표 명시</strong> ("Exact text in quotes")<br>
-          <strong>6. 변경 사항과 제약 조건의 분리</strong> (유지할 것 vs 바꿀 것)<br>
-          <strong>7. 다중 레퍼런스 이미지 역할 부여</strong> (스타일 참조 vs 인물 참조)<br>
-          <strong>8. 단계적 반복(Iterate)</strong> (단계별 진화)
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 02 · Slide 07</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">2차시 · 핵심 설계 원칙 8가지</span>
-      <span class="badge-tag">Principles 1-4</span>
-    </div>
-    <h2 class="slide-title">원칙 1~4 : 결과물 정의, 구조화, 디테일, 인물 동작</h2>
-    <p class="slide-subtitle">생성물의 장르를 못박고 물리적 디테일을 통제하는 기초 4원칙</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">원칙 1 : 결과물 종류 명확화 (Define Deliverable)</h3>
-        <p class="card-desc">"강아지 그림"이 아니라 <strong>"35mm 필름 카메라로 촬영된 실사 인물 사진"</strong>, <strong>"플랫 벡터 SVG 아이콘"</strong>, <strong>"피그마 스타일의 모바일 앱 UI 목업"</strong>처럼 최종 산출물의 물리적 매체를 첫 줄에 선언합니다.</p>
-        <h3 class="card-title" style="margin-top: 14px;">원칙 2 : 구조화된 포맷 활용 (Structured Format)</h3>
-        <p class="card-desc">줄글로 길게 늘어놓지 말고 마크다운 불릿(`- Subject:`, `- Lighting:`, `- Composition:`)을 사용하여 모델이 속성별로 파싱하기 쉽게 만듭니다.</p>
-      </div>
-      <div class="col card-box">
-        <h3 class="card-title">원칙 3 : 물리적 디테일 명세 (Visual Details)</h3>
-        <p class="card-desc">"분위기 있는 조명" 대신 <strong>"오후 5시의 따뜻한 골든아워 측광(Side lighting)"</strong>, "멋진 옷" 대신 <strong>"두꺼운 울 소재의 네이비 케이블 니트"</strong>처럼 구체적 재질과 광원을 지정합니다.</p>
-        <h3 class="card-title" style="margin-top: 14px;">원칙 4 : 인물과 동작 구체화 (Pose & Action)</h3>
-        <p class="card-desc">"남자가 서 있다" 대신 <strong>"40대 남성이 낡은 선박 키를 양손으로 굳게 쥐고, 먼 바다 수평선을 응시하며 굳은 표정을 짓고 있다"</strong>처럼 동사와 시선을 명시합니다.</p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 02 · Slide 08</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">2차시 · 핵심 설계 원칙 8가지</span>
-      <span class="badge-tag">Principles 5-8</span>
-    </div>
-    <h2 class="slide-title">원칙 5~8 : 텍스트 격리, 제약 분리, 레퍼런스 분업, 반복</h2>
-    <p class="slide-subtitle">부분 수정과 고급 제어를 성공시키는 핵심 4원칙</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box highlight">
-        <h3 class="card-title">원칙 5 : 텍스트는 큰따옴표로 엄격 격리</h3>
-        <p class="card-desc">
-          이미지 내에 표기될 글자는 반드시 <strong>"Text in quotes"</strong>로 쓰고, 폰트 스타일(산세리프, 볼드, 볼드 세리프)과 위치를 지정해야 오타가 발생하지 않습니다.
-        </p>
-        <h3 class="card-title" style="margin-top: 14px;">원칙 6 : 변경 사항 vs 보존 제약 분리</h3>
-        <p class="card-desc">
-          수정 요청 시 <strong>[Change]:</strong> 무엇을 바꿀 것인지와 <strong>[Preserve]:</strong> 기존의 얼굴, 배경, 조명 중 절대 건드리지 말아야 할 것을 분리해 선언합니다.
-        </p>
-      </div>
-      <div class="col card-box">
-        <h3 class="card-title">원칙 7 : 다중 레퍼런스 이미지의 역할 명시</h3>
-        <p class="card-desc">
-          이미지를 2장 넣을 때: "Image 1은 인물의 얼굴과 헤어스타일 참조, Image 2는 의상의 디자인과 컬러 팔레트 참조"처럼 역할(Role)을 각각 정의합니다.
-        </p>
-        <h3 class="card-title" style="margin-top: 14px;">원칙 8 : 단계적 점진 개선 (Iterate Step-by-Step)</h3>
-        <p class="card-desc">
-          처음부터 모든 완벽한 요소를 한 프롬프트에 넣지 말고, 기본 구도 생성 → 세부 요소 추가 → 부분 편집의 3단계를 밟습니다.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 02 · Slide 09</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">2차시 · 핵심 설계 원칙 8가지</span>
-      <span class="badge-tag">Case Study</span>
-    </div>
-    <h2 class="slide-title">공식 가이드 실습 1 : 35mm 필름 감성의 노련한 선원</h2>
-    <p class="slide-subtitle">8대 원칙을 철저히 준수한 실사 인물 사진 프롬프트의 정석</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="prompt-box">
-          <button class="copy-btn" onclick="copyPrompt(this, `A 35mm photograph of a weathered, bearded sailor at the wooden helm of a fishing boat on open waters. Medium shot, eye-level framing.
-
-Lighting: Direct sunlight casting defined shadows across his face, with warm golden highlights from the late-afternoon sun reflected on the water.
-
-Details: He wears a faded, heavy-knit wool fisherman sweater over a collared shirt, and a dark canvas beanie pushed back slightly on his graying hair.
-
-Camera: Crisp focus on the sailor and helm, with the ocean horizon soft and slightly hazy in the background. Natural film grain, muted sea greens and deep ocean blues with warm sunlit accents.`)">복사하기</button>
-A 35mm photograph of a weathered, bearded sailor at the wooden helm of a fishing boat on open waters. Medium shot, eye-level framing.
-
-Lighting: Direct sunlight casting defined shadows across his face, with warm golden highlights from the late-afternoon sun reflected on the water.
-
-Details: He wears a faded, heavy-knit wool fisherman sweater over a collared shirt, and a dark canvas beanie pushed back slightly on his graying hair.
-
-Camera: Crisp focus on the sailor and helm, with the ocean horizon soft and slightly hazy in the background. Natural film grain, muted sea greens and deep ocean blues with warm sunlit accents.
-        </div>
-        <p class="card-desc" style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
-          * 분석 포인트: "멋진 선원" 대신 카메라(35mm 필름), 샷(Medium shot), 조명(Direct sunlight + late-afternoon warm highlights), 의상 재질(heavy-knit wool, dark canvas), 피사계 심도(Crisp focus vs soft horizon)가 완벽히 분리되어 지정됨.
-        </p>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/photorealism-gpt-image-2-6-sunburst.webp" alt="35mm 노련한 선원 실사 사진">
-          <span class="img-label">Sunburst 렌더링 결과물</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 02 · Slide 10</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">2차시 · 핵심 설계 원칙 8가지</span>
-      <span class="badge-tag">User Best Practice</span>
-    </div>
-    <h2 class="slide-title">실무자 팁 : 감정어(Mood words)를 버려라</h2>
-    <p class="slide-subtitle">스레드 @choi.openai가 강조하는 '물리적 디테일(Physical Specs)' 변환 공식</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="thread-quote">
-          <div class="thread-author">
-            <span>최오픈 AI 연구소</span>
-            <span class="thread-handle">@choi.openai</span>
           </div>
-          <p class="thread-body">
-            "많은 분들이 '고급스러운', '신비로운', '에너제틱한' 같은 형용사(Mood words)를 잔뜩 넣습니다. 모델은 그 감정이 뭔지 모릅니다.<br><br>
-            '고급스러운' 대신 '무광 블랙 메탈 재질과 웜 앰버 간접 조명'을 쓰세요. '신비로운' 대신 '바닥에 낮게 깔린 드라이아이스 안개와 450nm 블루 백라이트'를 쓰세요. 감정어를 물리 법칙으로 치환할 때 2.6은 상상 이상의 결과물을 토해냅니다."
-          </p>
-        </div>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">🔄 감정어 → 물리 스펙 변환 사전</h3>
-        <table class="spec-table">
-          <tr><th>초보자의 감정어</th><th>프로의 물리 스펙 (GPT Image 2.6)</th></tr>
-          <tr>
-            <td>고급스러운 제품</td>
-            <td>무광 세라믹 질감, 측면 45도 소프트박스 반사광, 미니멀한 샌드톤 배경</td>
-          </tr>
-          <tr>
-            <td>신비로운 숲</td>
-            <td>아침 안개 사이로 쏟아지는 티달(Tyndall) 광선, 젖은 이끼의 하이라이트</td>
-          </tr>
-          <tr>
-            <td>역동적인 운동선수</td>
-            <td>1/2000초 고속 셔터, 흩날리는 땀방울의 물방울 입자 동결, 낮은 앵글</td>
-          </tr>
-          <tr>
-            <td>따뜻한 카페 분위기</td>
-            <td>2700K 텅스텐 조명, 원목 테이블의 나뭇결, 라떼 표면의 스팀 거품</td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 02 · Slide 11</span>
-  </div>
 </div>
 
+<div class="slide slide-versus" data-slide="8" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
 
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">3차시 · 생성 파라미터 & 제어 테크닉</span>
-      <span class="badge-tag">Session 03</span>
-    </div>
-    <h2 class="slide-title">3차시 : 파라미터를 알면 시행착오가 1/10로 줄어든다</h2>
-    <p class="slide-subtitle">Quality, Complexity, Size, Output Format 등 2.6 핵심 파라미터 완전 정복</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-3">
-      <div class="col card-box">
-        <h3 class="card-title">⚙️ Quality (화질 / 정밀도)</h3>
-        <p class="card-desc">
-          <code>auto</code> | <code>low</code> | <code>medium</code> | <code>high</code> | <code>max</code><br><br>
-          노이즈 제거 스텝 수와 텍스처 정밀도를 제어합니다. 프로덕션 최종본에는 <code>high</code> 또는 <code>max</code>가 필수입니다.
-        </p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">🧠 Complexity (계획 깊이)</h3>
-        <p class="card-desc">
-          <code>low</code> | <code>medium</code> | <code>high</code><br><br>
-          GPT Image 2.6에서 최초 도입된 파라미터. 이미지를 그리기 전 모델이 '구조적 기획'을 얼마나 깊게 할 것인지를 결정합니다.
-        </p>
-      </div>
-      <div class="col card-box">
-        <h3 class="card-title">📦 Output Format (포맷)</h3>
-        <p class="card-desc">
-          <code>png</code> | <code>jpeg</code> | <code>webp</code> | <code>svg</code> | <code>gif</code><br><br>
-          비트맵을 넘어 벡터(SVG)와 움직이는 루핑 애니메이션(GIF)을 네이티브 지원합니다.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 03 · Slide 12</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">3차시 · 생성 파라미터 & 제어 테크닉</span>
-      <span class="badge-tag">Parameter Comparison</span>
-    </div>
-    <h2 class="slide-title">Complexity 파라미터 비교 실증 : 페이퍼 아트 축구 트로피</h2>
-    <p class="slide-subtitle">동일한 프롬프트에서 Complexity 설정에 따라 공간적 깊이와 레이어가 어떻게 달라지는가</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/paper-cut-football-effort-low-gpt-image-2-6-sunburst.webp" alt="Complexity Low 축구 트로피">
-          <span class="img-label">complexity="low" (단순 평면형 레이어)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 8px; font-size: 12px;">
-          단순한 2~3단계의 종이 오리기 구조. 직관적이고 가벼운 아이콘이나 플랫 그래픽에 적합.
-        </p>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/paper-cut-football-effort-high-gpt-image-2-6-sunburst.webp" alt="Complexity High 축구 트로피">
-          <span class="img-label">complexity="high" (극대화된 다층 입체 레이어)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 8px; font-size: 12px;">
-          수십 겹의 정교한 종이 레이어, 미세한 그림자 틈새, 원근감과 조명 반사가 극대화된 전시급 아트워크.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 03 · Slide 13</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">3차시 · 생성 파라미터 & 제어 테크닉</span>
-      <span class="badge-tag">Format · SVG Vector</span>
-    </div>
-    <h2 class="slide-title">차세대 포맷 1 : 네이티브 벡터 SVG 출력 (Field & Flour 베이커리)</h2>
-    <p class="slide-subtitle">픽셀이 깨지지 않는 순수 벡터 패스(Path) 생성 — 일러스트레이터와 웹에서 즉시 편집 가능</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="prompt-box">
-          <button class="copy-btn" onclick="copyPrompt(this, `A clean, minimalist vector logo for an artisanal bakery named \"Field & Flour\". 
-
-Design: A stylized wheat stalk intertwined with a simple bread loaf outline. Flat 2D vector style, clean bezier curves, perfectly geometric alignment.
-
-Colors: Warm wheat gold (#D4AF37) and deep navy charcoal (#1A202C). 
-Output format: Native SVG, scalable paths, transparent background.`)">복사하기</button>
-A clean, minimalist vector logo for an artisanal bakery named "Field & Flour". 
-
-Design: A stylized wheat stalk intertwined with a simple bread loaf outline. Flat 2D vector style, clean bezier curves, perfectly geometric alignment.
-
-Colors: Warm wheat gold (#D4AF37) and deep navy charcoal (#1A202C). 
-Output format: Native SVG, scalable paths, transparent background.
-        </div>
-        <div class="card-box" style="margin-top: 10px;">
-          <h4 class="card-title">💡 SVG 출력의 3대 실무 가치</h4>
-          <p class="card-desc" style="font-size: 12px; line-height: 1.5;">
-            1. <strong>해상도 무한 확장:</strong> 명함부터 대형 현수막까지 품질 저하 없음.<br>
-            2. <strong>CSS / 코드 조작:</strong> 웹 프론트엔드에서 호버 시 색상 전환 및 애니메이션 가능.<br>
-            3. <strong>용량 초경량:</strong> 5KB 내외의 초소형 파일로 빠른 로딩 보장.
-          </p>
-        </div>
-      </div>
-      <div class="col">
-        <div class="img-frame" style="background: #FFFFFF;">
-          <img src="assets/openai-images/field-and-flour-gpt-image-2-6-sunburst.svg" alt="Field & Flour SVG 벡터 로고">
-          <span class="img-label">Sunburst 네이티브 SVG 렌더링</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 03 · Slide 14</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">3차시 · 생성 파라미터 & 제어 테크닉</span>
-      <span class="badge-tag">Format · Looping GIF</span>
-    </div>
-    <h2 class="slide-title">차세대 포맷 2 : 루핑 애니메이션 GIF (눈 숲속 등불 든 원숭이)</h2>
-    <p class="slide-subtitle">프롬프트 한 줄로 첫 프레임과 끝 프레임이 완벽히 이어지는 심리스(Seamless) 루프 애니메이션 생성</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="prompt-box">
-          <button class="copy-btn" onclick="copyPrompt(this, `A seamless looping animated GIF of an adorable baby monkey sitting in a snowy pine forest at twilight, holding a glowing warm lantern. 
-
-Animation: The lantern light gently flickers and pulses, snow continuously falls from top to bottom in a perfect seamless loop, and the monkey blinks softly every few seconds. 
-
-Atmosphere: Cozy, whimsical storybook illustration style with soft glowing rim light.
-Output: Animated GIF, perfect infinite loop.`)">복사하기</button>
-A seamless looping animated GIF of an adorable baby monkey sitting in a snowy pine forest at twilight, holding a glowing warm lantern. 
-
-Animation: The lantern light gently flickers and pulses, snow continuously falls from top to bottom in a perfect seamless loop, and the monkey blinks softly every few seconds. 
-
-Atmosphere: Cozy, whimsical storybook illustration style with soft glowing rim light.
-Output: Animated GIF, perfect infinite loop.
-        </div>
-        <p class="card-desc" style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
-          * 주의사항: <code>seamless loop</code>, <code>continuous falling snow</code>, <code>flickering lantern</code>처럼 루프가 끊기지 않는 자연스러운 물리 현상을 지시해야 이음새가 튀지 않습니다.
-        </p>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/monkey-lantern-gpt-image-2-6-sunburst.gif" alt="등불 든 아기 원숭이 루핑 GIF">
-          <span class="img-label">Sunburst 네이티브 GIF 루프</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 03 · Slide 15</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">3차시 · 생성 파라미터 & 제어 테크닉</span>
-      <span class="badge-tag">Typography Mastery</span>
-    </div>
-    <h2 class="slide-title">정확한 텍스트 렌더링 : "Yours to Create" 스트리트 패션 광고</h2>
-    <p class="slide-subtitle">기존 모델의 치명적 약점이었던 철자 깨짐과 오타를 완전히 극복한 타이포그래피 엔진</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="prompt-box">
-          <button class="copy-btn" onclick="copyPrompt(this, `A contemporary high-fashion street advertising poster. 
-
-Centerpiece: A bold, stylized typography headline reading exactly \"Yours to Create\". The font is a heavy sans-serif with subtle distressed industrial texture.
-
-Subtext below headline in smaller, crisp font: \"Spring / Summer 2026 Collection\".
-
-Background: Urban brutalist concrete architecture with vibrant orange and cobalt blue gradient spray-paint accents. Clean layout, perfectly spelled text, editorial print quality.`)">복사하기</button>
-A contemporary high-fashion street advertising poster. 
-
-Centerpiece: A bold, stylized typography headline reading exactly "Yours to Create". The font is a heavy sans-serif with subtle distressed industrial texture.
-
-Subtext below headline in smaller, crisp font: "Spring / Summer 2026 Collection".
-
-Background: Urban brutalist concrete architecture with vibrant orange and cobalt blue gradient spray-paint accents. Clean layout, perfectly spelled text, editorial print quality.
-        </div>
-        <div class="card-box highlight" style="margin-top: 10px;">
-          <h4 class="card-title">📌 텍스트 성공의 3원칙</h4>
-          <p class="card-desc" style="font-size: 12px;">
-            1. 문구는 반드시 큰따옴표 <code>"Exact Text"</code>로 감쌀 것<br>
-            2. 문구의 위계(헤드라인 vs 서브텍스트)와 크기를 서술할 것<br>
-            3. 폰트의 패밀리(Heavy sans-serif, Elegant serif 등)를 지정할 것
-          </p>
-        </div>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/thread-ad-gpt-image-2-6-sunburst.webp" alt="Yours to Create 광고 포스터">
-          <span class="img-label">Sunburst 텍스트 렌더링</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 03 · Slide 16</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Session 04</span>
-    </div>
-    <h2 class="slide-title">4차시 : 처음부터 다시 뽑지 마라 — 외과수술식 부분 편집의 시대</h2>
-    <p class="slide-subtitle">기존 생성물의 90%를 보존하고 오직 타깃 부위만 정밀 교체하는 혁신적 편집 메커니즘</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">⚠️ 구버전 인페인팅(Inpainting)의 고통</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          기존 도구에서 마스크 브러시로 칠하고 돌리면:<br>
-          • 주변 경계선이 뭉개지거나 이질적인 색상으로 튐<br>
-          • 얼굴이나 손가락이 미세하게 바뀌어 캐릭터 일관성이 깨짐<br>
-          • 조명과 시점이 원본과 어긋나 합성 티가 남
-        </p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">✨ GPT Image 2.6 외과수술식 부분 편집</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          <strong>1. 마크업 오버레이 (Markup Overlay):</strong> 투명 PNG 위에 빨간색 원이나 화살표로 지목하기만 하면 모델이 해당 영역을 정확히 인지.<br>
-          <strong>2. 구조적 마스크 프리:</strong> 복잡한 브러시질 없이 [Change]와 [Preserve] 텍스트 프롬프트만으로도 픽셀 단위 격리 수정 지원.<br>
-          <strong>3. 시맨틱 컨텍스트 보존:</strong> 주변 벽면, 그림자, 반사광을 스스로 계산하여 완벽한 물리적 일관성 유지.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 17</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Markup Overlay</span>
-    </div>
-    <h2 class="slide-title">혁신 기능 : 마크업 오버레이 (Markup Overlay) 편집 기법</h2>
-    <p class="slide-subtitle">원본 이미지 + 빨간색 마크업 레이어 + 프롬프트 3중 조합으로 완성하는 무결점 수정</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-3">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/markup-vase-input-gpt-image-2-6.webp" alt="원본 식탁 이미지">
-          <span class="img-label">1. 원본 이미지 (Input)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">식탁 위에 줄무늬 꽃병이 놓여 있는 주방 원본 사진.</p>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/markup-vase-overlay-gpt-image-2-6.png" alt="빨간 원 마크업 레이어">
-          <span class="img-label">2. 마크업 오버레이 (Overlay)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">수정할 꽃병 위치에 붉은색 원을 간결하게 드로잉.</p>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/markup-vase-gpt-image-2-6-sunburst.webp" alt="수정 완료된 코발트 블루 꽃병">
-          <span class="img-label">3. 편집 완료 (Output)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">테이블 질감과 배경은 100% 유지되고 꽃병만 코발트 블루 세라믹으로 완벽 교체.</p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 18</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">User Best Practice</span>
-    </div>
-    <h2 class="slide-title">실무자 팁 : 마스크 브러시 칠 대신 투명 오버레이를 던져라</h2>
-    <p class="slide-subtitle">스레드 @total_nlp가 밝히는 피그마 / 캔바 연계 10초 마크업 노하우</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="thread-quote">
-          <div class="thread-author">
-            <span>토탈 NLP 연구소</span>
-            <span class="thread-handle">@total_nlp</span>
+        <div class="vs-wrap">
+          <div class="vs-header">
+            <h2 class="vs-heading">작업 목적에 따른 2대 전용 모델 선택</h2>
+            <p class="vs-sub">속도와 정밀도의 명확한 분업으로 시간과 비용을 60% 절감한다</p>
           </div>
-          <p class="thread-body">
-            "포토샵이나 인페인팅 툴에서 픽셀 단위로 마스크를 문지르느라 시간 쓰지 마세요. 캔바나 피그마에서 원본 위에 반투명 빨간 동그라미(stroke 3px) 하나 얹고 투명 PNG로 내보낸 뒤 2.6에 던지세요.<br><br>
-            프롬프트는 딱 한 줄이면 됩니다: <code>'Replace the object inside the red markup circle with a glossy cobalt-blue ceramic vase. Keep everything else strictly identical.'</code> 이게 끝입니다."
-          </p>
-        </div>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">🎯 마크업 프롬프트 작성 3대 공식</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          <strong>1. 타깃 명시:</strong> <code>inside the red markup circle / indicated by the red arrow</code><br>
-          <strong>2. 교체 대상 명세:</strong> <code>with a glossy cobalt-blue ceramic vase filled with fresh white tulips</code><br>
-          <strong>3. 불변 제약 선언:</strong> <code>Keep the table texture, wall paint, lighting direction, and shadows strictly identical to the original image.</code>
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 19</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Layout-Preserving Translation</span>
-    </div>
-    <h2 class="slide-title">레이아웃 100% 보존 다국어 번역 : 에스프레소 머신 인포그래픽</h2>
-    <p class="slide-subtitle">그래픽 배치, 화살표, 부품 위치를 1픽셀도 건드리지 않고 스페인어 라벨만 한국어로 완벽 치환</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/infographic-coffee-machine-sp-gpt-image-2-6-sunburst.webp" alt="스페인어 인포그래픽">
-          <span class="img-label">원본 (스페인어 라벨 표기)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">Caldera, Bomba de agua, Portafiltro 등 스페인어 라벨 인포그래픽.</p>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/infographic-coffee-machine-gpt-image-2-6-sunburst.webp" alt="영문/한국어 번역 인포그래픽">
-          <span class="img-label">편집본 (영문/한국어 번역본)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">다이어그램과 화살표 위치는 고정되고 텍스트만 Boiler, Water Pump 등으로 완벽 번역 치환.</p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 20</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Style Transfer</span>
-    </div>
-    <h2 class="slide-title">스타일 전이 : 드로잉 화풍을 다른 피사체에 완벽 이식하기</h2>
-    <p class="slide-subtitle">Image 1의 독특한 질감과 라인워크를 그대로 계승하여 새로운 피사체 렌더링</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/drawings.webp" alt="화풍 레퍼런스 드로잉">
-          <span class="img-label">레퍼런스 이미지 (손그림 아날로그 라인워크)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 8px; font-size: 12px;">
-          * 프롬프트 핵심: "Transfer the exact sketchy black ink line art and cross-hatching shading style from Image 1 to generate a new character..."
-        </p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">🎨 스타일 전이의 3대 성공 규칙</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          • <strong>매체(Medium) 이름 명시:</strong> '느낌'이 아니라 '목탄(Charcoal)', '펜 잉크 해칭(Cross-hatching)', '과슈(Gouache)' 등 화구를 정확히 호명할 것.<br>
-          • <strong>선(Line)과 면(Fill)의 특성 전달:</strong> 거친 외곽선, 번진 수채화 경계면 등 미세한 붓 터치 특성을 서술할 것.<br>
-          • <strong>색상 팔레트 한정:</strong> 레퍼런스에서 사용된 흑백 모노톤 또는 세피아 톤을 그대로 유지하도록 제약할 것.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 21</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Identity & Outfit Swap</span>
-    </div>
-    <h2 class="slide-title">인물 일관성 유지 & 의상 교체 : 얼굴은 그대로, 옷만 교체</h2>
-    <p class="slide-subtitle">스레드 @choi.openai의 패션 이커머스 최적화 워크플로우 실증</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/outfit-gpt-image-2-6-sunburst.webp" alt="의상 교체 결과물">
-          <span class="img-label">Sunburst 인물 일관성 의상 피팅</span>
-        </div>
-      </div>
-      <div class="col">
-        <div class="prompt-box">
-          <button class="copy-btn" onclick="copyPrompt(this, `[Target]: Replace the model's outfit in Image 1.
-
-[Change]: Change her casual t-shirt to an elegant emerald-green silk button-up blouse with tailored ivory linen trousers. Ensure natural fabric draping, realistic creases, and light reflections.
-
-[Preserve]: Keep her facial features, facial expression, skin tone, hairstyle, body posture, and studio background strictly identical to Image 1.`)">복사하기</button>
-[Target]: Replace the model's outfit in Image 1.
-
-[Change]: Change her casual t-shirt to an elegant emerald-green silk button-up blouse with tailored ivory linen trousers. Ensure natural fabric draping, realistic creases, and light reflections.
-
-[Preserve]: Keep her facial features, facial expression, skin tone, hairstyle, body posture, and studio background strictly identical to Image 1.
-        </div>
-        <p class="card-desc" style="margin-top: 10px; font-size: 12px; color: var(--text-muted);">
-          * 쇼핑몰 사장님과 패션 디자이너에게 가장 각광받는 실무 기법. 고가의 모델 촬영을 한 번만 진행하고 수십 종의 신상 의상을 자연스럽게 가상 피팅할 수 있습니다.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 22</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Multi-Reference Fusion</span>
-    </div>
-    <h2 class="slide-title">다중 레퍼런스 결합 : 인물 사진 + 반려견 사진을 한 프레임에 합성</h2>
-    <p class="slide-subtitle">서로 다른 조명과 배경에서 촬영된 2장의 사진을 단일한 조명과 원근법으로 자연스럽게 통합</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/test-woman.webp" alt="인물 원본">
-          <span class="img-label">Image 1 : 인물 레퍼런스</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">실내에서 촬영된 여성의 독사진 레퍼런스.</p>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/test-woman-with-dog-gpt-image-2-6-sunburst.webp" alt="반려견과 함께 있는 여성 합성본">
-          <span class="img-label">합성본 : 여성 + 골든 리트리버 결합</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">여성의 얼굴과 헤어를 유지한 채 거실 소파에서 반려견과 교감하는 장면으로 완벽 재구성.</p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 23</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Cutout & Alpha Channel</span>
-    </div>
-    <h2 class="slide-title">투명 배경 제품 누끼 추출 : 샴푸 용기 배경 분리 및 라벨 보존</h2>
-    <p class="slide-subtitle">복잡한 화장실 배경에서 샴푸 보틀만 오차 없이 분리하여 투명 알파 채널 PNG로 추출</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/shampoo.webp" alt="샴푸 원본">
-          <span class="img-label">원본 (선반 위 샴푸 보틀)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">타일과 벽면 그림자가 얽혀 있는 실내 제품 촬영본.</p>
-      </div>
-      <div class="col">
-        <div class="img-frame" style="background: repeating-conic-gradient(#E2E8F0 0% 25%, #FFFFFF 0% 50%) 50% / 16px 16px;">
-          <img src="assets/openai-images/extract-product-gpt-image-2-6-sunburst.webp" alt="누끼 추출된 샴푸 용기">
-          <span class="img-label">추출본 (완벽한 투명 알파 채널)</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">보틀 외곽선의 반투명 플라스틱 굴절과 텍스트 라벨을 손상 없이 보존하며 투명 배경 생성.</p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 24</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Sketch to Realism</span>
-    </div>
-    <h2 class="slide-title">러프 스케치 to 실사 렌더링 : 낙서 협곡을 10초 만에 내셔널지오그래픽 샷으로</h2>
-    <p class="slide-subtitle">아이패드나 종이에 대충 끄적인 스케치의 지형 구도를 그대로 살려 웅장한 실사 사진 생성</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">✏️ 프롬프트 구조화</h3>
-        <div class="prompt-box" style="margin-top: 8px;">
-          <button class="copy-btn" onclick="copyPrompt(this, `Transform the rough valley sketch in Image 1 into a breathtaking National Geographic style photograph.
-
-Composition: Follow the exact mountain ridge lines, winding river path, and camera horizon from the sketch.
-
-Environment: Rugged red-rock canyon bathed in dramatic late-afternoon sun rays. Crystal clear turquoise river reflecting the towering canyon walls.
-
-Camera: Ultra-sharp landscape photograph shot on medium format digital camera. Rich geological textures and atmospheric depth.`)">복사하기</button>
-Transform the rough valley sketch in Image 1 into a breathtaking National Geographic style photograph.
-
-Composition: Follow the exact mountain ridge lines, winding river path, and camera horizon from the sketch.
-
-Environment: Rugged red-rock canyon bathed in dramatic late-afternoon sun rays. Crystal clear turquoise river reflecting the towering canyon walls.
-
-Camera: Ultra-sharp landscape photograph shot on medium format digital camera. Rich geological textures and atmospheric depth.
-        </div>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/realistic-valley-gpt-image-2-6-sunburst.webp" alt="실사 협곡 렌더링">
-          <span class="img-label">Sunburst 스케치 변환 실사 샷</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 25</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">4차시 · 부분 편집 & 수정 마스터</span>
-      <span class="badge-tag">Action Scene Fusion</span>
-    </div>
-    <h2 class="slide-title">인물 장면 합성 : 평범한 인물을 박진감 넘치는 액션 씬으로</h2>
-    <p class="slide-subtitle">미술관에서 조용히 서 있던 인물을 광활한 대자연의 스릴 넘치는 야생 모험 속으로 이식</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/woman-in-museum.webp" alt="미술관 인물 원본">
-          <span class="img-label">Image 1 : 미술관 속 인물 원본</span>
-        </div>
-        <p class="card-desc" style="margin-top: 6px; font-size: 11px;">차분한 조명 아래 박물관에 서 있는 여성의 인물 사진.</p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">🎬 시네마틱 장면 이식 프롬프트</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          <code>Take the exact woman from Image 1 (preserve her facial features and hair color). Place her in an intense wilderness thriller scene in the Pacific Northwest mountains.</code><br><br>
-          • <strong>상황 묘사:</strong> 비바람이 몰아치는 숲길을 달리는 다급한 포즈<br>
-          • <strong>의상 변환:</strong> 박물관 외투 대신 젖은 방수 고어텍스 재킷 착용<br>
-          • <strong>조명 동기화:</strong> 흐린 날씨의 차가운 푸른 톤과 빗방울 하이라이트를 인물 피부에 일치시킬 것
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 04 · Slide 26</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">5차시 · 실전 베스트 프랙티스 & 커뮤니티 응용</span>
-      <span class="badge-tag">Session 05</span>
-    </div>
-    <h2 class="slide-title">5차시 : 실무에 바로 쓰는 프로들의 Best Practice</h2>
-    <p class="slide-subtitle">UI 목업, IR 피치덱 슬라이드, 캐릭터 일관성 동화책, 이커머스 상세페이지 현업 템플릿</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-3">
-      <div class="col card-box">
-        <h3 class="card-title">📱 모바일 앱 UI 목업</h3>
-        <p class="card-desc">
-          디자이너 없이도 피그마급 고해상도 앱 화면을 스마트폰 베젤 프레임 안에 완벽히 패키징하여 생성.
-        </p>
-      </div>
-      <div class="col card-box">
-        <h3 class="card-title">📊 YC 스타일 IR 피치덱</h3>
-        <p class="card-desc">
-          TAM / SAM / SOM 수치와 바 차트, 다이어그램이 어긋나지 않는 깔끔한 투자 유치용 발표 슬라이드.
-        </p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">📚 캐릭터 일관성 스토리</h3>
-        <p class="card-desc">
-          주인공의 얼굴, 의상, 비례를 씬이 바뀌어도 100% 동일하게 유지하며 연속 동화책/웹툰 제작.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 05 · Slide 27</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">5차시 · 실전 베스트 프랙티스 & 커뮤니티 응용</span>
-      <span class="badge-tag">UI/UX Showcase</span>
-    </div>
-    <h2 class="slide-title">베스트 프랙티스 1 : 모바일 앱 UI 목업 (로컬 파머스 마켓)</h2>
-    <p class="slide-subtitle">아이폰 프레임, 상태 바, 내비게이션, 깔끔한 폰트 배치가 결합된 상용급 앱 화면</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="prompt-box">
-          <button class="copy-btn" onclick="copyPrompt(this, `A modern iOS mobile app interface for a local organic farm-to-table delivery service called \"FreshRoots\". 
-
-Presentation: The screen is showcased cleanly centered inside a sleek modern smartphone mockup with subtle shadow on a soft neutral studio background.
-
-UI Layout:
-- Top: Clean search bar and category pills (Organic Vegetables, Fresh Fruits, Artisan Dairy).
-- Body: Grid of vibrant product cards with price tags (\"Organic Strawberries - $4.99\") and green \"Add\" buttons.
-- Bottom: Minimalist tab bar with icons for Home, Search, Cart, Profile.
-Clean typography, beautiful spacing, modern Figma design aesthetic.`)">복사하기</button>
-A modern iOS mobile app interface for a local organic farm-to-table delivery service called "FreshRoots". 
-
-Presentation: The screen is showcased cleanly centered inside a sleek modern smartphone mockup with subtle shadow on a soft neutral studio background.
-
-UI Layout:
-- Top: Clean search bar and category pills (Organic Vegetables, Fresh Fruits, Artisan Dairy).
-- Body: Grid of vibrant product cards with price tags ("Organic Strawberries - $4.99") and green "Add" buttons.
-- Bottom: Minimalist tab bar with icons for Home, Search, Cart, Profile.
-Clean typography, beautiful spacing, modern Figma design aesthetic.
-        </div>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/ui-farmers-market-gpt-image-2-6-sunburst.webp" alt="모바일 앱 UI 목업">
-          <span class="img-label">Sunburst 모바일 UI 목업</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 05 · Slide 28</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">5차시 · 실전 베스트 프랙티스 & 커뮤니티 응용</span>
-      <span class="badge-tag">Pitch Deck Slide</span>
-    </div>
-    <h2 class="slide-title">베스트 프랙티스 2 : YC 스타일 IR 피치덱 (시장 기회 분석 슬라이드)</h2>
-    <p class="slide-subtitle">스타트업 대표와 기획자를 위한 TAM / SAM / SOM 수치 그래프 완벽 렌더링</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="prompt-box">
-          <button class="copy-btn" onclick="copyPrompt(this, `A clean, minimalist 16:9 pitch deck presentation slide titled \"Market Opportunity\". 
-
-Visuals:
-- Three nested circular diagrams showing TAM ($120B Global Logistics), SAM ($24B Cold Chain), and SOM ($3.2B Last-Mile Delivery).
-- Clean numerical typography with sharp contrast.
-- Right side features a sleek 3D isometric delivery van illustration.
-
-Color palette: Deep navy background (#0F172A), crisp white text, vibrant electric cyan and emerald green accent charts. Ultra-clean venture capital presentation style.`)">복사하기</button>
-A clean, minimalist 16:9 pitch deck presentation slide titled "Market Opportunity". 
-
-Visuals:
-- Three nested circular diagrams showing TAM ($120B Global Logistics), SAM ($24B Cold Chain), and SOM ($3.2B Last-Mile Delivery).
-- Clean numerical typography with sharp contrast.
-- Right side features a sleek 3D isometric delivery van illustration.
-
-Color palette: Deep navy background (#0F172A), crisp white text, vibrant electric cyan and emerald green accent charts. Ultra-clean venture capital presentation style.
-        </div>
-      </div>
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/market-opportunity-slide-gpt-image-2-6-sunburst.webp" alt="시장 기회 분석 피치덱 슬라이드">
-          <span class="img-label">Sunburst IR 슬라이드 렌더링</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 05 · Slide 29</span>
-  </div>
-</div>
-
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">5차시 · 실전 베스트 프랙티스 & 커뮤니티 응용</span>
-      <span class="badge-tag">Character Consistency</span>
-    </div>
-    <h2 class="slide-title">베스트 프랙티스 3 : 캐릭터 일관성 유지 동화책/웹툰 제작</h2>
-    <p class="slide-subtitle">씬이 10번 바뀌어도 주인공의 헤어스타일, 얼굴형, 옷차림을 철저히 보존하는 프롬프트 공식</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">🔑 일관성 확보의 3대 앵커(Anchor)</h3>
-        <p class="card-desc" style="line-height: 1.65;">
-          <strong>1. 고유 식별자(Identifier) 고정:</strong><br>
-          "A 7-year-old boy named Leo with unruly curly copper hair, freckles across his nose bridge, wearing an oversized mustard-yellow hoodie."<br><br>
-          <strong>2. 레퍼런스 시드 및 이미지 고정:</strong><br>
-          1번 샷에서 생성된 주인공 이미지를 Image 1 레퍼런스로 지정하고 다음 씬 요청 시 <code>[Same character as Image 1 in new setting]</code> 선언.<br><br>
-          <strong>3. 조명과 화풍의 패밀리화:</strong><br>
-          동일한 아동 문학 일러스트레이터 화풍(Whimsical watercolor and gouache texture)을 전 차시에 복사 유지.
-        </p>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">📖 실무 4컷 연속 스토리 예시</h3>
-        <div class="step-item">
-          <div class="step-num">1</div>
-          <div class="step-text">
-            <h4>기본 캐릭터 확립 씬</h4>
-            <p>마을 골목에서 길고양이와 눈을 마주치며 웃는 주인공 레오</p>
+          <div class="vs-table">
+            <div class="vs-table-head">
+              <div class="vs-col-title vs-title-left">gpt-image-2.6-flare</div>
+              <div></div>
+              <div class="vs-col-title vs-title-right">gpt-image-2.6-sunburst</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">평균 생성 속도 5~8초 (초고속 탐색)</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">평균 생성 속도 15~25초 (심층 렌더링)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">경제적인 토큰 비용 (약 50% 절감)</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">표준 프로덕션 비용 (최고 화질)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">구도 잡기, 색감 탐색, 빠른 A/B 테스트</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">최종 납품용 광고, 로고(SVG), 인포그래픽</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">전체적인 씬(Scene) 구성에 특화</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">정밀 텍스트 타이포그래피, 마크업 오버레이</div>
+            </div>
+            
           </div>
         </div>
-        <div class="step-item">
-          <div class="step-num">2</div>
-          <div class="step-text">
-            <h4>사건 발생 씬</h4>
-            <p>고양이가 오래된 숲속 문 속으로 뛰어들어가는 것을 보고 놀라는 표정</p>
+          </div>
+</div>
+
+<div class="slide slide-post" data-slide="9" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="post-wrap">
+          <div class="post-card">
+            <div class="post-header">
+              <span class="post-badge">Threads Best Practice</span>
+              <span class="post-author">@geumverse_ai</span>
+            </div>
+            <div class="post-body">
+              <p class="post-text">2.6 업데이트의 핵심은 속도와 일관성입니다.<br>Flare로 6초 만에 4~5개 구도를 뽑아 컨펌을 받고, 채택된 구도의 시드와 프롬프트를<br>Sunburst로 넘겨 최종 고화질 렌더링하세요. 토큰 비용과 시간이 극적으로 줄어듭니다.<br></p>
+            </div>
+            <div class="post-footer">
+              <a href="https://www.threads.com/@geumverse_ai" target="_blank" rel="noopener" class="post-link">스레드 원문 보기 ↗</a>
+              <span class="post-caption">스레드 실무자들의 2-Tier 파이프라인</span>
+            </div>
           </div>
         </div>
-        <div class="step-item">
-          <div class="step-num">3</div>
-          <div class="step-text">
-            <h4>새로운 세계 탐험 씬</h4>
-            <p>빛나는 거대 버섯 숲속에서 조심스레 발걸음을 옮기는 전신 샷</p>
+          </div>
+</div>
+
+<div class="slide slide-steps" data-slide="10" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="steps-wrap">
+          <div class="steps-header">
+            <h2 class="steps-heading">현업 실무자의 3단계 프로덕션 루틴</h2>
+            <p class="steps-sub">무작정 무거운 모델로 처음부터 디테일을 넣지 않는다</p>
+          </div>
+          <div class="steps-grid">
+            <div class="step-card">
+              <span class="step-num">STEP 1</span>
+              <h3 class="step-title"></h3>
+              <p class="step-hint"></p>
+            </div>
+            
+            <div class="step-card">
+              <span class="step-num">STEP 2</span>
+              <h3 class="step-title"></h3>
+              <p class="step-hint"></p>
+            </div>
+            
+            <div class="step-card">
+              <span class="step-num">STEP 3</span>
+              <h3 class="step-title"></h3>
+              <p class="step-hint"></p>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-versus" data-slide="11" data-session="1차시: 패러다임과 모델 선택">
+  <div class="slide-content">
+
+        <div class="vs-wrap">
+          <div class="vs-header">
+            <h2 class="vs-heading">2.6으로 넘어올 때 버려야 할 것 vs 취할 것</h2>
+            <p class="vs-sub">구버전 Midjourney/DALL-E 습관을 즉시 폐기해야 하는 이유</p>
+          </div>
+          <div class="vs-table">
+            <div class="vs-table-head">
+              <div class="vs-col-title vs-title-left">구시대 습관 (버릴 것)</div>
+              <div></div>
+              <div class="vs-col-title vs-title-right">2.6 표준 (정착시킬 것)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">masterpiece, 8k 등 수식어 도배 (노이즈로 작용)</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">35mm f/1.8, 울 니트 질감 등 물리적 스펙 명세</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">no extra fingers 등 부정 프롬프트 남발</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">무엇이 존재해야 하는지를 명확한 명사로 선언</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">맘에 안 들면 &#x27;다시 생성&#x27; 무한 반복 (크레딧 낭비)</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">마크업 투명 오버레이로 원하는 영역만 핀포인트 수정</div>
+            </div>
+            
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 05 · Slide 30</span>
-  </div>
+          </div>
 </div>
 
+<div class="slide slide-cover" data-slide="12" data-session="2차시: 핵심 설계 원칙 8가지">
+  <div class="slide-content">
 
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">5차시 · 실전 베스트 프랙티스 & 커뮤니티 응용</span>
-      <span class="badge-tag">Outdoor Billboard Ad</span>
-    </div>
-    <h2 class="slide-title">베스트 프랙티스 4 : 옥외 광고 빌보드 목업 (일몰 고속도로 샴푸 광고)</h2>
-    <p class="slide-subtitle">제품 누끼 이미지를 실제 환경(고속도로 대형 전광판)에 합성하여 설득력 있는 광고 시안 제작</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">🛣️ 빌보드 생성 프롬프트</h3>
-        <div class="prompt-box" style="margin-top: 8px;">
-          <button class="copy-btn" onclick="copyPrompt(this, `A massive roadside highway billboard advertisement at sunset. 
-
-The billboard proudly displays the luxury organic shampoo bottle from Image 1 against an emerald botanical forest backdrop, with bold white headline text reading \"Pure Botanicals, Pure Hair\". 
-
-Setting: Open highway during golden hour, asphalt road curving beneath the billboard with warm sunset light casting long dramatic shadows. Photorealistic commercial quality.`)">복사하기</button>
-A massive roadside highway billboard advertisement at sunset. 
-
-The billboard proudly displays the luxury organic shampoo bottle from Image 1 against an emerald botanical forest backdrop, with bold white headline text reading "Pure Botanicals, Pure Hair". 
-
-Setting: Open highway during golden hour, asphalt road curving beneath the billboard with warm sunset light casting long dramatic shadows. Photorealistic commercial quality.
+        <div class="cv-wrap">
+          <div class="cv-pic"><img src="assets/openai-images/photorealism-gpt-image-2-6-sunburst.webp" alt="" /></div>
+          <div class="cv-txt">
+            <span class="k-tag-badge">2차시</span>
+            <h1 class="cv-title">핵심 설계 원칙 8가지 : 프롬프트는 스펙 명세서다</h1>
+            
+          </div>
         </div>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">💡 실무 응용처</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          • <strong>제안서 및 클라이언트 피칭:</strong> "이 제품이 실제로 출시되면 강남대로 전광판이나 올림픽대로에 이렇게 걸립니다"를 10초 만에 시각화.<br>
-          • <strong>투자자 설득:</strong> 단순 제품 렌더링보다 대형 광고판이나 매장 디스플레이 속에 배치되었을 때 브랜드 가치가 수십 배 높아 보임.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 05 · Slide 31</span>
-  </div>
+          </div>
 </div>
 
+<div class="slide slide-chapter" data-slide="13" data-session="2차시: 핵심 설계 원칙 8가지">
+  <div class="slide-content">
 
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">5차시 · 실전 베스트 프랙티스 & 커뮤니티 응용</span>
-      <span class="badge-tag">Multi-Turn Iteration</span>
-    </div>
-    <h2 class="slide-title">베스트 프랙티스 5 : 다중 턴 순차 편집 (계절과 날씨 1문장 변환)</h2>
-    <p class="slide-subtitle">앞선 일몰 고속도로 빌보드를 눈 내리는 겨울 저녁 야경으로 10초 만에 전환하는 대화형 편집</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col card-box">
-        <h3 class="card-title">💬 다중 턴(Multi-turn) 수정 지시문</h3>
-        <div class="prompt-box" style="margin-top: 8px;">
-          <button class="copy-btn" onclick="copyPrompt(this, `Change the season in Image 1 to winter twilight. 
-
-Make snow softly falling across the scene, with snow dusting the top of the billboard and edges of the highway. 
-
-Shift the sky from sunset to a deep navy evening sky, while keeping the billboard ad graphics and highway curve strictly preserved.`)">복사하기</button>
-Change the season in Image 1 to winter twilight. 
-
-Make snow softly falling across the scene, with snow dusting the top of the billboard and edges of the highway. 
-
-Shift the sky from sunset to a deep navy evening sky, while keeping the billboard ad graphics and highway curve strictly preserved.
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 1</span>
+            <h2 class="ch-name">OpenAI 공식 가이드 8대 원칙</h2>
+          </div>
         </div>
-      </div>
-      <div class="col card-box highlight">
-        <h3 class="card-title">✨ 다중 턴 편집의 위력</h3>
-        <p class="card-desc" style="line-height: 1.6;">
-          • <strong>맥락 유지(Context Memory):</strong> GPT Image 2.6은 이전 턴의 구조와 카메라 위치를 기억하므로 새로운 프롬프트에서 모든 것을 다시 적을 필요가 없습니다.<br>
-          • <strong>A/B 테스트 무한 생성:</strong> 봄, 여름, 가을, 겨울 4계절 버전이나 주간/야간 버전을 단 한 줄의 프롬프트로 파생시킬 수 있습니다.
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 05 · Slide 32</span>
-  </div>
+          </div>
 </div>
 
+<div class="slide slide-chain" data-slide="14" data-session="2차시: 핵심 설계 원칙 8가지">
+  <div class="slide-content">
 
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">5차시 · 실전 베스트 프랙티스 & 커뮤니티 응용</span>
-      <span class="badge-tag">Comic Strip & Reels</span>
-    </div>
-    <h2 class="slide-title">4컷 숏폼 릴스 / 인스타툰 제작 : 주인이 나간 후의 비밀</h2>
-    <p class="slide-subtitle">단일 프롬프트로 4개 패널의 완벽한 서사 구조와 일관된 캐릭터가 담긴 웹툰 생성</p>
-  </div>
-  <div class="slide-body">
-    <div class="grid-2">
-      <div class="col">
-        <div class="img-frame">
-          <img src="assets/openai-images/comic-reel-gpt-image-2-6-sunburst.webp" alt="4컷 만화 릴스">
-          <span class="img-label">Sunburst 4컷 만화 렌더링</span>
+        <div class="chain-wrap">
+          <h2 class="chain-heading">원칙 1~4 : 피사체와 공간을 통제하는 기초 4원칙</h2>
+          <div class="chain-row">
+            
+            <div class="chain-card">
+              <div class="chain-big">1. 결과물 정의 (Deliverable)</div>
+              <div class="chain-text">&#x27;강아지 그림&#x27;이 아니라 &#x27;35mm 필름 실사 사진&#x27;, &#x27;플랫 벡터 SVG 로고&#x27;로 매체 못박기</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">2. 구조화된 포맷 (Structure)</div>
+              <div class="chain-text">줄글을 지양하고 [- Subject:], [- Lighting:], [- Camera:] 마크다운 불릿 사용</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">3. 물리적 디테일 (Visuals)</div>
+              <div class="chain-text">&#x27;분위기 있는 조명&#x27; 대신 &#x27;오후 5시 골든아워 측광(Side light), 굵은 울 니트 질감&#x27;</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">4. 인물과 동작 (Pose &amp; Action)</div>
+              <div class="chain-text">&#x27;남자가 서 있다&#x27; 대신 &#x27;키를 양손으로 쥐고 먼 수평선을 응시하며 굳은 표정&#x27;</div>
+            </div>
+            </div>
         </div>
-      </div>
-      <div class="col">
-        <div class="prompt-box">
-          <button class="copy-btn" onclick="copyPrompt(this, `A clean 4-panel vertical comic strip illustrating \"The Secret Life of a Dog When Owner Leaves\". 
+          </div>
+</div>
 
-Panel 1: The owner shuts the apartment door with a click. A corgi looks sad and innocent.
-Panel 2: The corgi immediately puts on cool sunglasses and pulls out a secret bag of treats from under the rug.
-Panel 3: The corgi hosts a dance party with the neighborhood cat.
-Panel 4: The door lock beeps, and the corgi dashes back to the entrance rug, pretending to have waited all day.
+<div class="slide slide-chain" data-slide="15" data-session="2차시: 핵심 설계 원칙 8가지">
+  <div class="slide-content">
 
-Style: Cute Korean webtoon illustration style with crisp line art, warm pastel tones, and subtle speech bubbles with minimal sound effects.`)">복사하기</button>
-A clean 4-panel vertical comic strip illustrating "The Secret Life of a Dog When Owner Leaves". 
-
-Panel 1: The owner shuts the apartment door with a click. A corgi looks sad and innocent.
-Panel 2: The corgi immediately puts on cool sunglasses and pulls out a secret bag of treats from under the rug.
-Panel 3: The corgi hosts a dance party with the neighborhood cat.
-Panel 4: The door lock beeps, and the corgi dashes back to the entrance rug, pretending to have waited all day.
-
-Style: Cute Korean webtoon illustration style with crisp line art, warm pastel tones, and subtle speech bubbles with minimal sound effects.
+        <div class="chain-wrap">
+          <h2 class="chain-heading">원칙 5~8 : 부분 수정과 고급 제어를 지탱하는 핵심 4원칙</h2>
+          <div class="chain-row">
+            
+            <div class="chain-card">
+              <div class="chain-big">5. 텍스트 엄격 격리 (Quotes)</div>
+              <div class="chain-text">간판이나 로고에 들어갈 문구는 반드시 &quot;Exact Text&quot; 큰따옴표로 표기</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">6. 변경 vs 보존 제약 분리</div>
+              <div class="chain-text">수정 요청 시 [Change]: 바꿀 부분과 [Preserve]: 절대 건드리지 말 부분 격리</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">7. 다중 레퍼런스 역할 명시</div>
+              <div class="chain-text">Image 1은 얼굴과 표정 참조, Image 2는 의상 디자인과 색상 참조로 역할 분담</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">8. 단계적 점진 개선 (Iterate)</div>
+              <div class="chain-text">한 번에 다 넣지 말고 기본 구도 확정 → 디테일 추가 → 부분 편집의 순서 준수</div>
+            </div>
+            </div>
         </div>
-      </div>
-    </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="16" data-session="2차시: 핵심 설계 원칙 8가지">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 2</span>
+            <h2 class="ch-name">공식 실습 : 35mm 필름 선원</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-prompt" data-slide="17" data-session="2차시: 핵심 설계 원칙 8가지">
+  <div class="slide-content">
+
+        <div class="prompt-wrap">
+          <h2 class="prompt-heading">공식 가이드 실습 1 : 35mm 필름 감성의 노련한 선원</h2>
+          <p class="prompt-before">바다 위에서 배를 몰고 있는 멋진 늙은 선원의 실사 사진을 그려줘</p>
+          <div class="prompt-card">
+            <div class="prompt-card-header">
+              <span class="prompt-label">8대 원칙을 철저히 준수한 물리 스펙 명세서</span>
+              <button class="btn-copy" onclick="copyPrompt(this, ``)">프롬프트 복사</button>
+            </div>
+            <pre class="prompt-code"><code></code></pre>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="18" data-session="2차시: 핵심 설계 원칙 8가지">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">물리 스펙이 만든 실사 렌더링의 완성도</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/photorealism-gpt-image-2-6-sunburst.webp" alt="피사계 심도와 필름 그레인" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">피사계 심도와 필름 그레인</h3>
+                <p class="split-item-sub">선원 얼굴의 림라이트와 바다 수평선의 부드러운 아웃포커스가 완벽히 분리됨</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-versus" data-slide="19" data-session="2차시: 핵심 설계 원칙 8가지">
+  <div class="slide-content">
+
+        <div class="vs-wrap">
+          <div class="vs-header">
+            <h2 class="vs-heading">감정어(Mood words)를 버리고 물리 스펙으로 말하라</h2>
+            <p class="vs-sub">스레드 @choi.openai가 강조하는 프롬프트 치환 사전</p>
+          </div>
+          <div class="vs-table">
+            <div class="vs-table-head">
+              <div class="vs-col-title vs-title-left">초보자의 감정어 (결과 불확실)</div>
+              <div></div>
+              <div class="vs-col-title vs-title-right">프로의 물리 스펙 (2.6 엔진 최적화)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">고급스러운 프리미엄 제품</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">무광 세라믹 질감, 측면 45도 소프트박스 반사광, 샌드톤 배경</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">신비롭고 몽환적인 숲</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">아침 안개 사이로 쏟아지는 티달 광선(Tyndall ray), 젖은 이끼 하이라이트</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">역동적인 달리기 선수</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">1/2000초 고속 셔터, 튀어 오르는 물방울 입자 동결, 로우 앵글</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">따뜻하고 아늑한 카페</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">2700K 텅스텐 조명, 월넛 원목 테이블의 나뭇결, 라떼 표면의 미세 거품</div>
+            </div>
+            
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-cover" data-slide="20" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="cv-wrap">
+          <div class="cv-pic"><img src="assets/openai-images/paper-cut-football-effort-high-gpt-image-2-6-sunburst.webp" alt="" /></div>
+          <div class="cv-txt">
+            <span class="k-tag-badge">3차시</span>
+            <h1 class="cv-title">생성 파라미터 &amp; 제어 테크닉 : SVG, GIF, 타이포그래피</h1>
+            
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="21" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 1</span>
+            <h2 class="ch-name">Complexity와 Quality 파라미터</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chain" data-slide="22" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="chain-wrap">
+          <h2 class="chain-heading">GPT Image 2.6 핵심 제어 파라미터</h2>
+          <div class="chain-row">
+            
+            <div class="chain-card">
+              <div class="chain-big">Quality (auto | low | med | high | max)</div>
+              <div class="chain-text">노이즈 제거 스텝 수와 세밀한 텍스처를 결정. 납품용에는 high 또는 max 필수</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">Complexity (low | medium | high)</div>
+              <div class="chain-text">2.6에서 신설된 계획 깊이 파라미터. 공간적 레이어와 기하학적 복잡도를 좌우</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">Output Format (png | jpeg | webp | svg | gif)</div>
+              <div class="chain-text">비트맵을 넘어 웹 표준 벡터(SVG)와 무한 루프 애니메이션(GIF)을 네이티브 지원</div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-versus" data-slide="23" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="vs-wrap">
+          <div class="vs-header">
+            <h2 class="vs-heading">Complexity 파라미터 실증 : 페이퍼 아트 축구 트로피</h2>
+            <p class="vs-sub">동일 프롬프트에서 모델의 구조적 계획 깊이에 따른 입체감 차이</p>
+          </div>
+          <div class="vs-table">
+            <div class="vs-table-head">
+              <div class="vs-col-title vs-title-left">complexity=&quot;low&quot; (단순 평면형 레이어)</div>
+              <div></div>
+              <div class="vs-col-title vs-title-right">complexity=&quot;high&quot; (극대화된 다층 입체 레이어)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">2~3단계의 단순한 종이 오리기 구조</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">수십 겹의 정교한 종이 레이어와 미세한 그림자 틈새</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">플랫 그래픽, 가벼운 아이콘에 최적화</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">전시회급 아트워크, 깊이감 있는 3D 조명 반사</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">빠른 렌더링과 낮은 토큰 소모</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">심층 추론 기반 고밀도 텍스처 렌더링</div>
+            </div>
+            
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="24" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 2</span>
+            <h2 class="ch-name">차세대 포맷 : 네이티브 SVG</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-prompt" data-slide="25" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="prompt-wrap">
+          <h2 class="prompt-heading">차세대 포맷 1 : 네이티브 벡터 SVG 출력 (Field &amp; Flour)</h2>
+          
+          <div class="prompt-card">
+            <div class="prompt-card-header">
+              <span class="prompt-label">일러스트레이터와 웹에서 즉시 쓸 수 있는 순수 벡터 패스</span>
+              <button class="btn-copy" onclick="copyPrompt(this, ``)">프롬프트 복사</button>
+            </div>
+            <pre class="prompt-code"><code></code></pre>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="26" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">네이티브 SVG 벡터 렌더링 결과</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/field-and-flour-gpt-image-2-6-sunburst.svg" alt="해상도 무한 확장 &amp; CSS 애니메이션 대응" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">해상도 무한 확장 &amp; CSS 애니메이션 대응</h3>
+                <p class="split-item-sub">웹 프론트엔드에 인라인으로 삽입하여 호버 시 색상 전환이나 모션 효과 적용 가능</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="27" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 3</span>
+            <h2 class="ch-name">차세대 포맷 : 루핑 애니메이션 GIF</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-prompt" data-slide="28" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="prompt-wrap">
+          <h2 class="prompt-heading">차세대 포맷 2 : 루핑 애니메이션 GIF (등불 든 아기 원숭이)</h2>
+          
+          <div class="prompt-card">
+            <div class="prompt-card-header">
+              <span class="prompt-label">첫 프레임과 끝 프레임이 완벽히 이어지는 무한 루프</span>
+              <button class="btn-copy" onclick="copyPrompt(this, ``)">프롬프트 복사</button>
+            </div>
+            <pre class="prompt-code"><code></code></pre>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="29" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">루핑 애니메이션 GIF 생성 결과</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/monkey-lantern-gpt-image-2-6-sunburst.gif" alt="끊김 없는 무한 루프 애니메이션" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">끊김 없는 무한 루프 애니메이션</h3>
+                <p class="split-item-sub">웹사이트 배너, SNS 숏폼 스티커, 게임 인터페이스에 즉시 활용 가능</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="30" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 4</span>
+            <h2 class="ch-name">오타 없는 정확한 텍스트 렌더링</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-prompt" data-slide="31" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="prompt-wrap">
+          <h2 class="prompt-heading">타이포그래피 포스터 : &quot;Yours to Create&quot; 스트리트 패션 광고</h2>
+          
+          <div class="prompt-card">
+            <div class="prompt-card-header">
+              <span class="prompt-label">철자 깨짐을 극복한 타이포그래피 엔진</span>
+              <button class="btn-copy" onclick="copyPrompt(this, ``)">프롬프트 복사</button>
+            </div>
+            <pre class="prompt-code"><code></code></pre>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="32" data-session="3차시: 생성 파라미터 &amp; 제어 테크닉">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">정확한 영문 타이포그래피 렌더링</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/thread-ad-gpt-image-2-6-sunburst.webp" alt="오타 제로 &amp; 인쇄용 그래픽 레이아웃" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">오타 제로 &amp; 인쇄용 그래픽 레이아웃</h3>
+                <p class="split-item-sub">스트리트 패션 브랜드의 거친 질감과 선명한 폰트 디테일이 완벽 조화</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-cover" data-slide="33" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="cv-wrap">
+          <div class="cv-pic"><img src="assets/openai-images/markup-vase-gpt-image-2-6-sunburst.webp" alt="" /></div>
+          <div class="cv-txt">
+            <span class="k-tag-badge">4차시</span>
+            <h1 class="cv-title">부분 편집 &amp; 수정 마스터 : 외과수술식 수정의 시대</h1>
+            
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="34" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 1</span>
+            <h2 class="ch-name">마크업 오버레이 (Markup Overlay)</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-word" data-slide="35" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="word-wrap">
+          <h1 class="word-big">처음부터 다시 뽑지 마라</h1>
+          <p class="word-sub">90%를 보존하고 오직 타깃 부위만 정밀 교체하는 핀포인트 수정</p>
+          
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-attach" data-slide="36" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="attach-wrap">
+          <div class="attach-header">
+            <h2 class="attach-heading">마크업 오버레이 3단계 프로세스</h2>
+            <p class="attach-sub">투명 PNG 위에 붉은색 원이나 화살표를 그려 전달하기만 하면 끝</p>
+          </div>
+          <div class="attach-row">
+            <div class="attach-card">
+              <div class="attach-thumb">
+                <img src="assets/openai-images/markup-vase-input-gpt-image-2-6.webp" alt="" />
+                
+                <span class="attach-chip">스크린샷 마크업</span>
+              </div>
+              <p class="attach-cmd">1단계: 식탁 위 줄무늬 꽃병 원본 이미지</p>
+            </div>
+            
+            <div class="attach-card">
+              <div class="attach-thumb">
+                <img src="assets/openai-images/markup-vase-overlay-gpt-image-2-6.png" alt="" />
+                
+                <span class="attach-chip">스크린샷 마크업</span>
+              </div>
+              <p class="attach-cmd">2단계: 수정할 영역에 빨간색 동그라미 마크업</p>
+            </div>
+            
+            <div class="attach-card">
+              <div class="attach-thumb">
+                <img src="assets/openai-images/markup-vase-gpt-image-2-6-sunburst.webp" alt="" />
+                
+                <span class="attach-chip">스크린샷 마크업</span>
+              </div>
+              <p class="attach-cmd">3단계: 테이블과 배경은 100% 보존, 꽃병만 코발트 블루로 완벽 치환</p>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-post" data-slide="37" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="post-wrap">
+          <div class="post-card">
+            <div class="post-header">
+              <span class="post-badge">Threads Best Practice</span>
+              <span class="post-author">@total_nlp</span>
+            </div>
+            <div class="post-body">
+              <p class="post-text">포토샵이나 인페인팅 툴에서 복잡하게 브러시로 마스크를 문지르지 마세요.<br>캔바나 피그마에서 원본 위에 반투명 빨간 원 하나 얹고 투명 PNG로 내보낸 뒤 지시하세요.<br>&quot;Replace the object inside the red markup circle with a glossy cobalt-blue ceramic vase. Keep everything else strictly identical.&quot;<br>이게 프로들의 10초 부분 편집 공식입니다.<br></p>
+            </div>
+            <div class="post-footer">
+              <a href="https://www.threads.com/@total_nlp" target="_blank" rel="noopener" class="post-link">스레드 원문 보기 ↗</a>
+              <span class="post-caption">투명 오버레이로 콕 집어 변경하기</span>
+            </div>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="38" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 2</span>
+            <h2 class="ch-name">레이아웃 100% 보존 다국어 번역</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-versus" data-slide="39" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="vs-wrap">
+          <div class="vs-header">
+            <h2 class="vs-heading">커피 머신 인포그래픽 : 스페인어 → 영문/한국어 치환</h2>
+            <p class="vs-sub">부품 다이어그램과 화살표 위치를 1픽셀도 건드리지 않고 텍스트만 교체</p>
+          </div>
+          <div class="vs-table">
+            <div class="vs-table-head">
+              <div class="vs-col-title vs-title-left">원본 (스페인어 라벨 인포그래픽)</div>
+              <div></div>
+              <div class="vs-col-title vs-title-right">편집본 (영문/한국어 번역본)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">Caldera (보일러 라벨 표기)</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">Boiler (정확한 영문으로 번역 치환)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">Bomba de agua (워터 펌프)</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">Water Pump (레이아웃 위치 100% 고정)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">Portafiltro (포터필터)</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">Portafilter (폰트 크기 및 화살표 완벽 유지)</div>
+            </div>
+            
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="40" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 3</span>
+            <h2 class="ch-name">인물 일관성 &amp; 의상 교체 (Fashion Swap)</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-prompt" data-slide="41" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="prompt-wrap">
+          <h2 class="prompt-heading">얼굴과 체형은 유지하고 의상만 신상으로 피팅하기</h2>
+          
+          <div class="prompt-card">
+            <div class="prompt-card-header">
+              <span class="prompt-label">이커머스 패션 쇼핑몰을 위한 [Change] vs [Preserve] 분리 공식</span>
+              <button class="btn-copy" onclick="copyPrompt(this, ``)">프롬프트 복사</button>
+            </div>
+            <pre class="prompt-code"><code></code></pre>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="42" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">인물 일관성 유지 의상 교체 렌더링</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/outfit-gpt-image-2-6-sunburst.webp" alt="얼굴 왜곡 제로 &amp; 사실적인 실크 텍스처" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">얼굴 왜곡 제로 &amp; 사실적인 실크 텍스처</h3>
+                <p class="split-item-sub">고가의 모델 촬영 비용을 1회로 줄이고 수십 종의 신상 룩북을 즉시 파생</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="43" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 4</span>
+            <h2 class="ch-name">다중 레퍼런스 합성 &amp; 누끼 추출</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="44" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">다중 레퍼런스 결합 : 인물 사진 + 반려견 합성</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/test-woman.webp" alt="단독 실내 인물 사진" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">단독 실내 인물 사진</h3>
+                <p class="split-item-sub">원래 배경과 조명을 분석하여 새로운 씬의 광원과 동기화</p>
+              </div>
+            </div>
+            
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/test-woman-with-dog-gpt-image-2-6-sunburst.webp" alt="자연스러운 조명과 시선 교감" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">자연스러운 조명과 시선 교감</h3>
+                <p class="split-item-sub">소파 위에서 반려견과 함께 있는 장면으로 원근감과 반사광 완벽 통합</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="45" data-session="4차시: 부분 편집 &amp; 수정 마스터">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">투명 배경 누끼 추출 &amp; 러프 스케치 실사화</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/extract-product-gpt-image-2-6-sunburst.webp" alt="샴푸 용기 배경 분리" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">샴푸 용기 배경 분리</h3>
+                <p class="split-item-sub">반투명 플라스틱 굴절과 텍스트 라벨을 손상 없이 보존하며 투명 배경 생성</p>
+              </div>
+            </div>
+            
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/realistic-valley-gpt-image-2-6-sunburst.webp" alt="낙서 협곡의 실사 렌더링" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">낙서 협곡의 실사 렌더링</h3>
+                <p class="split-item-sub">손그림의 지형 능선과 강줄기 구도를 그대로 유지하며 웅장한 자연광 렌더링</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-cover" data-slide="46" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="cv-wrap">
+          <div class="cv-pic"><img src="assets/openai-images/ui-farmers-market-gpt-image-2-6-sunburst.webp" alt="" /></div>
+          <div class="cv-txt">
+            <span class="k-tag-badge">5차시</span>
+            <h1 class="cv-title">실전 베스트 프랙티스 &amp; 커뮤니티 응용 : UI 목업, IR덱, 4컷툰</h1>
+            
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="47" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 1</span>
+            <h2 class="ch-name">현업 비즈니스 템플릿</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-prompt" data-slide="48" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="prompt-wrap">
+          <h2 class="prompt-heading">베스트 프랙티스 1 : 모바일 앱 UI 목업 (로컬 파머스 마켓)</h2>
+          
+          <div class="prompt-card">
+            <div class="prompt-card-header">
+              <span class="prompt-label">피그마급 디테일과 스마트폰 프레임이 결합된 상용급 화면</span>
+              <button class="btn-copy" onclick="copyPrompt(this, ``)">프롬프트 복사</button>
+            </div>
+            <pre class="prompt-code"><code></code></pre>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="49" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">모바일 앱 UI 목업 렌더링</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/ui-farmers-market-gpt-image-2-6-sunburst.webp" alt="아이폰 프레임 패키징 &amp; 정밀 UI" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">아이폰 프레임 패키징 &amp; 정밀 UI</h3>
+                <p class="split-item-sub">스타트업 앱 기획서, 투자 제안서, 포트폴리오에 별도 목업 툴 없이 즉시 활용</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-prompt" data-slide="50" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="prompt-wrap">
+          <h2 class="prompt-heading">베스트 프랙티스 2 : YC 스타일 IR 피치덱 (시장 기회 슬라이드)</h2>
+          
+          <div class="prompt-card">
+            <div class="prompt-card-header">
+              <span class="prompt-label">숫자 타이포그래피와 다이어그램이 어긋나지 않는 발표 슬라이드</span>
+              <button class="btn-copy" onclick="copyPrompt(this, ``)">프롬프트 복사</button>
+            </div>
+            <pre class="prompt-code"><code></code></pre>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="51" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">스타트업 IR 피치덱 슬라이드 렌더링</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/market-opportunity-slide-gpt-image-2-6-sunburst.webp" alt="TAM / SAM / SOM 다이어그램 완성도" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">TAM / SAM / SOM 다이어그램 완성도</h3>
+                <p class="split-item-sub">발표용 슬라이드 한 장을 별도 PPT 디자인 외주 없이 완성도 높게 제작</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="52" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 2</span>
+            <h2 class="ch-name">캐릭터 일관성 동화책 &amp; 4컷 만화</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chain" data-slide="53" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="chain-wrap">
+          <h2 class="chain-heading">캐릭터 일관성 유지를 위한 3대 앵커(Anchor)</h2>
+          <div class="chain-row">
+            
+            <div class="chain-card">
+              <div class="chain-big">1. 고유 식별자(Identifier) 고정</div>
+              <div class="chain-text">이름, 나이, 머리색, 주근깨, 헐렁한 머스타드 후드티 등 시각적 닻을 명시</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">2. 레퍼런스 시드 및 이미지 고정</div>
+              <div class="chain-text">1번 씬의 결과물을 Image 1로 넣고 [Same character in new scene] 선언</div>
+            </div>
+            
+            <div class="chain-arrow">→</div>
+            <div class="chain-card">
+              <div class="chain-big">3. 화풍과 미디어 패밀리화</div>
+              <div class="chain-text">따뜻한 수채화 과슈 텍스처 등 동일한 아트 스타일 키워드를 전 씬에 유지</div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-prompt" data-slide="54" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="prompt-wrap">
+          <h2 class="prompt-heading">베스트 프랙티스 3 : 4컷 숏폼 릴스 / 인스타툰 만화 컷</h2>
+          
+          <div class="prompt-card">
+            <div class="prompt-card-header">
+              <span class="prompt-label">단일 프롬프트로 4개 패널의 서사와 일관된 캐릭터 웹툰 생성</span>
+              <button class="btn-copy" onclick="copyPrompt(this, ``)">프롬프트 복사</button>
+            </div>
+            <pre class="prompt-code"><code></code></pre>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-split" data-slide="55" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="split-wrap">
+          <div class="split-header">
+            <h2 class="split-heading">4컷 인스타툰 만화 렌더링</h2>
+            
+          </div>
+          <div class="split-grid">
+            <div class="split-item">
+              <div class="split-img-box"><img src="assets/openai-images/comic-reel-gpt-image-2-6-sunburst.webp" alt="완벽한 패널 분할과 캐릭터 표정" /></div>
+              <div class="split-info">
+                <h3 class="split-item-title">완벽한 패널 분할과 캐릭터 표정</h3>
+                <p class="split-item-sub">인스타그램 릴스, 웹툰 컷, 카드뉴스 콘텐츠 제작에 최적화된 만화 덱</p>
+              </div>
+            </div>
+            </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-chapter" data-slide="56" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="ch-wrap">
+          <div class="ch-glow"></div>
+          <div class="ch-box">
+            <span class="ch-label">CHAPTER 3</span>
+            <h2 class="ch-name">종합 정리 &amp; 실무 치트키</h2>
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-versus" data-slide="57" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="vs-wrap">
+          <div class="vs-header">
+            <h2 class="vs-heading">목적별 최적 모델 &amp; 파라미터 매트릭스</h2>
+            <p class="vs-sub">상황에 따라 복사해서 쓰는 엔지니어링 세팅 치트시트</p>
+          </div>
+          <div class="vs-table">
+            <div class="vs-table-head">
+              <div class="vs-col-title vs-title-left">업무 목적 및 환경</div>
+              <div></div>
+              <div class="vs-col-title vs-title-right">추천 모델 · Quality · Complexity · Format</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">러프 시안 탐색 / 브레인스토밍</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">flare | auto | low | webp (6초 생성으로 10개 구도 확보)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">실사 인물 / 제품 광고 촬영</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">sunburst | high | medium | png (렌즈·조명·질감 명세)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">기업 로고 / 벡터 아이콘</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">sunburst | high | low | svg (순수 벡터 패스 출력)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">SNS 루핑 배너 / 숏폼 스티커</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">sunburst | medium | medium | gif (심리스 무한 루프)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">인포그래픽 / 텍스트 다국어 번역</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">sunburst | max | high | png (큰따옴표 격리 + 레이아웃 고정)</div>
+            </div>
+            
+            <div class="vs-row">
+              <div class="vs-col vs-left">특정 부위 외과수술 부분 편집</div>
+              <div class="vs-arrow">→</div>
+              <div class="vs-col vs-right">sunburst | high | medium | png (마크업 빨간 원 + Preserve)</div>
+            </div>
+            
+          </div>
+        </div>
+          </div>
+</div>
+
+<div class="slide slide-word" data-slide="58" data-session="5차시: 실전 베스트 프랙티스 &amp; 커뮤니티 응용">
+  <div class="slide-content">
+
+        <div class="word-wrap">
+          <h1 class="word-big">이미지는 더 이상 그리는 것이 아니다</h1>
+          <p class="word-sub">원하는 세상을 엔지니어링 관점에서 명세(Spec)하라</p>
+          
+        </div>
+          </div>
+</div>
+
+</div>
+
+<div id="navBar">
+  <div class="nav-left">
+    <span class="nav-badge">Slidev 덱</span>
+    <span class="nav-session" id="currentSessionTitle">1차시: 패러다임과 모델 선택</span>
   </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Session 05 · Slide 33</span>
+  <div class="nav-center">
+    <button class="nav-btn" onclick="prevSlide()" title="이전 (←)">◀</button>
+    <span class="slide-counter" id="slideCounter">1 / 58</span>
+    <button class="nav-btn" onclick="nextSlide()" title="다음 (→ / Space)">▶</button>
+  </div>
+  <div class="nav-right">
+    <button class="nav-tool-btn" onclick="toggleOverview()">모아보기 (G)</button>
+    <button class="nav-tool-btn" onclick="toggleFullScreen()">전체화면</button>
   </div>
 </div>
 
-
-<div class="slide">
-  <div class="slide-header">
-    <div class="badge-row">
-      <span class="badge-session">종합 정리 · 실무 치트키</span>
-      <span class="badge-tag">Summary Matrix</span>
-    </div>
-    <h2 class="slide-title">GPT Image 2.6 핵심 파라미터 & 상황별 최적 조합 매트릭스</h2>
-    <p class="slide-subtitle">작업 유형에 따라 바로 복사해서 쓰는 엔지니어링 세팅 치트시트</p>
-  </div>
-  <div class="slide-body">
-    <div class="col card-box" style="width: 100%;">
-      <table class="spec-table">
-        <thead>
-          <tr>
-            <th>업무 목적</th>
-            <th>추천 모델</th>
-            <th>Quality</th>
-            <th>Complexity</th>
-            <th>Format</th>
-            <th>핵심 전략</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>러프 시안 탐색 / 브레인스토밍</strong></td>
-            <td><code>flare</code></td>
-            <td><code>auto</code></td>
-            <td><code>low</code></td>
-            <td><code>webp</code></td>
-            <td>6초 생성으로 5~10개 구도 즉시 확보</td>
-          </tr>
-          <tr>
-            <td><strong>실사 인물 / 제품 광고 촬영</strong></td>
-            <td><code>sunburst</code></td>
-            <td><code>high</code></td>
-            <td><code>medium</code></td>
-            <td><code>png</code></td>
-            <td>카메라 렌즈, 광원, 질감 물리 스펙 명세</td>
-          </tr>
-          <tr>
-            <td><strong>기업 로고 / 아이콘 패키지</strong></td>
-            <td><code>sunburst</code></td>
-            <td><code>high</code></td>
-            <td><code>low</code></td>
-            <td><code>svg</code></td>
-            <td>단순 지오메트릭 패스, 투명 배경 명시</td>
-          </tr>
-          <tr>
-            <td><strong>SNS 숏폼 / 루핑 배너</strong></td>
-            <td><code>sunburst</code></td>
-            <td><code>medium</code></td>
-            <td><code>medium</code></td>
-            <td><code>gif</code></td>
-            <td>연속 루프 동작(눈, 등불, 파도) 지정</td>
-          </tr>
-          <tr>
-            <td><strong>인포그래픽 / 텍스트 번역</strong></td>
-            <td><code>sunburst</code></td>
-            <td><code>max</code></td>
-            <td><code>high</code></td>
-            <td><code>png</code></td>
-            <td>큰따옴표 텍스트 격리 + 레이아웃 고정</td>
-          </tr>
-          <tr>
-            <td><strong>특정 부위 교체 / 오타 수정</strong></td>
-            <td><code>sunburst</code></td>
-            <td><code>high</code></td>
-            <td><code>medium</code></td>
-            <td><code>png</code></td>
-            <td>마크업 오버레이 빨간 원 + [Preserve] 선언</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="slide-footer">
-    <span class="footer-author">오진실 강사 | 목포AI실험실 오디세이</span>
-    <span>Summary · Slide 34</span>
-  </div>
-</div>
-
-
-<div class="slide cover-layout">
-  <div class="badge-row" style="justify-content: center;">
-    <span class="badge-session">수고하셨습니다</span>
-    <span class="badge-tag">강의 마무리</span>
-  </div>
-  <h2 class="cover-title" style="font-size: 32px; margin-bottom: 16px;">
-    "이미지는 더 이상 그리는 것이 아닙니다.<br><span>원하는 세상을 명세(Spec)하십시오."</span>
-  </h2>
-  <p class="cover-sub" style="font-size: 15px; max-width: 680px; margin: 0 auto 28px; line-height: 1.6;">
-    결과물을 명확히 정의하고, 물리적 디테일로 지시하며, 마크업 오버레이로 외과수술하듯 다듬는 것.<br>
-    이 3가지만 기억하시면 GPT Image 2.6은 여러분의 가장 강력한 비주얼 에이전트가 됩니다.
-  </p>
-  <div class="card-box highlight" style="display: inline-block; text-align: left; padding: 18px 28px; margin-bottom: 24px;">
-    <div style="font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
-      📍 목포AI실험실 온·오프라인 워크숍 안내
-    </div>
-    <div style="font-size: 13px; color: var(--text-sub); line-height: 1.6;">
-      • 공식 배포 웹 교안 : <a href="https://ehomekorea-netizen.github.io/mokpo-ai-labs-oddysey/image-prompting.html" target="_blank" style="color: var(--primary); font-weight: 700; text-decoration: underline;">ehomekorea-netizen.github.io/mokpo-ai-labs-oddysey/image-prompting.html</a><br>
-      • 강의 문의 및 AI 바이브코딩 커뮤니티 : 목포AI실험실 오디세이 (GitHub @ehomekorea-netizen)<br>
-      • 실습 자료 : OpenAI 공식 24종 고해상도 에셋 내장 완료
-    </div>
-  </div>
-  <div>
-    <span class="instructor-tag">오진실 강사 | 목포AI실험실 오디세이</span>
-  </div>
-</div>
-
-  </div>
+<div id="overviewModal" onclick="toggleOverview()">
+  <div class="overview-grid" id="overviewGrid" onclick="event.stopPropagation()"></div>
 </div>
 
 <script>
-let currentSlide = 0;
+let current = 1;
+const total = 58;
 const slides = document.querySelectorAll('.slide');
-const totalSlides = slides.length;
 const counter = document.getElementById('slideCounter');
-const progressBar = document.getElementById('progressBar');
-const chapterBtns = document.querySelectorAll('.chap-btn');
+const sessionEl = document.getElementById('currentSessionTitle');
 
-function updateSlide(idx) {
-  if (idx < 0) idx = 0;
-  if (idx >= totalSlides) idx = totalSlides - 1;
-  slides[currentSlide].classList.remove('active');
-  currentSlide = idx;
-  slides[currentSlide].classList.add('active');
-  counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
-  progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
-
-  // update chapter nav active state
-  chapterBtns.forEach(btn => btn.classList.remove('active'));
-  if (currentSlide < 6) chapterBtns[0].classList.add('active');
-  else if (currentSlide < 11) chapterBtns[1].classList.add('active');
-  else if (currentSlide < 17) chapterBtns[2].classList.add('active');
-  else if (currentSlide < 27) chapterBtns[3].classList.add('active');
-  else chapterBtns[4].classList.add('active');
+function showSlide(n) {
+  if (n < 1) n = 1;
+  if (n > total) n = total;
+  current = n;
+  
+  slides.forEach((s, idx) => {
+    if (idx + 1 === current) {
+      s.classList.add('active');
+      sessionEl.textContent = s.getAttribute('data-session');
+    } else {
+      s.classList.remove('active');
+    }
+  });
+  
+  counter.textContent = `${current} / ${total}`;
+  window.location.hash = `#${current}`;
 }
 
-function nextSlide() { updateSlide(currentSlide + 1); }
-function prevSlide() { updateSlide(currentSlide - 1); }
-function jumpToChapter(slideIndex) { updateSlide(slideIndex - 1); }
+function prevSlide() { showSlide(current - 1); }
+function nextSlide() { showSlide(current + 1); }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    nextSlide();
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    prevSlide();
+  } else if (e.key === 'Home') {
+    showSlide(1);
+  } else if (e.key === 'End') {
+    showSlide(total);
+  } else if (e.key === 'g' || e.key === 'G') {
+    toggleOverview();
+  } else if (e.key === 'Escape') {
+    document.getElementById('overviewModal').classList.remove('show');
+  }
+});
+
+// Touch swipe for mobile
+let touchStartX = 0;
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, false);
+document.addEventListener('touchend', e => {
+  const touchEndX = e.changedTouches[0].screenX;
+  if (touchStartX - touchEndX > 50) nextSlide();
+  if (touchEndX - touchStartX > 50) prevSlide();
+}, false);
 
 function copyPrompt(btn, text) {
   navigator.clipboard.writeText(text).then(() => {
-    const original = btn.textContent;
-    btn.textContent = "복사완료! ✓";
-    btn.style.background = "#10B981";
+    const origin = btn.textContent;
+    btn.textContent = '복사 완료!';
+    btn.style.background = '#30D158';
     setTimeout(() => {
-      btn.textContent = original;
-      btn.style.background = "";
-    }, 1800);
+      btn.textContent = origin;
+      btn.style.background = '';
+    }, 1500);
   });
 }
 
@@ -2050,45 +2073,43 @@ function toggleFullScreen() {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen();
   } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    }
+    if (document.exitFullscreen) document.exitFullscreen();
   }
 }
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-    e.preventDefault();
-    nextSlide();
-  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-    e.preventDefault();
-    prevSlide();
-  } else if (e.key.toLowerCase() === 'f') {
-    toggleFullScreen();
+function toggleOverview() {
+  const modal = document.getElementById('overviewModal');
+  const grid = document.getElementById('overviewGrid');
+  modal.classList.toggle('show');
+  
+  if (modal.classList.contains('show')) {
+    grid.innerHTML = '';
+    slides.forEach((s, idx) => {
+      const card = document.createElement('div');
+      card.className = 'overview-card' + (idx + 1 === current ? ' current' : '');
+      const num = idx + 1;
+      const heading = s.querySelector('h1, h2, h3, .post-author, .step-title, .jc-title');
+      const title = heading ? heading.textContent : '슬라이드 ' + num;
+      const sess = s.getAttribute('data-session').split(':')[0];
+      
+      card.innerHTML = `<span class="ov-num">${num}</span><p class="ov-title">${title}</p><span class="ov-session">${sess}</span>`;
+      card.onclick = () => {
+        showSlide(num);
+        modal.classList.remove('show');
+      };
+      grid.appendChild(card);
+    });
   }
-});
+}
 
-// Touch swipe support
-let touchStartX = 0;
-document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, false);
-document.addEventListener('touchend', e => {
-  let touchEndX = e.changedTouches[0].screenX;
-  if (touchStartX - touchEndX > 50) nextSlide();
-  if (touchEndX - touchStartX > 50) prevSlide();
-}, false);
-
-// Auto fallback for standalone downloads
-document.querySelectorAll('img').forEach(img => {
-  img.addEventListener('error', function() {
-    const src = this.getAttribute('src');
-    if (src && src.startsWith('assets/') && !this.dataset.fallbackTried) {
-      this.dataset.fallbackTried = 'true';
-      this.src = 'https://ehomekorea-netizen.github.io/mokpo-ai-labs-oddysey/' + src;
-    }
-  });
-});
-
-updateSlide(0);
+// Init from hash
+const hash = parseInt(window.location.hash.replace('#', ''));
+if (hash && hash >= 1 && hash <= total) {
+  showSlide(hash);
+} else {
+  showSlide(1);
+}
 </script>
+
 </body>
 </html>
