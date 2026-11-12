@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과일 사진 한 장으로 블로그 임시저장까지 | AI 에이전트 실습 교안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root {
+  --bg-color: #0b0f19;
+  --card-bg: #141b2d;
+  --card-border: rgba(255, 255, 255, 0.1);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-orange: #ff6f0f; /* 당근 오렌지 */
+  --accent-green: #22c55e;  /* 피클 그린 */
+  --accent-blue: #3b82f6;
+  --font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* App Container */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* Top Navigation Bar */
+header {
+  height: 52px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 100;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.badge-karrot {
+  background: var(--accent-orange);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+.header-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.header-title span { color: var(--text-main); }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-icon {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Slide Viewport */
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-deck {
+  width: 100%;
+  max-width: 1180px;
+  aspect-ratio: 16 / 9;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.99);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Slide Layout Components */
+.slide-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-orange);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.slide-h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  color: #fff;
+  line-height: 1.25;
+}
+.slide-sub {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+
+/* Cards & Grids */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 14px;
+  flex: 1;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.panel.highlight-orange {
+  border-color: rgba(255, 111, 15, 0.4);
+  background: rgba(255, 111, 15, 0.05);
+}
+.panel.highlight-green {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.05);
+}
+.panel.highlight-blue {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.panel-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+.panel-list li {
+  position: relative;
+  padding-left: 16px;
+}
+.panel-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent-orange);
+  font-weight: bold;
+}
+.panel.highlight-green .panel-list li::before {
+  color: var(--accent-green);
+}
+
+/* Compare View */
+.compare-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  flex: 1;
+}
+.compare-col {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.compare-head {
+  font-size: 18px;
+  font-weight: 700;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Flow Steps */
+.step-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex: 1;
+}
+.step-card {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.step-num {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent-orange);
+  margin-bottom: 6px;
+}
+.step-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.step-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* Code Snippet Box */
+.code-box {
+  background: #070a13;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #38bdf8;
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+/* Big Hero Cover Slide */
+.cover-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+.hero-tag {
+  background: rgba(255, 111, 15, 0.15);
+  color: var(--accent-orange);
+  border: 1px solid rgba(255, 111, 15, 0.3);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  width: fit-content;
+  margin-bottom: 20px;
+}
+.hero-title {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+.hero-desc {
+  font-size: 20px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 820px;
+  margin-bottom: 28px;
+}
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+  color: #cbd5e1;
+}
+
+/* Bottom Controls */
+footer {
+  height: 52px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+.footer-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.progress-bar {
+  width: 140px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent-orange);
+  width: 0%;
+  transition: width 0.3s;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-nav {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-nav:hover {
+  background: var(--accent-orange);
+  border-color: var(--accent-orange);
+  color: white;
+}
+
+/* Overview Modal */
+#overviewModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 15, 25, 0.95);
+  backdrop-filter: blur(16px);
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  padding: 32px;
+}
+#overviewModal.show { display: flex; }
+.overview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 8px;
+}
+.ov-card {
+  aspect-ratio: 16 / 9;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s;
+}
+.ov-card:hover {
+  border-color: var(--accent-orange);
+  transform: translateY(-2px);
+}
+.ov-card.current {
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 12px rgba(255, 111, 15, 0.4);
+}
+.ov-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-orange);
+}
+.ov-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.35;
+}
+
+@media (max-width: 768px) {
+  .slide-deck { border-radius: 0; height: 100%; aspect-ratio: unset; }
+  .slide { padding: 24px; }
+  .slide-h1 { font-size: 22px; }
+  .grid-2, .grid-3, .grid-4, .compare-box, .step-row { grid-template-columns: 1fr; display: flex; flex-direction: column; overflow-y: auto; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <div class="logo-area">
+      <span class="badge-karrot">당근 11월 AI 실습</span>
+      <div class="header-title">오디세이의 <span>AI 에이전트 마스터클래스</span></div>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-icon" onclick="toggleOverview()"><span>⊞</span> 목록 (G)</button>
+      <button class="btn-icon" onclick="toggleFullScreen()"><span>⛶</span> 전체화면</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="slide-deck" id="slideDeck">
+
+      <!-- Slide 1: Cover -->
+      <div class="slide active" data-title="표지: 과일 사진 한 장으로 블로그 임시저장까지">
+        <div class="cover-hero">
+          <div class="hero-tag">당근 정기모임 11월 실습 워크숍</div>
+          <h1 class="hero-title">과일 사진 한 장으로<br><span style="color:var(--accent-orange);">블로그 임시저장</span>까지</h1>
+          <p class="hero-desc">말만 하는 챗봇에서 벗어나, 가상 브라우저와 클라우드 샌드박스로 현실의 일을 대신하는 'AI 에이전트 하네스(Harness)' 환경의 원리와 실전 실습</p>
+          <div class="hero-meta">
+            <div>👨‍🏫 <strong>진행:</strong> 목포AI실험실 오디세이</div>
+            <div>⏱️ <strong>시간:</strong> 1시간 ~ 1시간 30분</div>
+            <div>📱 <strong>도구:</strong> 피클(Pickle) · 구글 드라이브 · 네이버 블로그</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Agenda -->
+      <div class="slide" data-title="오늘의 스터디 로드맵">
+        <div class="slide-tag">Curriculum</div>
+        <h2 class="slide-h1">오늘 함께 정복할 5가지 핵심</h2>
+        <div class="slide-sub">단순히 기능을 따라 하는 것이 아니라, 기술적으로 왜 되는지 원리를 이해합니다.</div>
+        <div class="grid-3">
+          <div class="panel highlight-orange">
+            <div class="panel-title">1장. 피클 에이전트 리캡</div>
+            <ul class="panel-list">
+              <li>대화형 챗봇 vs AI 에이전트 차이</li>
+              <li>내 폰과 분리된 클라우드 가상 컴퓨터</li>
+              <li>피클 초대코드(ZPSY6VS7) 세팅</li>
+            </ul>
+          </div>
+          <div class="panel highlight-green">
+            <div class="panel-title">2장. 에이전트 하네스(Harness)</div>
+            <ul class="panel-list">
+              <li>LLM 뇌에 손발을 달아주는 하네스 환경</li>
+              <li>Browser Use vs Computer Use 원리</li>
+              <li>밑바닥 while True 에이전트 루프</li>
+            </ul>
+          </div>
+          <div class="panel highlight-blue">
+            <div class="panel-title">3장. 실전 파이프라인</div>
+            <ul class="panel-list">
+              <li>구글 드라이브 사진 자동 감지</li>
+              <li>스마트에디터 ONE DOM 제어</li>
+              <li>임시저장 검증과 안전한 책임 분계선</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Chatbot vs Agent -->
+      <div class="slide" data-title="1장: 챗봇과 에이전트의 결정적 차이">
+        <div class="slide-tag">Chapter 1 · Paradigm Shift</div>
+        <h2 class="slide-h1">말만 하는 AI vs 진짜 일하는 AI</h2>
+        <div class="slide-sub">챗봇은 글을 써줄 뿐이지만, 에이전트는 현실의 웹사이트에 들어가 일을 끝냅니다.</div>
+        <div class="compare-box">
+          <div class="compare-col">
+            <div class="compare-head" style="color:var(--text-muted);">
+              <span>대화형 챗봇 (ChatGPT 등)</span>
+              <span>💬 텍스트 응답</span>
+            </div>
+            <ul class="panel-list">
+              <li><strong>결과물:</strong> 채팅창 속 텍스트 답변</li>
+              <li><strong>실행:</strong> 사람이 일일이 복사해서 블로그에 붙여넣어야 함</li>
+              <li><strong>한계:</strong> 외부 사이트 로그인이나 버튼 클릭 불가</li>
+              <li><strong>시간:</strong> 내가 화면을 보고 프롬프트를 칠 때만 동작</li>
+            </ul>
+          </div>
+          <div class="compare-col" style="border-color:rgba(34,197,94,0.4); background:rgba(34,197,94,0.03);">
+            <div class="compare-head" style="color:var(--accent-green);">
+              <span>AI 에이전트 (피클 등)</span>
+              <span>⚡ 실제 작업 완수</span>
+            </div>
+            <ul class="panel-list">
+              <li><strong>결과물:</strong> 블로그 임시저장 완료, 예약 확정, 전화 통화</li>
+              <li><strong>실행:</strong> AI가 직접 크로미움 브라우저를 열고 조작</li>
+              <li><strong>도구:</strong> 가상 컴퓨터, DOM 제어, 파일시스템, 볼트 금고</li>
+              <li><strong>시간:</strong> 내 폰이 꺼져도 24시간 클라우드에서 자율 수행</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Where it runs -->
+      <div class="slide" data-title="1장: 에이전트는 어디서 돌아갈까?">
+        <div class="slide-tag">Chapter 1 · Architecture</div>
+        <h2 class="slide-h1">내 폰과 완전히 분리된 클라우드 샌드박스</h2>
+        <div class="slide-sub">내 스마트폰 화면을 가로채거나 배터리를 닳게 하지 않습니다.</div>
+        <div class="grid-3">
+          <div class="panel">
+            <div class="panel-title">🖥️ 가상 브라우저</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">서버 내부의 격리된 크로미움 엔진. 내 폰 브라우저의 쿠키나 개인 기록을 침범하지 않고 안전하게 독립 세션으로 작동합니다.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-title">🔐 볼트 금고 (Vault)</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">아이디와 비밀번호, 결제 카드는 엔클레이브에 암호화 보관. AI 모델조차 비밀번호 평문을 보지 못하며 웹 폼에 자동 주입됩니다.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-title">📂 파일 & 스케줄러</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">원고 파일 임시 백업, 구글 드라이브 연동, 정해진 시간이나 상태 변화를 감시하는 백그라운드 루틴이 24시간 돌아갑니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Chapter 2 Cover -->
+      <div class="slide" data-title="2장: 한 줄 프롬프트 뒤의 '하네스(Harness)'">
+        <div class="cover-hero">
+          <div class="hero-tag" style="background:rgba(34,197,94,0.15); color:var(--accent-green); border-color:rgba(34,197,94,0.3);">Chapter 2 · Core Tech</div>
+          <h1 class="hero-title">한 줄 프롬프트 뒤의 진실:<br><span style="color:var(--accent-green);">'에이전트 하네스(Harness)'</span>란?</h1>
+          <p class="hero-desc">"드라이브 사진으로 블로그 써서 임시저장해줘"라는 단 한 줄이 실행되기 위해 어떤 소프트웨어 인프라가 받쳐주고 있을까요?</p>
+        </div>
+      </div>
+
+      <!-- Slide 6: Brain vs Harness -->
+      <div class="slide" data-title="2장: LLM은 뇌일 뿐이다">
+        <div class="slide-tag">Chapter 2 · Concept</div>
+        <h2 class="slide-h1">두뇌(LLM)에 손과 발을 달아주는 하네스 환경</h2>
+        <div class="slide-sub">에이전트 스터디의 본질은 프롬프트 말장난이 아닌 '도구와 제어 인프라'의 이해입니다.</div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-title">🧠 LLM 모델 단독 (Brain)</div>
+            <p style="font-size:14px; color:#cbd5e1; line-height:1.6; margin-bottom:12px;">입력된 텍스트 다음 단어를 확률적으로 예측하는 텍스트 연산기일 뿐입니다.</p>
+            <ul class="panel-list">
+              <li>브라우저를 띄울 수 없음</li>
+              <li>파일을 저장하거나 읽을 수 없음</li>
+              <li>버튼을 클릭하거나 마우스를 움직일 수 없음</li>
+            </ul>
+          </div>
+          <div class="panel highlight-green">
+            <div class="panel-title">🦾 에이전트 하네스 (Harness Engine)</div>
+            <p style="font-size:14px; color:#cbd5e1; line-height:1.6; margin-bottom:12px;">두뇌가 세상을 감각하고 물리적 행동을 하도록 감싸는 소프트웨어 프레임워크입니다.</p>
+            <ul class="panel-list">
+              <li><strong>도구함(Tools):</strong> 브라우저 클릭/타이핑, 드라이브 API, 볼트</li>
+              <li><strong>샌드박스:</strong> 안전한 파일 시스템 및 네트워크 격리망</li>
+              <li><strong>루프 제어:</strong> 목표가 달성될 때까지 상태를 피드백하는 엔진</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 7: Agent Loop While True -->
+      <div class="slide" data-title="2장: 밑바닥 에이전트 루프 (While True)">
+        <div class="slide-tag">Chapter 2 · Loop Architecture</div>
+        <h2 class="slide-h1">에이전트의 심장: 자율 추론 루프</h2>
+        <div class="slide-sub">도구 호출보다 중요한 것은 '검증된 산출물'과 'Break 조건'입니다.</div>
+        <div class="step-row" style="margin-bottom:16px;">
+          <div class="step-card">
+            <div class="step-num">STEP 1</div>
+            <div class="step-title">Observe (관찰)</div>
+            <div class="step-desc">브라우저 DOM 트리, 현재 URL, 열린 팝업 상태를 스냅샷으로 읽음</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">STEP 2</div>
+            <div class="step-title">Plan (추론)</div>
+            <div class="step-desc">목표를 위해 다음에 실행할 도구(예: 스마트에디터 제목 클릭)를 결정</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">STEP 3</div>
+            <div class="step-title">Act (실행)</div>
+            <div class="step-desc">browser_type, browser_upload, fill_secret 등 실제 브라우저 조작</div>
+          </div>
+          <div class="step-card highlight-green">
+            <div class="step-num" style="color:var(--accent-green);">STEP 4</div>
+            <div class="step-title">Verify & Break</div>
+            <div class="step-desc">'임시저장 완료' 토스트가 떴는가? 확인되면 루프 탈출하고 사용자 보고</div>
+          </div>
+        </div>
+        <div class="code-box">
+while True:
+    state = browser.get_snapshot() # 1. 화면 관찰
+    action = agent.decide_action(state, goal="네이버 블로그 임시저장") # 2. 추론
+    if state.has_text("임시저장이 완료되었습니다"): # 4. Break 검증
+        take_screenshot()
+        break
+    browser.execute(action) # 3. 도구 실행
+        </div>
+      </div>
+
+      <!-- Slide 8: Browser Use vs Computer Use -->
+      <div class="slide" data-title="2장: Browser Use vs Computer Use">
+        <div class="slide-tag">Chapter 2 · Deep Dive</div>
+        <h2 class="slide-h1">왜 픽셀 좌표가 아니라 DOM 제어인가?</h2>
+        <div class="slide-sub">네이버 블로그 스마트에디터 ONE의 복잡한 서식 컴포넌트를 정밀 제어하는 원리</div>
+        <div class="compare-box">
+          <div class="compare-col">
+            <div class="compare-head" style="color:var(--text-muted);">
+              <span>Computer Use (화면 좌표 조작)</span>
+              <span>❌ 네이버 봇 차단</span>
+            </div>
+            <ul class="panel-list">
+              <li>화면 전체 캡처를 보고 마우스 (x, y) 픽셀 좌표를 클릭</li>
+              <li>창 크기, 반응형 레이아웃 변경 시 엉뚱한 곳을 클릭함</li>
+              <li>기계적 직선 마우스 궤적과 비정상 입력으로 캡차/차단 유발</li>
+              <li>구형 데스크톱 프로그램용 임시방편 기술</li>
+            </ul>
+          </div>
+          <div class="compare-col highlight-green">
+            <div class="compare-head" style="color:var(--accent-green);">
+              <span>Browser Use (DOM 시맨틱 조작)</span>
+              <span>✅ 실제 사람처럼 통과</span>
+            </div>
+            <ul class="panel-list">
+              <li>실제 크로미움 브라우저 내부의 요소(ref)를 직접 타격</li>
+              <li>사람과 같은 자연스러운 키스트로크 딜레이 에뮬레이션</li>
+              <li>사전 인증된 쿠키/세션 재사용으로 2차 인증 피로 최소화</li>
+              <li>제목 서식, 구분선 컴포넌트, 이미지 파일 첨부를 완벽 지원</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 9: Safety & Human-in-the-Loop -->
+      <div class="slide" data-title="2장: 안전선과 Human-in-the-Loop">
+        <div class="slide-tag">Chapter 2 · Safety Boundary</div>
+        <h2 class="slide-h1">사람과 AI의 안전한 책임 분계선</h2>
+        <div class="slide-sub">비밀번호는 AI가 보지 못하게, 최종 발행은 사람이 직접 누르게 설계합니다.</div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-title">🔒 금고(Vault)의 비밀번호 주입</div>
+            <ul class="panel-list">
+              <li>네이버 비밀번호는 AI 모델에 텍스트로 전달되지 않습니다.</li>
+              <li>`browser_fill_secret` 명령을 통해 브라우저 입력창으로 비밀번호가 직접 마스킹 주입됩니다.</li>
+              <li>대화 기록이나 로그 어디에도 내 비밀번호가 남지 않습니다.</li>
+            </ul>
+          </div>
+          <div class="panel highlight-orange">
+            <div class="panel-title">🛑 발행 전 최종 승인 (Human-in-the-Loop)</div>
+            <ul class="panel-list">
+              <li>에이전트에게 맡기는 범위는 <strong>[임시저장]</strong>까지로 한정합니다.</li>
+              <li>공개 글 발행은 내 이름과 브랜드가 걸리는 일이므로 에이전트가 단독으로 [발행]을 누르지 못하게 제약합니다.</li>
+              <li>사람이 폰에서 확인하고 [발행]만 원클릭으로 누르면 끝납니다.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 10: Chapter 3 Cover -->
+      <div class="slide" data-title="3장: 실전 파이프라인 실습">
+        <div class="cover-hero">
+          <div class="hero-tag" style="background:rgba(59,130,246,0.15); color:var(--accent-blue); border-color:rgba(59,130,246,0.3);">Chapter 3 · Real Pipeline</div>
+          <h1 class="hero-title">실전 파이프라인:<br><span style="color:var(--accent-blue);">구글 드라이브 사진 → 블로그 임시저장</span></h1>
+          <p class="hero-desc">스마트폰으로 찍은 사진이 구글 드라이브에 올라가면, 에이전트가 알아서 원고를 쓰고 네이버 스마트에디터에 임시저장하는 5단계 전 과정</p>
+        </div>
+      </div>
+
+      <!-- Slide 11: Why Google Drive -->
+      <div class="slide" data-title="3장: 왜 채팅 첨부 대신 구글 드라이브인가?">
+        <div class="slide-tag">Chapter 3 · Data Strategy</div>
+        <h2 class="slide-h1">개인 장난감에서 현업 실무 파이프라인으로</h2>
+        <div class="slide-sub">스마트폰 카메라 백업과 클라우드 스토리지를 에이전트의 작업함으로 연결합니다.</div>
+        <div class="grid-3">
+          <div class="panel">
+            <div class="panel-title">📱 스마트폰 자동 동기화</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">매장에서 과일 사진을 찍으면 구글 드라이브 '블로그_사진' 폴더로 백그라운드 자동 동기화됩니다.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-title">🔍 고화질 원본 & 메타데이터</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">채팅방 압축 손실 없이 고화질 원본 파일과 촬영 일시, 폴더명을 에이전트가 API로 바로 읽어 들입니다.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-title">🔄 팀 협업 & 자율 처리</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">팀원이 드라이브에 사진을 넣어두기만 해도 에이전트가 이를 감지하고 블로그 초안을 미리 만들어둡니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 12: 5 Steps Workflow -->
+      <div class="slide" data-title="3장: 5단계 엔드투엔드 파이프라인">
+        <div class="slide-tag">Chapter 3 · Pipeline Architecture</div>
+        <h2 class="slide-h1">오늘 실제로 수행된 5단계 자동화 여정</h2>
+        <div class="slide-sub">목포 달디당 과일 협찬 사진 2장이 스마트에디터에 안착하기까지</div>
+        <div class="step-row">
+          <div class="step-card">
+            <div class="step-num">01. 감지</div>
+            <div class="step-title">Drive 사진 수집</div>
+            <div class="step-desc">드라이브 폴더에서 귤 박스, 단감, 디저트 사진 2장 파일 확보</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">02. 리서치</div>
+            <div class="step-title">매장 검색 & 원고</div>
+            <div class="step-desc">카카오맵 '달디당 대성점' 주소 확인 후 마크다운 원고 백업</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">03. 로그인</div>
+            <div class="step-title">Vault 네이버 접속</div>
+            <div class="step-desc">원격 브라우저 가동 및 볼트 비밀번호 주입으로 로그인 통과</div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">04. 에디터</div>
+            <div class="step-title">사진배치 & 서식</div>
+            <div class="step-desc">스마트에디터 ONE 진입, 제목/본문 입력, 사진 1·2 업로드, 대표썸네일 지정</div>
+          </div>
+          <div class="step-card highlight-green">
+            <div class="step-num" style="color:var(--accent-green);">05. 검증</div>
+            <div class="step-title">임시저장 & 보고</div>
+            <div class="step-desc">[저장] 클릭, 토스트 검증, 스크린샷 캡처 후 사람에게 카드 보고!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 13: Error Recovery -->
+      <div class="slide" data-title="3장: 돌발 상황 극복 (자율 에이전트의 힘)">
+        <div class="slide-tag">Chapter 3 · Self-Healing</div>
+        <h2 class="slide-h1">에러가 나도 멈추지 않는 '자율 회복'</h2>
+        <div class="slide-sub">단순 매크로는 에러가 나면 뻗지만, 에이전트는 대안을 찾아 스스로 해결합니다.</div>
+        <div class="grid-2">
+          <div class="panel" style="border-color:rgba(239,68,68,0.4); background:rgba(239,68,68,0.05);">
+            <div class="panel-title" style="color:#ef4444;">⚠️ 실제 발생한 돌발상황</div>
+            <ul class="panel-list">
+              <li>고해상도 사진 원본(1.0MB) 업로드 시 네이버에서 "일시적 파일전송 오류" 반환</li>
+              <li>일반적인 자동화 매크로라면 여기서 에러를 뿜고 멈췄을 상황</li>
+            </ul>
+          </div>
+          <div class="panel highlight-green">
+            <div class="panel-title" style="color:var(--accent-green);">💡 에이전트의 자율 문제 해결</div>
+            <ul class="panel-list">
+              <li>에러 메시지를 읽고 파일 크기 최적화가 필요하다고 스스로 판단</li>
+              <li>내부 리사이징 도구로 1400px 웹 최적화본(250KB)을 즉시 생성</li>
+              <li>재업로드 성공 후 정상 렌더링 확인하고 임시저장 완수!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 14: Chapter 4 Cover -->
+      <div class="slide" data-title="4장: 스마트폰으로 직접 해보는 실습 가이드">
+        <div class="cover-hero">
+          <div class="hero-tag" style="background:rgba(255,111,15,0.15); color:var(--accent-orange); border-color:rgba(255,111,15,0.3);">Chapter 4 · Hands-on Practice</div>
+          <h1 class="hero-title">당근 회원 실전 실습:<br><span style="color:var(--accent-orange);">한 줄 명령으로 블로그 저장하기</span></h1>
+          <p class="hero-desc">오늘 배운 원리를 바탕으로 스마트폰에서 직접 구글 드라이브와 네이버 블로그를 연결하고 실습해 봅니다.</p>
+        </div>
+      </div>
+
+      <!-- Slide 15: Step by Step Practice -->
+      <div class="slide" data-title="4장: 3단계 실습 가이드">
+        <div class="slide-tag">Chapter 4 · Action Guide</div>
+        <h2 class="slide-h1">스마트폰 하나로 끝내는 3단계 실습</h2>
+        <div class="slide-sub">복잡한 설정은 처음에 한 번만! 그 뒤로는 말 한마디면 끝납니다.</div>
+        <div class="grid-3">
+          <div class="panel">
+            <div class="panel-title">Step 1. 연결 활성화</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">피클 앱 설정에서 구글 드라이브를 켜고, 네이버 계정을 안전 금고(Vault)에 저장합니다.</p>
+            <span style="font-size:11px; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">1회만 설정</span>
+          </div>
+          <div class="panel highlight-orange">
+            <div class="panel-title">Step 2. 사진 넣고 명령</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">드라이브 폴더에 사진을 넣고 피클 채팅창에 마법의 한 줄을 보냅니다:</p>
+            <div class="code-box" style="font-size:11px; padding:8px 12px;">"드라이브 사진으로 블로그 써서 임시저장해줘"</div>
+          </div>
+          <div class="panel highlight-green">
+            <div class="panel-title">Step 3. 검토 후 발행</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:10px;">에이전트가 보내준 임시저장 스크린샷 카드를 확인하고, 블로그 앱에서 [발행]을 누릅니다.</p>
+            <span style="font-size:11px; background:rgba(34,197,94,0.2); color:var(--accent-green); padding:2px 6px; border-radius:4px;">최종 승인 완료</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 16: Chapter 5 Cover -->
+      <div class="slide" data-title="5장: 에이전트 시대, 인간의 진짜 역할">
+        <div class="cover-hero">
+          <div class="hero-tag">Chapter 5 · Human Leadership</div>
+          <h1 class="hero-title">에이전트 시대,<br><span style="color:var(--accent-orange);">인간은 무엇을 해야 하는가?</span></h1>
+          <p class="hero-desc">단순 타이핑과 복사-붙여넣기는 이제 끝났습니다. 우리가 공부하고 집중해야 할 진짜 가치는 어디에 있을까요?</p>
+        </div>
+      </div>
+
+      <!-- Slide 17: Human's True Value -->
+      <div class="slide" data-title="5장: 인간의 3대 핵심 역할">
+        <div class="slide-tag">Chapter 5 · Future Skills</div>
+        <h2 class="slide-h1">단순 노동자에서 '지휘자'로의 전환</h2>
+        <div class="slide-sub">에이전트가 궂은일을 맡을 때, 사람은 판단과 방향에 집중합니다.</div>
+        <div class="grid-3">
+          <div class="panel">
+            <div class="panel-title">🎯 1. 골 선언 (Goal)</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">무엇을 왜 이루어야 하는지 의도를 명확히 제시합니다. "어떤 독자에게 어떤 가치를 전할 것인가?"</p>
+          </div>
+          <div class="panel highlight-orange">
+            <div class="panel-title">🛠️ 2. 하네스 설계 (Harness)</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">에이전트가 막힘없이 달릴 수 있도록 드라이브, 볼트, 브라우저의 데이터 파이프라인을 뚫어줍니다.</p>
+          </div>
+          <div class="panel highlight-green">
+            <div class="panel-title">⚖️ 3. 가치 판단 (Judgment)</div>
+            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">만들어진 산출물을 인간의 안목으로 검토하고, 발행할 가치가 있는지 최종 승인하고 책임집니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 18: Ending & Q&A -->
+      <div class="slide" data-title="마무리 & 질의응답">
+        <div class="cover-hero" style="text-align:center; align-items:center;">
+          <div class="hero-tag">당근 AI 에이전트 실습 모임</div>
+          <h1 class="hero-title" style="font-size:36px; margin-bottom:12px;">복붙 노동에서 벗어나<br><span style="color:var(--accent-green);">내 삶과 비즈니스의 지휘자</span>가 되세요</h1>
+          <p class="hero-desc" style="font-size:16px; margin-bottom:24px;">오늘 배운 하네스 구조는 블로그뿐만 아니라 맛집 예약, 강의 일정 정리, 영수증 정산까지 무궁무진하게 확장됩니다.</p>
+          <div style="background:rgba(255,255,255,0.05); border:1px solid var(--card-border); padding:14px 28px; border-radius:12px; font-size:14px; color:var(--text-muted);">
+            💬 궁금한 점은 언제든 당근 모임 단톡방과 피클 비서에게 물어보세요! | <strong>목포AI실험실 오디세이</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-progress">
+      <span id="slideCounter">1 / 18</span>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span id="currentTitle" style="color:var(--text-main); margin-left:8px;">표지</span>
+    </div>
+    <div class="footer-nav">
+      <button class="btn-nav" onclick="prevSlide()">← 이전 (PageUp)</button>
+      <button class="btn-nav" onclick="nextSlide()">다음 (PageDown/Space) →</button>
+    </div>
+  </footer>
+</div>
+
+<!-- Overview Grid Modal -->
+<div id="overviewModal">
+  <div class="overview-head">
+    <h3 style="font-size:18px; font-weight:700;">전체 슬라이드 목차 (총 18장)</h3>
+    <button class="btn-icon" onclick="toggleOverview()">닫기 (ESC)</button>
+  </div>
+  <div class="overview-grid" id="overviewGrid"></div>
+</div>
+
+<script>
+let current = 1;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function showSlide(n) {
+  if (n < 1) n = 1;
+  if (n > total) n = total;
+  current = n;
+
+  slides.forEach((s, idx) => {
+    s.classList.toggle('active', idx + 1 === current);
+  });
+
+  const activeSlide = slides[current - 1];
+  const title = activeSlide.getAttribute('data-title') || '슬라이드 ' + current;
+  
+  document.getElementById('slideCounter').textContent = current + ' / ' + total;
+  document.getElementById('progressFill').style.width = ((current / total) * 100) + '%';
+  document.getElementById('currentTitle').textContent = title;
+  window.location.hash = current;
+}
+
+function nextSlide() { showSlide(current + 1); }
+function prevSlide() { showSlide(current - 1); }
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+    nextSlide();
+  } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+    prevSlide();
+  } else if (e.key === 'Home') {
+    showSlide(1);
+  } else if (e.key === 'End') {
+    showSlide(total);
+  } else if (e.key === 'g' || e.key === 'G') {
+    toggleOverview();
+  } else if (e.key === 'Escape') {
+    document.getElementById('overviewModal').classList.remove('show');
+  }
+});
+
+// Mobile touch swipe
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, false);
+document.addEventListener('touchend', e => {
+  const touchEndX = e.changedTouches[0].screenX;
+  if (touchStartX - touchEndX > 50) nextSlide();
+  if (touchEndX - touchStartX > 50) prevSlide();
+}, false);
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+  }
+}
+
+function toggleOverview() {
+  const modal = document.getElementById('overviewModal');
+  const grid = document.getElementById('overviewGrid');
+  modal.classList.toggle('show');
+  
+  if (modal.classList.contains('show')) {
+    grid.innerHTML = '';
+    slides.forEach((s, idx) => {
+      const card = document.createElement('div');
+      card.className = 'ov-card' + (idx + 1 === current ? ' current' : '');
+      const num = idx + 1;
+      const title = s.getAttribute('data-title') || '슬라이드 ' + num;
+      card.innerHTML = `<span class="ov-num">Slide ${num}</span><p class="ov-title">${title}</p>`;
+      card.onclick = () => {
+        showSlide(num);
+        modal.classList.remove('show');
+      };
+      grid.appendChild(card);
+    });
+  }
+}
+
+// Init from hash or start
+const hash = parseInt(window.location.hash.replace('#', ''));
+if (hash && hash >= 1 && hash <= total) {
+  showSlide(hash);
+} else {
+  showSlide(1);
+}
+</script>
+
+</body>
+</html>
